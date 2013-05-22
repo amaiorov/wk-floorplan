@@ -1,0 +1,80 @@
+<div class="admin">
+  <div class="search">
+    <img src="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/logo-wk2.png" id="logo">
+    Search: <input ng-model="query.name" ng-change="textChange(query)">
+    <input type="button" ng-click="save()" value="Save">
+    <p class="success">Success! The positions have been saved.</p>
+  </div>
+  <div class="map-holster">
+  <div class="map floor_{{query.floor}} {{turned && 'searching' || ''}}" ng-click="registerMove($event)">
+    <div class="loading" ng-hide="loaded">
+      <img src="img/preloader.gif">
+    </div>
+    <img src="img/6.jpg" id="pixel-pusher">
+    <ul id="floors">
+      <div>
+        Floors
+        <li id="6" class="selected" ng-click="query.floor = 6; classToggle($event, query);">6</li>
+        <li id="7" ng-click="query.floor = 7; classToggle($event,query);">7</li>
+        <li id="8" ng-click="query.floor = 8; classToggle($event,query);">8</li>
+      </div>
+      <div>
+        Filters
+        <li id="all" class="selected" ng-click="query.type = ''; turned=true; classToggle($event,query);">All</li>
+        <li id="seats" ng-click="query.type = 'seat'; turned=true; classToggle($event,query);">Seats</li>
+        <li id="conference" ng-click="query.type = 'conference'; turned=true; classToggle($event,query);">Conference</li>
+        <li id="bathrooms" ng-click="query.type = 'bathroom'; turned=true; classToggle($event,query);">Bathrooms</li>
+        <li id="printers" ng-click="query.type = 'printer'; turned=true; classToggle($event,query);">Printers</li>
+    </div>
+    </ul>
+  <ul>
+    <ul>
+      <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:state}" class="{{room.type}}" draggable>
+        <div class="initials">{{room.initials}}</div>
+        <div class="details">
+          <p class="name">Name: {{room.name}}  <span class="x" deletable>x</span></p>
+        </div>
+      </li>
+      <li ng-repeat="seat in seats | filter:query" style="top: {{seat.top}}; left: {{seat.left}}" ng-click="toggle()" ng-class="{selected:state}" class="{{seat.type}}" draggable>
+        <div class="initials">{{seat.initials}}</div>
+        <div class="details">
+          <p class="name">Name: {{seat.name}}</p><p class="extension">Extension: {{seat.extension}}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="tools-wrapper">
+<div class="admin-tools">
+  <div class="room-admin">
+    <h3>New Room</h3>
+    Name: <input ng-model="room.name"><br>
+    Type: <select ng-model="room.type">
+      <option value="conference">Conference Room</option>
+      <option value="bathroom">Bathroom</option>
+      <option value="printer">Printer</option>
+    </select><br>
+    Floor: <input ng-model="room.floor"><br>
+    <input type="button" value="Add It!" ng-click="saveRoom()">
+  </div>
+  <div class="room-admin">
+    <h3>Change an image</h3>
+    <form action="file_upload.php" method="post"
+    enctype="multipart/form-data">
+    <label for="floor-name">Floor Image to Change:</label>
+    <select name="floor-name" id="floor-name">
+      <option value="6-admin">6 (Admin)</option>
+      <option value="6-user">6 (User)</option>
+      <option value="7-admin">7 (Admin)</option>
+      <option value="7-user">7 (User)</option>
+      <option value="8-admin">8 (Admin)</option>
+      <option value="8-user">8 (User)</option>
+    </select>
+    <label for="file">File:</label>
+    <input type="file" name="file" id="file"><br>
+    <input type="submit" name="submit" value="Submit">
+</form>
+  </div>
+</div>
+</div>

@@ -1,0 +1,267 @@
+/* app css stylesheet */
+
+body {
+  padding-top: 20px;
+}
+
+.map {
+	width: 100%;
+	margin: 0 auto;
+	background: gray;
+	position: relative;
+	background-size: cover;
+}
+
+.map-holster {
+	width: 70%;
+	margin: 0 auto;
+}
+
+#pixel-pusher {
+	width: 100%;
+	visibility: hidden;
+}
+
+.map.floor_6 {
+	background: url(../upload/6-user.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.map.floor_7 {
+	background: url(../upload/7-user.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.map.floor_8 {
+	background: url(../upload/8-user.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.admin .map.floor_6 {
+	background: url(../upload/6-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.admin .map.floor_7 {
+	background: url(../upload/7-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.admin .map.floor_8 {
+	background: url(../upload/8-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.map ul {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.map ul li {
+	list-style-type: none;
+	color: white;
+	position: absolute;
+	text-align: center;
+	font-weight: bold;
+	background: url(../img/dot.png) no-repeat;
+	width: 27px;
+	height: 42px;
+	font-size: 12px;
+	padding-top: 5px;
+	margin-left: -13px;
+	margin-top:-47px;
+	cursor: pointer;
+	display: none;
+}
+
+.map ul li.conference {
+	background: url(../img/conference.png) no-repeat;
+}
+
+.map ul li.printer {
+	background: url(../img/printer.png) no-repeat;
+}
+
+.map ul li.bathroom {
+	background: url(../img/bathroom.png) no-repeat;
+}
+
+.admin .map ul li {
+	display: block;
+}
+
+.admin {
+	min-width: 1000px;
+}
+
+.map.searching ul li {
+	display: block;
+}
+
+.map li .initials {
+	position: relative;
+	z-index: 2;
+}
+
+.map ul li .name, .map ul li .extension  {
+	line-height: 11px;
+	font-size: 11px;
+	white-space: nowrap;
+	margin: 0 0 2px 0;
+	visibility: hidden;
+}
+
+.map ul li.selected .name, .map ul li.selected .extension  {
+	visibility: visible;
+}
+
+.map li .details {
+	width: 0px;
+	background: rgba(0,0,0,.5);
+	border-radius: 5px;
+	position: absolute;
+	top: 0;
+	left: 13px;
+	z-index: 4;
+	display: inline-block;
+	opacity: 0;
+	padding: 3px 0px;
+	transition: all 200ms ease-in; 
+}
+
+.map li.printer .details {
+	background: rgba(0,174,239,0.8);
+}
+
+.map li.bathroom .details {
+	background: rgba(255,0,0,0.8);
+}
+
+.map li.conference .details {
+	background: rgba(0,166,81,0.8);
+}
+
+.map li.selected .details {
+	width: auto;
+	text-align: left;
+	padding: 3px 21px;
+	opacity: 1;
+}
+
+.map li.selected .initials {
+	z-index: 5;
+}
+
+.search {
+	width: 800px;
+	margin: 20px auto;
+}
+
+#logo {
+	margin-right: 50px;
+}
+
+.success {
+	text-align: right;
+	margin-top: 17px;
+	float: right;
+	color: #55d685;
+	opacity: 0;
+	transition: all 3s ease-in; 
+}
+
+.success.on {
+	opacity: 1;
+	transition: all 0ms ease-in; 
+}
+
+#floors{
+	position: absolute;
+	left:-94px;
+	top: 0;
+	text-align: left;
+	width: 40px;
+	padding-left: 10px;
+	height: auto;
+	font-weight: bold;
+}
+
+#floors li {
+	position: relative;
+	display: block;
+	background: black;
+	height: auto;
+	width: 75px;
+	padding: 5px;
+	border-radius: 5px 0px 0px 5px;
+	margin: 4px 0;
+	opacity: .4;
+}
+
+#floors li.selected {
+	opacity: 1;
+}
+
+.loading {
+	width: 100%;
+	height: 100%;
+	background:rgba(255,255,255,.5);
+	position: absolute;
+	text-align: center;
+	z-index: 3;
+}
+
+.loading img {
+	margin-top: 200px;
+}
+
+.admin-tools {
+	width: 70%;
+	min-width: 700px;
+	margin: 40px auto;
+}
+
+.room-admin {
+	background: #ddd;
+	width: 300px;
+	padding: 10px;
+	border-radius: 5px;
+	float: left;
+	margin-right: 10px;
+}
+
+.tools-wrapper {
+	min-width: 1000px;
+	width: 100%;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.x {
+	text-indent: -9999px;
+	background: url(../img/close-me.png) no-repeat;
+	height: 8px;
+	width: 8px;
+	display: inline-block;
+	margin: 2px 0 0 5px;
+}
