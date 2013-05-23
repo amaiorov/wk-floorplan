@@ -4,9 +4,10 @@
 
 function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Google Docs URL
+	var host = '50.56.126.197';
 	var url = "https://spreadsheets.google.com/feeds/list/0AuOy3p4ez6oidG1jZjljTnN6Z3dpSW5vSU16eHlXQnc/od6/public/basic?alt=json",
-		db = "http://"+ $location.host() +":5984/wieden_seats", // Main Seat DB
-		roomdb = "http://"+ $location.host() +":5984/wieden_rooms", // Conference Room / Bathroom / Printer DB
+		db = "http://"+ host +":5984/wieden_seats", // Main Seat DB
+		roomdb = "http://"+ host +":5984/wieden_rooms", // Conference Room / Bathroom / Printer DB
 		db_dump = {};
 	// Some Defaults...
 	$scope.query = {floor: 6};
