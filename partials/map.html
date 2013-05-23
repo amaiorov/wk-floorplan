@@ -26,13 +26,13 @@
     </ul>
   <ul>
     <ul>
-      <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:state}" class="{{room.type}}">
+      <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:room.selected}" class="{{room.type}}">
         <div class="initials">{{room.initials}}</div>
         <div class="details">
           <p class="name">Name: {{room.name}}</p>
         </div>
       </li>
-      <li ng-repeat="seat in seats | filter:query" style="top: {{seat.top}}; left: {{seat.left}}" ng-click="toggle()" ng-class="{selected:state}" class="{{seat.type}}">
+      <li ng-repeat="seat in seats | filter:query" style="top: {{seat.top}}; left: {{seat.left}}" ng-click="toggle()" ng-class="{selected:seat.selected}" class="{{seat.type}}">
         <div class="initials">{{seat.initials}}</div>
         <div class="details">
           <p class="name">Name: {{seat.name}}</p><p class="extension">Extension: {{seat.extension}}</p>

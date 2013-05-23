@@ -5,6 +5,7 @@
 function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Google Docs URL
 	var host = '50.56.126.197';
+	$http.defaults.useXDomain = true;
 	var url = "https://spreadsheets.google.com/feeds/list/0AuOy3p4ez6oidG1jZjljTnN6Z3dpSW5vSU16eHlXQnc/od6/public/basic?alt=json",
 		db = "http://"+ host +":5984/wieden_seats", // Main Seat DB
 		roomdb = "http://"+ host +":5984/wieden_rooms", // Conference Room / Bathroom / Printer DB
@@ -32,6 +33,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	function resetRooms () {
 		$http.get(roomdb + '/_all_docs?include_docs=true').success(function(data){
 			$scope.rooms = parseData(data);
+			for (var i in $scope.rooms) {
+				$scope.rooms[i].selected = false;
+			}
 		});
 	}
 
@@ -65,6 +69,12 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Saves all updates to the DB
 	$scope.save = function () {
+		for (var i in $scope.rooms) {
+			$scope.rooms[i].selected = false;
+		}
+		for (var i in $scope.seats) {
+			$scope.seats[i].selected = false;
+		}
 		$http.post(db + '/_bulk_docs', JSON.stringify({'docs': $scope.seats})).success(function(dump){
 			$scope.updateRevs();
 			succeed();
@@ -93,7 +103,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			container['left'] = 0;
 			container['type'] = "seat";
 		}
-
+		container['selected'] = false;
 		container["floor"] = extra.floor;
 		container["name"] = response.feed.entry[i].title.$t.trim() + " " + extra.last;
 		container["initials"] = response.feed.entry[i].title.$t[0] + extra.last[0];
@@ -116,11 +126,29 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Toggles the state of the pin drops on click
 	$scope.toggle = function () {
-		this.state = !this.state;
-		if (this.state) {
-			$scope.selected = this;
-		} else {
-			$scope.selected = "";
+		debugger;
+
+		if (this.seat) {
+			for (var i in $scope.seats) {
+				if (this.seat.name != $scope.seats[i].name) {
+					$scope.seats[i].selected = false;
+				}
+			}
+			for (var i in $scope.rooms) {
+				$scope.rooms[i].selected = false;
+			}
+			this.seat.selected = !this.seat.selected;
+		}
+		else if (this.room) {
+			for (var i in $scope.rooms) {
+				if (this.room.name != $scope.rooms[i].name) {
+					$scope.rooms[i].selected = false;
+				}
+			}
+			for (var i in $scope.seats) {
+				$scope.seats[i].selected = false;
+			}
+			this.room.selected = !this.room.selected;
 		}
 	}
 
