@@ -126,8 +126,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Toggles the state of the pin drops on click
 	$scope.toggle = function () {
-		debugger;
-
 		if (this.seat) {
 			for (var i in $scope.seats) {
 				if (this.seat.name != $scope.seats[i].name) {
