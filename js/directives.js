@@ -69,3 +69,19 @@ directive('deletable', function($document) {
     });
   }
 });
+
+wk_app.
+directive('focus', function($document) {
+  return function(scope, element, attr) {
+    element.bind('focus', function(event) {
+      scope.focus = false;
+      scope.$apply();
+    });
+    element.bind('blur', function(event) {
+      setTimeout(function(){
+        scope.focus = true;
+        scope.$apply();
+      },300);
+    });
+  }
+});

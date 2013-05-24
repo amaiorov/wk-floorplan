@@ -1,6 +1,14 @@
   <div class="search">
     <img src="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/logo-wk2.png" id="logo">
-    Search: <input ng-model="query.name" ng-change="textChange(query)">
+    <div class="search-bar">
+    Search: <input ng-model="query.name" ng-change="textChange(query)" focus>
+    <ul id="autocomplete"  ng-hide="focus">
+      <li ng-repeat="seat in seats | filter: {name: query.name}" ng-click="query.name = seat.name; query.floor = seat.floor;toggle();">
+          <p class="name">{{seat.name}} | {{seat.extension}}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
   </div>
   <div class="map-holster">
   <div class="map floor_{{query.floor}} {{turned && 'searching' || ''}}" ng-click="registerMove($event)">
@@ -11,17 +19,16 @@
     <ul id="floors">
       <div>
         Floors
-        <li id="6" class="selected" ng-click="query.floor = 6; classToggle($event, query);">6</li>
-        <li id="7" ng-click="query.floor = 7; classToggle($event,query);">7</li>
-        <li id="8" ng-click="query.floor = 8; classToggle($event,query);">8</li>
+        <li id="6" ng-class="{selected: query.floor == 6}" ng-click="query.floor = 6;">6</li>
+        <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7;">7</li>
+        <li id="8" ng-class="{selected: query.floor == 8}" ng-click="query.floor = 8;">8</li>
       </div>
       <div>
         Filters
-        <li id="all" class="selected" ng-click="query.type = ''; turned=true; classToggle($event,query);">All</li>
-        <li id="seats" ng-click="query.type = 'seat'; turned=true; classToggle($event,query);">Seats</li>
-        <li id="conference" ng-click="query.type = 'conference'; turned=true; classToggle($event,query);">Conference</li>
-        <li id="bathrooms" ng-click="query.type = 'bathroom'; turned=true; classToggle($event,query);">Bathrooms</li>
-        <li id="printers" ng-click="query.type = 'printer'; turned=true; classToggle($event,query);">Printers</li>
+        <li id="all" class="selected" ng-click="query.name = ''; query.type = ''; turned=true; classToggle($event,query);">All</li>
+        <li id="seats" ng-click="query.name = ''; query.type = 'seat'; turned=true; classToggle($event,query);">Seats</li>
+        <li id="conference" ng-click="query.name = ''; query.type = 'conference'; turned=true; classToggle($event,query);">Conference</li>
+        <li id="printers" ng-click="query.name = ''; query.type = 'printer'; turned=true; classToggle($event,query);">Printers</li>
     </div>
     </ul>
   <ul>

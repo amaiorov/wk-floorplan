@@ -154,6 +154,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	$scope.textChange = function (query) {
 		if (query.name === "" || typeof query.name == "undefined") {
 			$scope.turned = "";
+			delete query.name;
 		}
 		else {
 			$scope.turned = "searching";
