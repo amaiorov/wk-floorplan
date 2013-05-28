@@ -279,6 +279,7 @@ body {
 	display: inline;
 	background: #ECECEC;
 	height: auto;
+	cursor: pointer;
 	width: 75px;
 	padding: 5px;
 	border-radius: 3px 3px 3px 3px;
