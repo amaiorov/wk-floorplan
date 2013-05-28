@@ -46,6 +46,10 @@ body {
   background-size: 100% auto;
 }
 
+.admin .map-holster {
+	margin-top: 100px;
+}
+
 .admin .map.floor_6 {
 	background: url(../upload/6-admin.jpg) no-repeat; 
   -webkit-background-size: 100% auto;
@@ -183,12 +187,12 @@ body {
 }
 
 .success {
-	text-align: right;
 	margin-top: 17px;
-	float: right;
 	color: #55d685;
 	opacity: 0;
 	transition: all 3s ease-in; 
+	width: auto;
+	display: inline-block;
 }
 
 .success.on {
@@ -342,4 +346,3 @@ input {
 	top: 73px;
 	position: absolute;
 }
-
