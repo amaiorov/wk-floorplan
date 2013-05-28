@@ -1,4 +1,4 @@
-<div class="admin">
+<div class="admin" ng-class="{admin: userToggle}">
     <div class="search">
     <img src="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/logo-wk2.png" id="logo">
 
@@ -27,7 +27,12 @@
           <li id="printers" ng-class="{selected: query.type == 'printer'}" ng-click="query.name = ''; query.type = 'printer'; turned=true;">Printers</li>
         </div>
       </ul>
-      <input type="button" ng-click="save()" value="Save" id="savebtn">
+      <div id="savebtn">
+        <input type="button" ng-click="save()" value="Save">
+        <input type="button" ng-click="userToggle = !userToggle;" value="Toggle User View">
+      </div>
+
+
       <p class="success">Success! The positions have been saved.</p>
   </div>
 
@@ -40,7 +45,6 @@
   <ul>
     <ul>
       <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:room.selected}" class="{{room.type}}" draggable>
-        <div class="initials">{{room.initials}}</div>
         <div class="details">
           <p class="name">Name: {{room.name}}  <span class="x" deletable>x</span></p>
         </div>

@@ -13,8 +13,9 @@ body {
 }
 
 .map-holster {
-	width: 70%;
+	width: 80%;
 	margin: 50px auto;
+	min-width: 420px;
 }
 
 #pixel-pusher {
@@ -46,10 +47,6 @@ body {
   background-size: 100% auto;
 }
 
-.admin .map-holster {
-	margin-top: 100px;
-}
-
 .admin .map.floor_6 {
 	background: url(../upload/6-admin.jpg) no-repeat; 
   -webkit-background-size: 100% auto;
@@ -74,6 +71,32 @@ body {
   background-size: 100% auto;
 }
 
+.admin.user .map.floor_6 {
+	background: url(../upload/6-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.admin.user .map.floor_7 {
+	background: url(../upload/7-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+.admin.user .map.floor_8 {
+	background: url(../upload/8-admin.jpg) no-repeat; 
+  -webkit-background-size: 100% auto;
+  -moz-background-size: 100% auto;
+  -o-background-size: 100% auto;
+  background-size: 100% auto;
+}
+
+
+
 .map ul {
 	padding: 0;
 	margin: 0;
@@ -87,13 +110,28 @@ body {
 	position: absolute;
 	text-align: center;
 	font-weight: bold;
+	background: url(../img/minidot.png) no-repeat;
+	width: 14px;
+	height: 13px;
+	font-size: 10px;
+	margin-left: -7px;
+	margin-top: -6px;
+	cursor: pointer;
+	display: none;
+}
+
+.admin .map ul li {
+	list-style-type: none;
+	color: white;
+	position: absolute;
+	text-align: center;
+	font-weight: bold;
 	background: url(../img/dot.png) no-repeat;
-	width: 27px;
-	height: 42px;
-	font-size: 12px;
-	padding-top: 5px;
-	margin-left: -13px;
-	margin-top:-47px;
+	width: 21px;
+	height: 26px;
+	font-size: 10px;
+	margin-left: -10px;
+	margin-top: -26px;
 	cursor: pointer;
 	display: none;
 }
@@ -104,6 +142,10 @@ body {
 
 .map ul li.printer {
 	background: url(../img/printer.png) no-repeat;
+	width: 20px;
+	height: 20px;
+	margin-top: -10px;
+	margin-left: -10px;
 }
 
 .map ul li.bathroom {
@@ -141,20 +183,40 @@ body {
 
 .map li .details {
 	width: 0px;
-	background: rgba(0,0,0,.5);
-	border-radius: 5px;
+	background: rgba(238,42,36,1);
+	border-radius: 5px 5px 5px 0;
 	position: absolute;
-	top: 0;
-	left: 13px;
+	top: -25px;
+	left: 1px;
 	z-index: 4;
+	border-bottom: 2px solid rgba(148,18,18,.2);
 	display: inline-block;
 	opacity: 0;
 	padding: 3px 0px;
 	transition: all 200ms ease-in; 
 }
 
-.map li.printer .details {
-	background: rgba(0,174,239,0.8);
+.admin .map li .details {
+	left: 0;
+}
+
+.admin .initials {
+	display: block;
+}
+
+.initials {
+	display: none;
+}
+
+.map-holster .map li.printer .details {
+	background: #6abd45;
+	top: 0px;
+	left: 18px;
+	padding: 3px 14px 4px 3px;
+	display: block;
+	height: 13px;
+	border-radius: 0 5px 5px 0;
+	border-bottom: 0;
 }
 
 .map li.bathroom .details {
@@ -168,7 +230,7 @@ body {
 .map li.selected .details {
 	width: auto;
 	text-align: left;
-	padding: 3px 21px;
+	padding: 3px 14px;
 	opacity: 1;
 }
 
@@ -177,7 +239,9 @@ body {
 }
 
 .search {
-	width: 800px;
+	max-width: 800px;
+	padding: 0 20px;
+	min-width: 410px;
 	margin: 20px auto;
 	position: relative;
 }
@@ -202,7 +266,7 @@ body {
 
 #floors{
 	position: absolute;
-	right: 9px;
+	right: 28px;
 	top: 46px;
 	text-align: left;
 	padding-left: 10px;
@@ -245,7 +309,7 @@ body {
 }
 
 .admin-tools {
-	width: 70%;
+	width: 80%;
 	min-width: 700px;
 	margin: 40px auto;
 }
@@ -342,7 +406,7 @@ input {
 }
 
 #savebtn {
-	right: 181px;
+	left: 600px;
 	top: 73px;
 	position: absolute;
 }

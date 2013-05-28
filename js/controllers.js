@@ -15,6 +15,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	$scope.rooms = [];
 	$scope.focus = true;
 	$scope.search = true;
+	$scope.userToggle = true;
 
 	// Utility function for parsing CouchDB data
 	function parseData(data) {
