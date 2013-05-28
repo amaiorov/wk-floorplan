@@ -13,6 +13,8 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Some Defaults...
 	$scope.query = {floor: 6};
 	$scope.rooms = [];
+	$scope.focus = true;
+	$scope.search = true;
 
 	// Utility function for parsing CouchDB data
 	function parseData(data) {
@@ -147,6 +149,13 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 				$scope.seats[i].selected = false;
 			}
 			this.room.selected = !this.room.selected;
+		} else {
+			for (var i in $scope.seats) {
+				$scope.seats[i].selected = false;
+			}
+			for (var i in $scope.rooms) {
+				$scope.rooms[i].selected = false;
+			}
 		}
 	}
 
@@ -161,12 +170,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		}
 	}
 
-	// Handles style toggling of left menu
-	$scope.classToggle = function (e, q) {
-		jQuery(e.srcElement).siblings().removeClass('selected');
-		jQuery(e.srcElement).addClass('selected');
-	}
-
 	// Displays the fading success message
 	function succeed () {
 		$('.success').addClass('on');
@@ -178,19 +181,10 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Handles creation of a new "room" from the admin form
 	$scope.saveRoom = function () {
 		var room = $scope.room;
-		if (room.name !== "" && room.name && room.floor !== "" && room.floor && typeof room.type != "undefined") {
-			var initials;
-			if (room.type === "conference") {
-				room.initials = "CF";
-			} else if (room.type === "bathroom") {
-				room.initials = "WC";
-			} else if (room.type === "printer") {
-				room.initials = "P";
-			} else {
-				room.initials = "HI"; // This should never happen
-			}
+		if (room.name !== "" && room.name && room.floor !== "" && room.floor) {
+			room.initials = "P";
 
-			$scope.rooms.push({name: room.name, floor: room.floor, top: 0, left: 0, type: room.type, initials: room.initials});
+			$scope.rooms.push({name: room.name, floor: room.floor, top: 0, left: 0, type: 'printer', initials: room.initials});
 			$scope.room.name = "";
 			$scope.room.floor = "";
 			$scope.room.type = "";

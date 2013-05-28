@@ -1,14 +1,32 @@
   <div class="search">
     <img src="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/logo-wk2.png" id="logo">
+
     <div class="search-bar">
-    Search: <input ng-model="query.name" ng-change="textChange(query)" focus>
-    <ul id="autocomplete"  ng-hide="focus">
-      <li ng-repeat="seat in seats | filter: {name: query.name}" ng-click="query.name = seat.name; query.floor = seat.floor;toggle();">
-          <p class="name">{{seat.name}} | {{seat.extension}}</p>
+      <ul class="nav">
+        <li ng-class="{active: search}" ng-click="explore = false; search = true; query.type = ''; turned = false; toggle();">Search
+          <span class="arrow-up" ng-hide="explore"></span>
+        </li>
+        <li ng-class="{active: explore}" ng-click="explore = true; search = false; query.name = ''; query.type = 'seat'; turned = true; toggle();">Explore</li>
+      </ul>
+      <input ng-model="query.name" ng-change="textChange(query)" focus ng-hide="explore">
+      <ul id="autocomplete"  ng-hide="focus || explore || !turned">
+        <li ng-repeat="seat in seats | filter: {name: query.name}" ng-click="query.name = seat.name; query.floor = seat.floor;toggle();">
+            <p class="name">{{seat.name}} | {{seat.extension}}</p>
+          </div>
+        </li>
+      </ul>
+      <ul id="floors" ng-hide="!explore">
+        <div>
+          Filters:
+          <li id="6" ng-class="{selected: query.floor == 6}" ng-click="query.floor = 6;">6</li>
+          <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7;">7</li>
         </div>
-      </li>
-    </ul>
-  </div>
+        <div>
+          <li id="seats" ng-class="{selected: query.type == 'seat'}" ng-click="query.name = ''; query.type = 'seat'; turned=true;">Seats</li>
+          <li id="printers" ng-class="{selected: query.type == 'printer'}" ng-click="query.name = ''; query.type = 'printer'; turned=true;">Printers</li>
+        </div>
+      </ul>
+    </div>
   </div>
   <div class="map-holster">
   <div class="map floor_{{query.floor}} {{turned && 'searching' || ''}}" ng-click="registerMove($event)">
@@ -16,21 +34,6 @@
       <img src="img/preloader.gif">
     </div>
     <img src="img/6.jpg" id="pixel-pusher">
-    <ul id="floors">
-      <div>
-        Floors
-        <li id="6" ng-class="{selected: query.floor == 6}" ng-click="query.floor = 6;">6</li>
-        <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7;">7</li>
-        <li id="8" ng-class="{selected: query.floor == 8}" ng-click="query.floor = 8;">8</li>
-      </div>
-      <div>
-        Filters
-        <li id="all" class="selected" ng-click="query.name = ''; query.type = ''; turned=true; classToggle($event,query);">All</li>
-        <li id="seats" ng-click="query.name = ''; query.type = 'seat'; turned=true; classToggle($event,query);">Seats</li>
-        <li id="conference" ng-click="query.name = ''; query.type = 'conference'; turned=true; classToggle($event,query);">Conference</li>
-        <li id="printers" ng-click="query.name = ''; query.type = 'printer'; turned=true; classToggle($event,query);">Printers</li>
-    </div>
-    </ul>
   <ul>
     <ul>
       <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:room.selected}" class="{{room.type}}">

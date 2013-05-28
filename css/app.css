@@ -14,7 +14,7 @@ body {
 
 .map-holster {
 	width: 70%;
-	margin: 0 auto;
+	margin: 50px auto;
 }
 
 #pixel-pusher {
@@ -175,6 +175,7 @@ body {
 .search {
 	width: 800px;
 	margin: 20px auto;
+	position: relative;
 }
 
 #logo {
@@ -197,10 +198,9 @@ body {
 
 #floors{
 	position: absolute;
-	left:-94px;
-	top: 0;
+	right: 9px;
+	top: 46px;
 	text-align: left;
-	width: 40px;
 	padding-left: 10px;
 	height: auto;
 	font-weight: bold;
@@ -208,14 +208,19 @@ body {
 
 #floors li {
 	position: relative;
-	display: block;
-	background: black;
+	display: inline;
+	background: #ECECEC;
 	height: auto;
 	width: 75px;
 	padding: 5px;
-	border-radius: 5px 0px 0px 5px;
+	border-radius: 3px 3px 3px 3px;
 	margin: 4px 0;
 	opacity: .4;
+}
+
+#floors > div {
+	float: left;
+	margin-left: 20px;
 }
 
 #floors li.selected {
@@ -270,39 +275,71 @@ body {
 	position: relative;
 	display: inline-block;
 	float: right;
+	margin-top: 18px;
+	width: 220px;
 }
 
-.search ul {
+.search-bar input {
+	z-index: 11;
+}
+
+.search #autocomplete {
 	max-height: 230px;
 	position: absolute;
-	top: 30px;
+	top: 49px;
 	overflow-y: scroll;
 	background: white;
 	z-index: 10;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
--moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
--webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
--moz-transition: border linear 0.2s, box-shadow linear 0.2s;
--ms-transition: border linear 0.2s, box-shadow linear 0.2s;
--o-transition: border linear 0.2s, box-shadow linear 0.2s;
-transition: border linear 0.2s, box-shadow linear 0.2s;
-background-color: #ffffff;
-border: 1px solid #cccccc;
-border-top: none;
--webkit-border-radius: 3px;
--moz-border-radius: 3px;
-border-radius: 3px;
-right: 0px;
-width: 218px;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-top: none;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 0px 0px 3px 3px;
+	right: 0px;
+	width: 218px;
 }
 
-.search ul li {
+.search #autocomplete li {
 	cursor: pointer;
 	padding: 3px 9px;
 	margin: 0;
 }
 
-.search ul li:hover {
+.search #autocomplete li:hover {
 	background: #CCC;
 }
+
+.search .nav {
+	padding-bottom: 5px;
+}
+.search .nav li {
+	float: left;
+	padding-right: 20px;
+	cursor: pointer;
+	position: relative;
+}
+
+.search .nav li.active {
+	font-weight: bold;
+}
+
+input {
+	outline: none;
+}
+
+.arrow-up {
+	position: absolute;
+	width: 17px;
+	height: 8px;
+	bottom: -6px;
+	left: 25%;
+	background: url(../img/arrow.png) no-repeat;
+}
+
+#savebtn {
+	right: 181px;
+	top: 73px;
+	position: absolute;
+}
+
