@@ -183,13 +183,20 @@ body {
 
 .map li .details {
 	width: 0px;
-	background: rgba(238,42,36,1);
-	border-radius: 5px 5px 5px 0;
+	background: #df2822; /* Old browsers */
+	background: -moz-linear-gradient(top, #df2822 0%, #bd231e 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#df2822), color-stop(100%,#bd231e)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #df2822 0%,#bd231e 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #df2822 0%,#bd231e 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #df2822 0%,#bd231e 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #df2822 0%,#bd231e 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#df2822', endColorstr='#bd231e',GradientType=0 ); /* IE6-9 */
+		border-radius: 5px 5px 5px 0;
 	position: absolute;
-	top: -25px;
+	top: -26px;
 	left: 1px;
 	z-index: 4;
-	border-bottom: 2px solid rgba(148,18,18,.2);
+	border-bottom: 2px solid #bd231e;
 	display: inline-block;
 	opacity: 0;
 	padding: 3px 0px;
@@ -197,7 +204,8 @@ body {
 }
 
 .admin .map li .details {
-	left: 0;
+	left: 1px;
+	top:-32px;
 }
 
 .admin .initials {
