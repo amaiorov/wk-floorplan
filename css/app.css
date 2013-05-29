@@ -419,3 +419,43 @@ input {
 	top: 73px;
 	position: absolute;
 }
+
+.print-me {
+	display: none;
+}
+@media print {
+      body {
+          width: 100%;
+      }
+      .admin {
+      	display: none;
+      }
+      .tools-wrapper {
+      	display: none;
+      }
+      .print-me {
+      	display: block;
+      	position: relative;
+      	width: 100%;
+      }
+      .print-me img {
+      	width: 100%;
+      }
+      .print-me p {
+      	font-size: .6em;
+      	white-space: normal;
+      	line-height: 1;
+      	font-weight: bold;
+      }
+
+      .print-me ul {
+      	margin: 0;
+      	padding: 0;
+      }
+
+      .print-me li {
+      	padding: 0;
+      	margin: 0;
+      	list-style-type: none;
+      }
+}
