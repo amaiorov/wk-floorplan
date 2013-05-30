@@ -55,9 +55,10 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Fetches seats from google doc
 	function fetchRows () {
-		jQuery.get(url, function (response) {
+		jQuery.getJSON(url, function (response) {
 			var people = [],
 				extra;
+				console.log(response);
 			for (var i in response.feed.entry) {
 				extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
 				extra = jQuery.parseJSON(extra);
@@ -116,7 +117,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Updates DB revision numbers for saving multiple times
 	$scope.updateRevs = function () {
-		jQuery.get(db + '/_all_docs?include_docs=true', function (dump) {
+		jQuery.getJSON(db + '/_all_docs?include_docs=true', function (dump) {
 			var jsonDump = JSON.parse(dump);
 			for(var i in jsonDump.rows) {
 				db_dump[jsonDump.rows[i].doc['id']] = jsonDump.rows[i];
