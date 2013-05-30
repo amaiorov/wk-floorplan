@@ -1,4 +1,4 @@
-<div class="admin" ng-class="{admin: userToggle}">
+<div class="admin">
     <div class="search">
     <img src="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/logo-wk2.png" id="logo">
 
@@ -29,7 +29,6 @@
       </ul>
       <div id="savebtn">
         <input type="button" ng-click="save()" value="Save">
-        <input type="button" ng-click="userToggle = !userToggle;" value="Toggle User View">
       </div>
 
 
@@ -73,12 +72,9 @@
     enctype="multipart/form-data">
     <label for="floor-name">Floor Image to Change:</label>
     <select name="floor-name" id="floor-name">
-      <option value="6-admin">6 (Admin)</option>
-      <option value="6-user">6 (User)</option>
-      <option value="7-admin">7 (Admin)</option>
-      <option value="7-user">7 (User)</option>
-      <option value="8-admin">8 (Admin)</option>
-      <option value="8-user">8 (User)</option>
+      <option value="6-user">6</option>
+      <option value="7-user">7</option>
+      <option value="8-user">8</option>
     </select>
     <label for="file">File:</label>
     <input type="file" name="file" id="file"><br>
