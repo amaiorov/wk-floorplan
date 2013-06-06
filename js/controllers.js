@@ -117,8 +117,8 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Updates DB revision numbers for saving multiple times
 	$scope.updateRevs = function () {
-		jQuery.getJSON(db + '/_all_docs?include_docs=true', function (dump) {
-			var jsonDump = JSON.parse(dump);
+		$http.get(db + '/_all_docs?include_docs=true').success(function(dump){
+			var jsonDump = dump;
 			for(var i in jsonDump.rows) {
 				db_dump[jsonDump.rows[i].doc['id']] = jsonDump.rows[i];
 			}
