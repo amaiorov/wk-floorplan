@@ -267,6 +267,20 @@ body {
 	display: inline-block;
 }
 
+.error {
+	margin-top: 17px;
+	color: red;
+	opacity: 0;
+	transition: all 3s ease-in; 
+	width: auto;
+	display: inline-block;
+}
+
+.error.on {
+	opacity: 1;
+	transition: all 0ms ease-in; 
+}
+
 .success.on {
 	opacity: 1;
 	transition: all 0ms ease-in; 

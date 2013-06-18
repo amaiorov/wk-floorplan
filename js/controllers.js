@@ -58,7 +58,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		jQuery.getJSON(url, function (response) {
 			var people = [],
 				extra;
-				console.log(response);
 			for (var i in response.feed.entry) {
 				extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
 				extra = jQuery.parseJSON(extra);
@@ -79,14 +78,31 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		for (var i in $scope.seats) {
 			$scope.seats[i].selected = false;
 		}
+
 		$http.post(db + '/_bulk_docs', JSON.stringify({'docs': $scope.seats})).success(function(dump){
-			$scope.updateRevs();
-			succeed();
+			if (dump[0]['error']) {
+				$('.error').addClass('on');
+				$scope.updateRevs('seat');
+				setTimeout(function(){
+					$('.error').removeClass('on');
+				}, 	200);
+			} else {
+				$scope.updateRevs('seat');
+				succeed(dump);
+			}
 		});
 		
 		$http.post(roomdb + '/_bulk_docs', JSON.stringify({'docs': $scope.rooms})).success(function(dump){
-			resetRooms();
-			succeed();
+			if (dump[0]['error']) {
+				$('.error').addClass('on');
+				$scope.updateRevs('room');
+				setTimeout(function(){
+					$('.error').removeClass('on');
+				}, 	200);
+			} else {
+				resetRooms();
+				succeed(dump);
+			}
 		});
 	}
 
@@ -116,16 +132,32 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	}
 
 	// Updates DB revision numbers for saving multiple times
-	$scope.updateRevs = function () {
-		$http.get(db + '/_all_docs?include_docs=true').success(function(dump){
-			var jsonDump = dump;
-			for(var i in jsonDump.rows) {
-				db_dump[jsonDump.rows[i].doc['id']] = jsonDump.rows[i];
-			}
-			for (var seat in $scope.seats) {
-				$scope.seats[seat]['_rev'] = db_dump[$scope.seats[seat].id].value.rev;
-			}
-		});
+	$scope.updateRevs = function (type) {
+		if (type == 'seat') {
+			$http.get(db + '/_all_docs?include_docs=true').success(function(dump){
+				var jsonDump = dump;
+				for(var i in jsonDump.rows) {
+					db_dump[jsonDump.rows[i].doc['id']] = jsonDump.rows[i];
+				}
+				for (var seat in $scope.seats) {
+					$scope.seats[seat]['_rev'] = db_dump[$scope.seats[seat].id].value.rev;
+				}
+			});
+		} else {
+			$http.get(roomdb + '/_all_docs?include_docs=true').success(function(dump){
+				var jsonDump = dump.rows;
+				for (var i in $scope.rooms) {
+					var id = $scope.rooms[i]['_id'];
+					var rev;
+					for (var b in jsonDump) {
+						if (jsonDump[b].id === id) {
+							rev = jsonDump[b].doc['_rev'];
+							$scope.rooms[i]['_rev'] = rev;
+						}
+					}
+				}
+			});
+		}
 	}
 
 	// Toggles the state of the pin drops on click
@@ -173,7 +205,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	}
 
 	// Displays the fading success message
-	function succeed () {
+	function succeed (dump) {
 		$('.success').addClass('on');
 		setTimeout(function(){
 			$('.success').removeClass('on');
