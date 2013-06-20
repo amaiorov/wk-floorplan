@@ -45,8 +45,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	function init () {
 		$http.get(db + '/_all_docs?include_docs=true').success(function(dump){
 			var jsonDump = dump.rows;
+			console.log(jsonDump);
 			for(var i in jsonDump) {
-				db_dump[jsonDump[i].doc['name']] = jsonDump[i];
+				db_dump[jsonDump[i].doc['name'] + jsonDump[i].doc['extension']] = jsonDump[i];
 			}
 			fetchRows();
 		});
@@ -109,7 +110,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Construct container
 	function constructSeat (i, response, extra) {
 		var container = {};
-		container['id'] = response.feed.entry[i].title.$t.trim() + ' ' + extra.last;
+		container['id'] = response.feed.entry[i].title.$t.trim() + ' ' + extra.last + extra['ext.'];
 		if (container.id in db_dump) {
 			var thisDump = db_dump[container.id];
 			container['top'] = thisDump.doc.top
