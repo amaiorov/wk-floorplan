@@ -128,7 +128,14 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		container["name"] = response.feed.entry[i].title.$t.trim() + " " + extra.last;
 		container["initials"] = response.feed.entry[i].title.$t[0] + extra.last[0];
 		container["extension"] = extra['ext.'];
+		container['printnum'] = extra['deskmailbox'];
 		return container;
+	}
+
+	$scope.printSortFunction = function (a) {
+		var ret;
+		if (isNaN(a.printnum)) { ret = '100000000'} else { ret = a.printnum }
+		return parseInt(ret);
 	}
 
 	// Updates DB revision numbers for saving multiple times

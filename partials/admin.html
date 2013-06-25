@@ -88,10 +88,17 @@
 <div class="print-me">
   <ul>
     <li ng-repeat="seat in seats | filter:query" style="top: {{seat.top}}; left: {{seat.left}}; position: absolute" class="{{seat.type}} selected">
-          <p class="name">• {{seat.name}}</p>
+          <p class="name">{{seat.printnum}}</p>
     </li>
   </ul>
   <img src="upload/6-admin.jpg" ng-show="query.floor == 6">
   <img src="upload/7-admin.jpg" ng-show="query.floor == 7">
   <img src="upload/8-admin.jpg" ng-show="query.floor == 8">
+</div>
+<div class="print-me">
+  <div class="namez">
+    <div ng-repeat="seat in seats | filter:query | orderBy: printSortFunction" class="selected">
+          <p class="name">{{seat.printnum}}: {{seat.name}}</p>
+    </div>
+  </div>
 </div>

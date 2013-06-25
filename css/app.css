@@ -468,10 +468,11 @@ input {
       	width: 100%;
       }
       .print-me img {
-      	width: 100%;
+      	width: 90%;
+      	margin: 0 auto;
       }
       .print-me p {
-      	font-size: .6em;
+      	font-size: 1em;
       	white-space: normal;
       	line-height: 1;
       	font-weight: bold;
@@ -486,5 +487,19 @@ input {
       	padding: 0;
       	margin: 0;
       	list-style-type: none;
+      }
+
+      .print-me li p {
+      	display: block;
+      }
+
+      .namez {
+      	-webkit-column-count: 9;
+		-moz-column-count: 9;
+		column-count: 9;
+      }
+
+      .namez p {
+      	font-size: .8em;
       }
 }
