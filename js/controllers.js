@@ -60,10 +60,13 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			var people = [],
 				extra;
 			for (var i in response.feed.entry) {
-				extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
-				extra = jQuery.parseJSON(extra);
-				if (extra.floor && response.feed.entry[i].title) {
-					people.push(constructSeat(i, response, extra));
+				console.log(response.feed.entry[i].$t);
+				if (response.feed.entry[i].content && response.feed.entry[i].content.$t !== '') {
+					extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
+					extra = jQuery.parseJSON(extra);
+					if (response.feed.entry[i].title && extra.floor) {
+						people.push(constructSeat(i, response, extra));
+					}
 				}
 			}
 			$scope.turned = false;
