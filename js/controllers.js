@@ -62,7 +62,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			for (var i in response.feed.entry) {
 				extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
 				extra = jQuery.parseJSON(extra);
-				people.push(constructSeat(i, response, extra));
+				if (extra.floor && response.feed.entry[i].title) {
+					people.push(constructSeat(i, response, extra));
+				}
 			}
 			$scope.turned = false;
 			$scope.loaded = true;
