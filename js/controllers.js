@@ -125,6 +125,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		}
 		container['selected'] = false;
 		container["floor"] = extra.floor;
+		if (!extra.last) {
+			extra.last = " ";
+		}
 		container["name"] = response.feed.entry[i].title.$t.trim() + " " + extra.last;
 		container["initials"] = response.feed.entry[i].title.$t[0] + extra.last[0];
 		container["extension"] = extra['ext.'];

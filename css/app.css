@@ -465,12 +465,19 @@ input {
       .print-me {
       	display: block;
       	position: relative;
+      	width: 90%;
+      }
+
+      .print-me.bot {
       	width: 100%;
+      	position: absolute;
+      	bottom: 0;
       }
       .print-me img {
-      	width: 90%;
+      	width: 100%;
       	margin: 0 auto;
       }
+
       .print-me p {
       	font-size: 1em;
       	white-space: normal;
@@ -500,6 +507,6 @@ input {
       }
 
       .namez p {
-      	font-size: .8em;
+      	font-size: .7em;
       }
 }
