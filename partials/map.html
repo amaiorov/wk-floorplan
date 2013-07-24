@@ -22,8 +22,8 @@
           <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7;">7</li>
         </div>
         <div>
-          <li id="seats" ng-class="{selected: query.type == 'seat'}" ng-click="query.name = ''; query.type = 'seat'; turned=true;">Seats</li>
-          <li id="printers" ng-class="{selected: query.type == 'printer'}" ng-click="query.name = ''; query.type = 'printer'; turned=true;">Printers</li>
+          <li id="seats" ng-hide="true" ng-class="{selected: query.type == 'seat'}" ng-click="query.name = ''; query.type = 'seat'; turned=true;">Seats</li>
+          <li id="printers" ng-hide="true" ng-class="{selected: query.type == 'printer'}" ng-click="query.name = ''; query.type = 'printer'; turned=true;">Printers</li>
         </div>
       </ul>
     </div>
@@ -41,7 +41,7 @@
           <p class="name">Name: {{room.name}}</p>
         </div>
       </li>
-      <li ng-repeat="seat in seats | filter:query" style="top: {{seat.top}}; left: {{seat.left}}" ng-click="toggle()" ng-class="{selected:seat.selected}" class="{{seat.type}}">
+      <li ng-repeat="seat in seats | filter:query" ng-hide="seat.name=='open'" style="top: {{seat.top}}; left: {{seat.left}}" ng-click="toggle()" ng-class="{selected:seat.selected}" class="{{seat.type}}">
         <div class="details">
           <p class="name">Name: {{seat.name}}</p><p class="extension">Extension: {{seat.extension}}</p>
         </div>
