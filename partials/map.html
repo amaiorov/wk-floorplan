@@ -31,7 +31,6 @@
     <div class="loading" ng-hide="loaded">
       <img src="img/preloader.gif">
     </div>
-    <img src="img/6.jpg" id="pixel-pusher">
   <ul>
     <ul>
       <li ng-repeat="room in rooms | filter: query" style="top: {{room.top}}; left: {{room.left}}" ng-click="toggle()" ng-class="{selected:room.selected}" class="{{room.type}}">

@@ -9,8 +9,15 @@ body {
 	margin: 0 auto;
 	background: gray;
 	position: relative;
+	height: 437px;
 	background-size: cover;
 }
+
+.admin .map {
+	height: auto;
+}
+
+
 
 .admin .map-holster {
 	width: 80%;
