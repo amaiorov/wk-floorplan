@@ -12,9 +12,15 @@ body {
 	background-size: cover;
 }
 
-.map-holster {
+.admin .map-holster {
 	width: 80%;
 	margin: 50px auto;
+	min-width: 420px;
+}
+
+.map-holster {
+	width: 100%;
+	margin: 15px auto;
 	min-width: 420px;
 }
 
@@ -246,11 +252,16 @@ body {
 	z-index: 5;
 }
 
-.search {
+.admin .search {
 	max-width: 800px;
 	padding: 0 20px;
 	min-width: 410px;
 	margin: 20px auto;
+	position: relative;
+}
+
+.search {
+	margin: 15px auto;
 	position: relative;
 }
 
@@ -362,10 +373,17 @@ body {
 	margin: 2px 0 0 5px;
 }
 
-.search-bar {
+.admin .search-bar {
 	position: relative;
 	display: inline-block;
 	float: right;
+	margin-top: 18px;
+	width: 220px;
+}
+
+.search-bar {
+	position: relative;
+	display: inline-block;
 	margin-top: 18px;
 	width: 220px;
 }
