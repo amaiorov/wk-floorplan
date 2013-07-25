@@ -73,7 +73,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			$scope.$apply();
 			setTimeout(function(){
 				$('li.seat').each(function(){
-					console.log($(this).attr('data-top'));
+					console.log($(this).find('.top').text());
 					$(this).css({'top': '10px', 'left': '10px'});
 				});
 			},1000);
