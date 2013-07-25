@@ -71,6 +71,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			$scope.loaded = true;
 			$scope.seats = people;
 			$scope.$apply();
+			$('li.seat').each(function(){
+				$(this).css({'top':$(this).attr('data-top'), 'left': $(this).attr('data-left')});
+			});
 		});	
 	}
 

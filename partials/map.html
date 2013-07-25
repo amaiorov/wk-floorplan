@@ -37,7 +37,7 @@
           <p class="name">Name: {{room.name}}</p>
         </div>
       </li>
-      <li ng-repeat="seat in seats | filter:query" ng-hide="seat.name=='open'" ng-style="itemstyle(seat)" ng-click="toggle()" ng-class="{selected:seat.selected}" class="{{seat.type}}">
+      <li ng-repeat="seat in seats | filter:query" data-top="{{seat.top}}" data-left="{{seat.left}}" ng-hide="seat.name=='open'" ng-style="itemstyle(seat)" ng-click="toggle()" ng-class="{selected:seat.selected}" class="{{seat.type}}">
         <div class="details {{seat.thresh}}">
           <p class="name">Name: {{seat.name}}</p><p class="extension">Extension: {{seat.extension}}</p>
         </div>
