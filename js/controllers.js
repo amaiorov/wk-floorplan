@@ -116,7 +116,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		container['id'] = response.feed.entry[i].title.$t.trim() + ' ' + extra.last + extra['ext.'];
 		if (container.id in db_dump) {
 			var thisDump = db_dump[container.id];
-			container['top'] = thisDump.doc.top
+			container['top'] = thisDump.doc.top;
 			container['left'] = thisDump.doc.left;
 			container['_rev'] = thisDump.value.rev;
 			container['_id'] = thisDump.id;
@@ -126,6 +126,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			container['left'] = 0;
 			container['type'] = "seat";
 		}
+		container['style'] = {top:thisDump.doc.top,left:thisDump.doc.left};
 		container['selected'] = false;
 		container["floor"] = extra.floor;
 		if (!extra.last) {
@@ -191,7 +192,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Toggles the state of the pin drops on click
 	$scope.toggle = function () {
 		if (this.seat) {
-			console.log(this.seat.top);
 			for (var i in $scope.seats) {
 				if (this.seat.name != $scope.seats[i].name) {
 					$scope.seats[i].selected = false;
