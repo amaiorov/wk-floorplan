@@ -29,7 +29,6 @@ body {
 	width: 100%;
 	margin: 15px auto;
 	min-width: 420px;
-	overflow: hidden;
 }
 
 #pixel-pusher {
@@ -336,6 +335,8 @@ body {
 body {
 	margin-top: 0;
 	padding-top: 0;
+	overflow: hidden;
+	width: 100%;
 }
 
 #floors li {
