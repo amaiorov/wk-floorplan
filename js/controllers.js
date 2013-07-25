@@ -133,6 +133,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		if (!extra.last) {
 			extra.last = " ";
 		}
+		container.thresh = $scope.pos(container['left']);
 		container["name"] = response.feed.entry[i].title.$t.trim() + " " + extra.last;
 		container["initials"] = response.feed.entry[i].title.$t[0] + extra.last[0];
 		container["extension"] = extra['ext.'];
@@ -172,6 +173,20 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 					}
 				}
 			});
+		}
+	}
+
+	$scope.pos = function(seat) {
+		var num = seat.split('.')[0];
+		if (num.length > 2) {
+			num = num.substring(0,1);
+		}
+		num = parseInt(num);
+
+		if (num > 80) {
+			return 'seatright'
+		} else {
+			return 'seatleft';
 		}
 	}
 
