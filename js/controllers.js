@@ -6,7 +6,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Google Docs URL
 	var host = 'intranet.nyc.wk.com';
 	$http.defaults.useXDomain = true;
-	var url = "https://spreadsheets.google.com/feeds/list/0AuOy3p4ez6oidG1jZjljTnN6Z3dpSW5vSU16eHlXQnc/od6/public/basic?alt=json",
+	var url = "https://spreadsheets.google.com/feeds/list/0AuOy3p4ez6oidG1jZjljTnN6Z3dpSW5vSU16eHlXQnc/od6/public/basic?alt=json&callback=?",
 		db = "http://"+ host +":5984/wieden_seats", // Main Seat DB
 		roomdb = "http://"+ host +":5984/wieden_rooms", // Conference Room / Bathroom / Printer DB
 		db_dump = {};
@@ -34,7 +34,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Fetches Room Info from Couch
 	function resetRooms () {
-		console.log('failing here');
 		$http.get(roomdb + '/_all_docs?include_docs=true').success(function(data){
 			$scope.rooms = parseData(data);
 			for (var i in $scope.rooms) {
@@ -57,7 +56,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 
 	// Fetches seats from google doc
 	function fetchRows () {
-		console.log('failing here google docs');
 		jQuery.getJSON(url, function (response) {
 			var people = [],
 				extra;
