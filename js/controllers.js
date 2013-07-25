@@ -45,7 +45,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	function init () {
 		$http.get(db + '/_all_docs?include_docs=true').success(function(dump){
 			var jsonDump = dump.rows;
-			console.log(jsonDump);
 			for(var i in jsonDump) {
 				db_dump[jsonDump[i].doc['name'] + jsonDump[i].doc['extension']] = jsonDump[i];
 			}
@@ -60,7 +59,6 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			var people = [],
 				extra;
 			for (var i in response.feed.entry) {
-				console.log(response.feed.entry[i].$t);
 				if (response.feed.entry[i].content && response.feed.entry[i].content.$t !== '') {
 					extra = '{"' + cleanUp(response.feed.entry[i].content.$t) + '"}';
 					extra = jQuery.parseJSON(extra);
@@ -193,6 +191,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 	// Toggles the state of the pin drops on click
 	$scope.toggle = function () {
 		if (this.seat) {
+			console.log(this.seat.top);
 			for (var i in $scope.seats) {
 				if (this.seat.name != $scope.seats[i].name) {
 					$scope.seats[i].selected = false;
