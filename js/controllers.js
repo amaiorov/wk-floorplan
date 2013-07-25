@@ -183,7 +183,7 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 		}
 		num = parseInt(num);
 
-		if (num > 80) {
+		if (num > 50) {
 			return 'seatright'
 		} else {
 			return 'seatleft';
