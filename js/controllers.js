@@ -71,13 +71,20 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			$scope.loaded = true;
 			$scope.seats = people;
 			$scope.$apply();
-			setTimeout(function(){
-				$('li.seat').each(function(){
-					console.log($(this).find('.top').text());
-					$(this).css({'top': '10px', 'left': '10px'});
-				});
-			},1000);
 		});	
+	}
+
+	function setPos () {
+		setTimeout(function(){
+				$('li.seat').each(function(){
+					var top = $(this).find('.top').text();
+					var left = $(this).find('.left').text();
+					if (top == '') {
+						setPos();
+					}
+					$(this).css({'top': top, 'left': left});
+				});
+		},1000);
 	}
 
 	// Saves all updates to the DB
