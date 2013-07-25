@@ -109,7 +109,9 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			}
 		});
 	}
-
+	$scope.itemstyle = function(seat) {
+		return {top: seat.top, left: seat.left}
+	}
 	// Construct container
 	function constructSeat (i, response, extra) {
 		var container = {};
