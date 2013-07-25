@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="wk">
+<html lang="en" id="ng-app" ng-app="wk">
 <head>
   <meta charset="utf-8">
   <title>Wieden & Kennedy NYC Seating</title>
