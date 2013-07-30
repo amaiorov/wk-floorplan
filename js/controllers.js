@@ -137,11 +137,11 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			container['_id'] = thisDump.id;
 			container['type'] = thisDump.doc.type;
 		} else {
-			container['top'] = 0;
-			container['left'] = 0;
+			container['top'] = '0';
+			container['left'] = '0';
 			container['type'] = "seat";
 		}
-		container['style'] = {top:thisDump.doc.top,left:thisDump.doc.left};
+
 		container['selected'] = false;
 		container["floor"] = extra.floor;
 		if (!extra.last) {

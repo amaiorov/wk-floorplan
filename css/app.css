@@ -447,7 +447,7 @@ body {
 	margin: 0;
 }
 
-.search #autocomplete li:hover {
+.search #autocomplete li:hover, .search #autocomplete li.selected {
 	background: #CCC;
 }
 

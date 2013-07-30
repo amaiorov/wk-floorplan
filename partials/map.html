@@ -8,7 +8,7 @@
       </ul>
       <input ng-model="query.name" ng-change="textChange(query)" focus ng-hide="explore">
       <ul id="autocomplete"  ng-hide="focus || explore || !turned">
-        <li ng-repeat="seat in seats | filter: {name: query.name}" ng-click="query.name = seat.name; query.floor = seat.floor;toggle();">
+        <li ng-repeat="seat in seats | filter: {name: query.name}" ng-click="query.name = seat.name; query.floor = seat.floor;toggle();" tabindex="-1" numfocus>
             <p class="name">{{seat.name}} | {{seat.extension}}</p>
           </div>
         </li>
