@@ -515,14 +515,14 @@ input {
       .print-me {
       	display: block;
       	position: relative;
-      	width: 90%;
+      	width: 85%;
+      	margin: 0 auto;
       }
 
       .print-me.bot {
       	width: 100%;
-      	position: absolute;
-      	bottom: 0;
       }
+
       .print-me img {
       	width: 100%;
       	margin: 0 auto;
@@ -548,12 +548,6 @@ input {
 
       .print-me li p {
       	display: block;
-      }
-
-      .namez {
-      	-webkit-column-count: 9;
-		-moz-column-count: 9;
-		column-count: 9;
       }
 
       .namez p {

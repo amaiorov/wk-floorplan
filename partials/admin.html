@@ -19,9 +19,9 @@
       <ul id="floors" ng-hide="!explore">
         <div>
           Filters:
-          <li id="6" ng-class="{selected: query.floor == 6}" ng-click="query.floor = 6;">6</li>
-          <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7;">7</li>
-          <li id="8" ng-class="{selected: query.floor == 8}" ng-click="query.floor = 8;">8</li>
+          <li id="6" ng-class="{selected: query.floor == 6}" ng-click="query.floor = 6; setColz();">6</li>
+          <li id="7" ng-class="{selected: query.floor == 7}" ng-click="query.floor = 7; setColz();">7</li>
+          <li id="8" ng-class="{selected: query.floor == 8}" ng-click="query.floor = 8; setColz();">8</li>
         </div>
         <div>
           <li id="seats" ng-class="{selected: query.type == 'seat'}" ng-click="query.name = ''; query.type = 'seat'; turned=true;">Seats</li>
@@ -97,9 +97,11 @@
     <img src="upload/8-admin.jpg" ng-show="query.floor == 8">
 </div>
 <div class="print-me bot">
-  <div class="namez">
-    <div ng-repeat="seat in seats | filter:query | orderBy: printSortFunction" class="selected">
-          <p class="name">{{seat.printnum}}: {{seat.name}}</p>
+  <div class="namez clearfix">
+    <div class="colz" style="width: 11%; float: left;" ng-repeat="col in colz">
+      <div ng-repeat="seat in col | filter: query" class="selected">
+            <p class="name">{{seat.printnum}}: {{seat.name}}</p>
+      </div>
     </div>
   </div>
 </div>

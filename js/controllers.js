@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-function SeatListCtrl($scope, $http, $location, $routeParams) {
+function SeatListCtrl($scope, $http, $location, $routeParams, $filter) {
 	// Google Docs URL
 	var host = 'intranet.nyc.wk.com';
 	$http.defaults.useXDomain = true;
@@ -70,8 +70,38 @@ function SeatListCtrl($scope, $http, $location, $routeParams) {
 			$scope.turned = false;
 			$scope.loaded = true;
 			$scope.seats = people;
+
+			$scope.setColz();
+
+
 			$scope.$apply();
 		});	
+	}
+
+	$scope.setColz = function() {
+		function strcmp(a, b) {
+			var aint = $scope.printSortFunction(a);
+			var bint = $scope.printSortFunction(b);
+		    return aint - bint;
+		}
+
+		var sortedp = $filter('filter')($scope.seats.sort(strcmp),$scope.query);
+
+		var colz = [];
+
+		var div = Math.floor(sortedp.length/9);
+		var rem = sortedp.length % 9;
+		for (var b = 0; b < 9; b++) {
+			colz.push([]);
+			for (var i = 0; i < div; i++) {
+				colz[b].push(sortedp[i + (b*div)]);
+			}
+		}
+		for (var i = 0; i < rem; i++) {
+			colz[8].push(sortedp[i + (9*div)]);
+		}
+
+		$scope.colz = colz;
 	}
 
 	function setPos () {
