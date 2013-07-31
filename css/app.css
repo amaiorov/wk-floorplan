@@ -31,6 +31,13 @@ body {
 	min-width: 420px;
 }
 
+.wrapper-hidden {
+	width: 100%;
+		overflow: hidden;
+
+}
+
+
 #pixel-pusher {
 	width: 100%;
 	visibility: hidden;
@@ -174,6 +181,7 @@ body {
 
 .admin {
 	min-width: 1000px;
+	min-height: 1000px;
 }
 
 .map.searching ul li {
@@ -335,9 +343,10 @@ body {
 body {
 	margin-top: 0;
 	padding-top: 0;
-	overflow: hidden;
 	width: 100%;
 }
+
+
 
 #floors li {
 	position: relative;
