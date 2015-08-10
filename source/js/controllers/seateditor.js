@@ -83,7 +83,7 @@ SeatEditor.prototype.onSplitStart = function( e ) {
 SeatEditor.prototype.onSplitDrag = function( e ) {
 
 	var dragFracX = ( e.clientX - this._metrics.editingRegionLeft ) / this._metrics.editingRegionWidth;
-	var minFracX = .5;
+	var minFracX = .6;
 	var maxFracX = .9;
 	dragFracX = Math.min( Math.max( dragFracX, minFracX ), maxFracX );
 

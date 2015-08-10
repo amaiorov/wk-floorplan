@@ -57,3 +57,9 @@ body{
   min-width: $min-width;
   min-height: $min-height;
 }
+
+.btn:focus,.btn:active:focus,.btn.active:focus,
+.btn.focus,.btn:active.focus,.btn.active.focus {
+    outline: none;
+    box-shadow:none;
+}

@@ -7,7 +7,9 @@
 }
 
 .editing-region{
+	margin: 0 auto;
 	width: 100%;
+	max-width: 1920px;
 	height: 100%;
 	border: 1px solid lightgray;
 	white-space: nowrap;
@@ -20,6 +22,34 @@
 	height: 100%;
 	overflow: hidden;
 	white-space: normal;
+
+	>.floor-viewport{
+		width: 100%;
+		height: 100%;
+
+		.floor{
+			@include absoluteTopLeft;
+			background-size: 100% 100%;
+
+			&[data-id="6"] {
+				background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%206&w=1024&h=576);
+			}
+
+			&[data-id="7"] {
+				background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%207&w=1024&h=576);
+			}
+
+			&[data-id="8"] {
+				background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%208&w=1024&h=576);
+			}
+
+			>.inner{
+				width: 1024px;
+				height: 0;
+				padding-bottom: percentage(9/16);
+			}
+		}
+	}
 
 	>.split-handle{
 		position: absolute;
@@ -43,6 +73,12 @@
 			}
 		}
 	}
+
+	>.floor-buttons{
+		position: absolute;
+		top: 30px;
+		left: 30px;
+	}
 }
 
 .waitlist-pane{
@@ -50,31 +86,48 @@
 	position: relative;
 	width: 20%;
 	height: 100%;
-	padding: 30px;
-	@include box-sizing(borde-box);
 	overflow: hidden;
-	white-space: normal;
 
-	>h3{
-		font-size: 20px;
-		height: 40px;
-	}
-
-	>.waitlist{
+	>.container{
 		width: 100%;
-		height: calc(100% - 40px);
-		overflow: auto;
+		min-width: 250px;
+		height: 100%;
+		white-space: normal;
+		padding: 30px;
+		@include box-sizing(borde-box);
+
+		>h3{
+			font-size: 20px;
+			height: 40px;
+		}
+
+		>.waitlist{
+			width: 100%;
+			height: calc(100% - 40px);
+			overflow: auto;
+
+			.employee-icon{
+				@include translate(0, 0);
+			}
+		}
 	}
 }
 
 .employee-icon{
 	@include inline-block(top);
+	position: relative;
 	width: 40px;
 	height: 40px;
-	background: #99CCFF;
-	text-align: center;
-	color: white;
-	line-height: 40px;
-	font-size: 14px;
-	@include border-radius(100%);
+	@include translate(-50%, -50%);
+
+	>.icon{
+		width: 40px;
+		height: 40px;
+		background: #99CCFF;
+		text-align: center;
+		color: white;
+		line-height: 40px;
+		font-size: 14px;
+		@include border-radius(100%);
+	}
 }
