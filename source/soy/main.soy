@@ -1,0 +1,78 @@
+{namespace template autoescape="false"}
+
+/**
+ * Home Page
+ */
+{template .Home}
+<div id="home">
+	<div class="wk-logo"></div>
+	<table id="chart" class="table table-condensed table-striped"></table>
+</div>
+{/template}
+
+
+/**
+ * Seat Editor
+ * @param floor6Employees All employees on floor 6
+ * @param floor7Employees All employees on floor 7
+ * @param floor8Employees All employees on floor 8
+ * @param unseatedEmployees All employees who are not yet seated
+ */
+{template .SeatEditor}
+<div id="seat-editor">
+	<div class="editing-region">
+
+		<div class="floor-pane">
+			<div class="floor" data-id="6">
+				{foreach $employee in $floor6Employees}
+				{call .EmployeeIcon}
+					{param initials: $employee.initials /}
+				{/call}
+				{/foreach}
+			</div>
+
+			<div class="floor" data-id="7">
+				{foreach $employee in $floor7Employees}
+				{call .EmployeeIcon}
+					{param initials: $employee.initials /}
+				{/call}
+				{/foreach}
+			</div>
+
+			<div class="floor" data-id="8">
+				{foreach $employee in $floor8Employees}
+				{call .EmployeeIcon}
+					{param initials: $employee.initials /}
+				{/call}
+				{/foreach}
+			</div>
+
+			<div class="split-handle"></div>
+		</div>
+
+		<div class="waitlist-pane">
+			<h3>Wait List</h3>
+			<div class="waitlist">
+				{foreach $employee in $unseatedEmployees}
+				{call .EmployeeIcon}
+					{param initials: $employee.initials /}
+				{/call}
+				{/foreach}
+			</div>
+		</div>
+
+	</div>
+</div>
+{/template}
+
+
+/**
+ * Employee Icon
+ * An icon on the floor plan to represent employee
+ * @param initials The employee name initials.
+ */
+{template .EmployeeIcon}
+<div class="employee-icon">
+	<span class="initials">{ $initials }</span>
+</div>
+{/template}

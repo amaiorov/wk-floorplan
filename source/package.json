@@ -1,0 +1,28 @@
+{
+	"name": "Wieden_Kennedy_Floor_Plan",
+	"version": "0.0.0-ignored",
+	"devDependencies": {
+		"grunt": "~0.4.2",
+		"grunt-browserify": "latest",
+		"grunt-exorcise": "latest",
+		"grunt-contrib-watch": "latest",
+		"grunt-contrib-compass": "~0.8.0",
+		"grunt-closure-soy": "latest",
+		"grunt-webfont": "~0.4.0",
+		"browserify": "latest",
+		"browserify-shim": "latest",
+		"remapify": "latest",
+		"inherits": "latest",
+		"jquery": "latest",
+		"sheetrock": "latest"
+	},
+	"browserify": {
+		"transform": [
+			"browserify-shim"
+		]
+	},
+	"browserify-shim": {
+		"./js/libs/soyutils.js": "soy",
+		"./js/views/main.soy.js": "template"
+	}
+}

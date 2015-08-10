@@ -1,0 +1,78 @@
+&{
+	width: 100%;
+	height: 100vh;
+	padding: 50px;
+	@include box-sizing(borde-box);
+	@include user-select(none);
+}
+
+.editing-region{
+	width: 100%;
+	height: 100%;
+	border: 1px solid lightgray;
+	white-space: nowrap;
+}
+
+.floor-pane{
+	@include inline-block(top);
+	position: relative;
+	width: 80%;
+	height: 100%;
+	overflow: hidden;
+
+	>.split-handle{
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 20px;
+		height: 100%;
+		cursor: ew-resize;
+
+		&:after{
+			content: "";
+			position: absolute;
+			display: block;
+			right: 0;
+			width: 1px;
+			height: 100%;
+			background: lightgray;
+
+			[data-cursor="horizontal-dragging"] &{
+				background: gray;
+			}
+		}
+	}
+}
+
+.waitlist-pane{
+	@include inline-block(top);
+	position: relative;
+	width: 20%;
+	height: 100%;
+	padding: 30px;
+	@include box-sizing(borde-box);
+	overflow: hidden;
+
+	>h3{
+		font-size: 20px;
+		height: 40px;
+	}
+
+	>.waitlist{
+		width: 100%;
+		height: calc(100% - 40px);
+		overflow: auto;
+	}
+}
+
+.employee-icon{
+	@include inline-block(top);
+	width: 40px;
+	height: 40px;
+	background: #99CCFF;
+	text-align: center;
+	color: white;
+	line-height: 40px;
+	font-size: 14px;
+	@include border-radius(100%);
+}

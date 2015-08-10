@@ -1,0 +1,63 @@
+/*
+@include font-face(
+	'flamaregular',
+    font-files(
+    	'flama/flama-webfont.eot',
+    	'flama/flama-webfont.eot?#iefix',
+    	'flama/flama-webfont.woff2',
+    	'flama/flama-webfont.woff',
+    	'flama/flama-webfont.ttf',
+    	'flama/flama-webfont.svg#flamaregular'));
+
+@include font-face(
+    'Whitney',
+    font-files(
+        'whitney-medium/whitney-medium.eot',
+        'whitney-medium/whitney-medium.woff',
+        'whitney-medium/whitney-medium.ttf',
+        'whitney-medium/whitney-medium.svg#whitney_medium'));
+
+@include font-face(
+	'whitney_lightregular',
+    font-files(
+    	'whitney-light/whitney-light-webfont.eot',
+    	'whitney-light/whitney-light-webfont.woff2',
+    	'whitney-light/whitney-light-webfont.woff',
+    	'whitney-light/whitney-light-webfont.ttf',
+    	'whitney-light/whitney-light-webfont.svg#whitney_lightregular'));
+
+@include font-face(
+	'whitney_lightitalic',
+    font-files(
+    	'whitney-lightitalic/whitney-lightitalic-webfont.eot',
+    	'whitney-lightitalic/whitney-lightitalic-webfont.woff2',
+    	'whitney-lightitalic/whitney-lightitalic-webfont.woff',
+    	'whitney-lightitalic/whitney-lightitalic-webfont.ttf',
+    	'whitney-lightitalic/whitney-lightitalic-webfont.svg#whitney_lightitalic'));
+
+@include font-face(
+    'WhitneyBook',
+    font-files(
+        'whitney-book/whitney-book.eot',
+        'whitney-book/whitney-book.woff',
+        'whitney-book/whitney-book.ttf',
+        'whitney-book/whitney-book.svg#whitney_book'));
+
+@include font-face(
+	'whitney_bookitalic',
+    font-files(
+    	'whitney-bookitalic/whitney-bookitalic-webfont.eot',
+    	'whitney-bookitalic/whitney-bookitalic-webfont.woff2',
+    	'whitney-bookitalic/whitney-bookitalic-webfont.woff',
+    	'whitney-bookitalic/whitney-bookitalic-webfont.ttf',
+    	'whitney-bookitalic/whitney-bookitalic-webfont.svg#whitney_bookitalic'));
+
+$font_flama: "flamaregular";
+$font_whitney_light: "whitney_lightregular";
+$font_whitney_medium: "Whitney";
+$font_whitney_book: "WhitneyBook";
+$font_whitney_bookitalic: "whitney_bookitalic";
+$font_whitney_lightitalic: "whitney_lightitalic";
+*/
+
+$font_system: Helvetica, Arial, sans-serif;
