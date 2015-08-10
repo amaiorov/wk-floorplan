@@ -19,6 +19,7 @@
 	width: 80%;
 	height: 100%;
 	overflow: hidden;
+	white-space: normal;
 
 	>.split-handle{
 		position: absolute;
@@ -52,6 +53,7 @@
 	padding: 30px;
 	@include box-sizing(borde-box);
 	overflow: hidden;
+	white-space: normal;
 
 	>h3{
 		font-size: 20px;
