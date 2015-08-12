@@ -14,7 +14,8 @@
 		"remapify": "latest",
 		"inherits": "latest",
 		"jquery": "latest",
-		"sheetrock": "latest"
+		"sheetrock": "latest",
+		"bootstrap": "latest"
 	},
 	"browserify": {
 		"transform": [

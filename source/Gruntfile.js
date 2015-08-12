@@ -68,6 +68,10 @@ module.exports = function( grunt ) {
 					[
 						'remapify', [ {
 							src: '**/*.js',
+							expose: 'app',
+							cwd: './js'
+						}, {
+							src: '**/*.js',
 							expose: 'views',
 							cwd: './js/views'
 						}, {
