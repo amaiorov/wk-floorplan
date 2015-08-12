@@ -4,3 +4,4 @@ source/node_modules
 source/.sass-cache
 release
 Gemfile.lock
+*.sublime-workspace

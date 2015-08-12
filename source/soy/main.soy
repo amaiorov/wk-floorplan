@@ -4,7 +4,17 @@
  * Home Page
  */
 {template .Home}
-<div id="home">
+<section id="search">
+	<input type="text">
+	<button type="button" class="btn btn-default" data-id="search">
+	<select>
+		<option>All</option>
+		<option value="people">People</option>
+		<option value="printers">Printers</option>
+		<option value="rooms">Rooms</option>
+	</select>
+</section>
+<div id="home" class="hidden">
 	<div class="wk-logo"></div>
 	<table id="chart" class="table table-condensed table-striped"></table>
 </div>
