@@ -44,10 +44,84 @@ module.exports = ( function() {
 	_instance = _instance || new Bootstrapper( arguments );
 	return _instance;
 } )();
-},{"controllers/seateditor":3,"libs/soyutils":9,"models/employee":11,"models/employeecollection":12,"sheetrock":30,"views/main.soy":14}],2:[function(require,module,exports){
+},{"controllers/seateditor":6,"libs/soyutils":12,"models/employee":14,"models/employeecollection":15,"sheetrock":36,"views/main.soy":19}],2:[function(require,module,exports){
+var inherits = require( 'inherits' );
+var OccupantIcon = require( 'controllers/occupanticon' );
+var employeeCollection = require( 'models/employeecollection' );
+
+
+var EmployeeIcon = function( element, id ) {
+
+	var firstName = element.getAttribute( 'data-first' );
+	var lastName = element.getAttribute( 'data-last' );
+	var model = employeeCollection.getByName( firstName, lastName );
+
+	OccupantIcon.call( this, element, model );
+
+}
+inherits( EmployeeIcon, OccupantIcon );
+
+
+//Creature.prototype.die.call( this );
+
+module.exports = EmployeeIcon;
+},{"controllers/occupanticon":5,"inherits":34,"models/employeecollection":15}],3:[function(require,module,exports){
+var FloorModel = require( 'models/floor' );
+
+var EmployeeIcon = require( 'controllers/employeeicon' );
+var Seat = require( 'models/seat' );
+
+
+var Floor = function( element ) {
+
+	// assign view element
+	this.$element = $( element );
+
+	// create model
+	var floorIndex = this.$element.attr( 'data-id' );
+	this._model = FloorModel.getByIndex( floorIndex );
+
+	// create occupants
+	var occupants = this._occupants = [];
+
+	$.each( this.$element.find( '.occupant-icon' ), $.proxy( function( i, el ) {
+
+		var occupant = new EmployeeIcon( el );
+		occupants.push( occupant );
+
+		// WIP: NOW AUTOMATICALLY ASSIGN OCCUPANTS WITH VACANT SEATS
+		var seat = FloorModel.getVacantSeat( this._model.index );
+		occupant.model.occupy( seat );
+		occupant.updatePosition();
+
+	}, this ) );
+}
+
+
+Floor.prototype.getIndex = function() {
+
+	return this._model.index;
+};
+
+
+Floor.prototype.show = function() {
+
+	this.$element.show();
+};
+
+
+Floor.prototype.hide = function() {
+
+	this.$element.hide();
+};
+
+
+module.exports = Floor;
+},{"controllers/employeeicon":2,"models/floor":16,"models/seat":17}],4:[function(require,module,exports){
 var Utils = require( 'app/utils' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
+var Floor = require( 'controllers/floor' );
 
 var mousewheelHideDelay = null;
 var zoom = 0;
@@ -98,12 +172,14 @@ var FloorViewer = function( _$element ) {
 	this._windowScrollTop = null;
 	this._windowScrollLeft = null;
 
-	// Store floors by id
+	// Create and stores floors by index
 	var floors = this._floors = {};
 	$.each( this.$element.find( '.floor' ), function( i, el ) {
-		floors[ el.getAttribute( 'data-id' ) ] = $( el );
+		var floor = new Floor( el );
+		floors[ floor.getIndex() ] = floor;
 	} );
 
+	//
 	this.init();
 }
 
@@ -179,8 +255,12 @@ FloorViewer.prototype.setMousewheelSpeed = function( multiplier ) {
 
 FloorViewer.prototype.toggleFloor = function( floorId ) {
 
-	$.each( this._floors, function( id, $el ) {
-		$el.toggle( floorId === id );
+	$.each( this._floors, function( id, floor ) {
+		if ( floorId === id ) {
+			floor.show();
+		} else {
+			floor.hide();
+		}
 	} );
 }
 
@@ -311,7 +391,28 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 }
 
 module.exports = FloorViewer;
-},{"app/utils":13,"libs/gsap/TweenMax":5,"libs/gsap/utils/Draggable":8}],3:[function(require,module,exports){
+},{"app/utils":18,"controllers/floor":3,"libs/gsap/TweenMax":8,"libs/gsap/utils/Draggable":11}],5:[function(require,module,exports){
+var OccupantIcon = function( element, model ) {
+
+	// assign view element
+	this.$element = $( element );
+
+	// assign model
+	this.model = model;
+}
+
+
+OccupantIcon.prototype.updatePosition = function() {
+
+	this.$element.css( {
+		'top': this.model.seat.y,
+		'left': this.model.seat.x
+	} );
+};
+
+
+module.exports = OccupantIcon;
+},{}],6:[function(require,module,exports){
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorViewer = require( 'controllers/floorviewer' );
@@ -425,7 +526,7 @@ module.exports = {
 		return _instance;
 	}
 };
-},{"controllers/floorviewer":2,"libs/soyutils":9,"models/employeecollection":12,"views/main.soy":14}],4:[function(require,module,exports){
+},{"controllers/floorviewer":4,"libs/soyutils":12,"models/employeecollection":15,"views/main.soy":19}],7:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.17.0
@@ -2236,7 +2337,7 @@ module.exports = {
 })((typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window, "TweenLite");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.17.0
@@ -9589,7 +9690,7 @@ if (_gsScope._gsDefine) { _gsScope._gsQueue.pop()(); } //necessary in case Tween
 })((typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window, "TweenMax");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.17.0
@@ -12192,7 +12293,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../TweenLite.js":4}],7:[function(require,module,exports){
+},{"../TweenLite.js":7}],10:[function(require,module,exports){
 /*!
  * VERSION: 0.9.5
  * DATE: 2014-04-16
@@ -12206,7 +12307,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
  * @author: Jack Doyle, jack@greensock.com
  */
 (window._gsQueue||(window._gsQueue=[])).push(function(){"use strict";window._gsDefine("plugins.ThrowPropsPlugin",["plugins.TweenPlugin","TweenLite","easing.Ease","utils.VelocityTracker"],function(a,b,c,d){var t,u,v,w,e=function(){a.call(this,"throwProps"),this._overwriteProps.length=0},f=999999999999999,g=1e-10,h=!1,i={x:1,y:1,z:2,scale:1,scaleX:1,scaleY:1,rotation:1,rotationZ:1,rotationX:2,rotationY:2,skewX:1,skewY:1},j=String.fromCharCode(103,114,101,101,110,115,111,99,107,46,99,111,109),k=String.fromCharCode(47,114,101,113,117,105,114,101,115,45,109,101,109,98,101,114,115,104,105,112,47),l=function(a){for(var b=[j,String.fromCharCode(99,111,100,101,112,101,110,46,105,111),String.fromCharCode(99,100,112,110,46,105,111),String.fromCharCode(103,97,110,110,111,110,46,116,118),String.fromCharCode(99,111,100,101,99,97,110,121,111,110,46,110,101,116),String.fromCharCode(116,104,101,109,101,102,111,114,101,115,116,46,110,101,116),String.fromCharCode(99,101,114,101,98,114,97,120,46,99,111,46,117,107)],c=b.length;--c>-1;)if(-1!==a.indexOf(b[c]))return!0;return-1!==(j).indexOf(String.fromCharCode(103,114,101,101,110,115,111,99,107))&&-1!==a.indexOf(String.fromCharCode(108,111,99,97,108,104,111,115,116))}(j),m=function(a,b,c,d){for(var i,j,e=b.length,g=0,h=f;--e>-1;)i=b[e],j=i-a,0>j&&(j=-j),h>j&&i>=d&&c>=i&&(g=e,h=j);return b[g]},n=function(a,b,c,d){if("auto"===a.end)return a;c=isNaN(c)?f:c,d=isNaN(d)?-f:d;var e="function"==typeof a.end?a.end(b):a.end instanceof Array?m(b,a.end,c,d):Number(a.end);return e>c?e=c:d>e&&(e=d),{max:e,min:e,unitFactor:a.unitFactor}},o=function(a,b,c){for(var d in b)void 0===a[d]&&d!==c&&(a[d]=b[d]);return a},p=e.calculateChange=function(a,d,e,f){null==f&&(f=.05);var g=d instanceof c?d:d?new c(d):b.defaultEase;return e*f*a/g.getRatio(f)},q=e.calculateDuration=function(a,d,e,f,g){g=g||.05;var h=f instanceof c?f:f?new c(f):b.defaultEase;return Math.abs((d-a)*h.getRatio(g)/e/g)},r=e.calculateTweenDuration=function(a,f,i,j,k,l){if("string"==typeof a&&(a=b.selector(a)),!a)return 0;null==i&&(i=10),null==j&&(j=.2),null==k&&(k=1),a.length&&(a=a[0]||a);var w,x,y,z,A,B,C,D,E,F,m=0,r=9999999999,s=f.throwProps||f,t=f.ease instanceof c?f.ease:f.ease?new c(f.ease):b.defaultEase,u=isNaN(s.checkpoint)?.05:Number(s.checkpoint),v=isNaN(s.resistance)?e.defaultResistance:Number(s.resistance);for(w in s)"resistance"!==w&&"checkpoint"!==w&&"preventOvershoot"!==w&&(x=s[w],"object"!=typeof x&&(E=E||d.getByTarget(a),E&&E.isTrackingProp(w)?x="number"==typeof x?{velocity:x}:{velocity:E.getVelocity(w)}:(z=Number(x)||0,y=z*v>0?z/v:z/-v)),"object"==typeof x&&(void 0!==x.velocity&&"number"==typeof x.velocity?z=Number(x.velocity)||0:(E=E||d.getByTarget(a),z=E&&E.isTrackingProp(w)?E.getVelocity(w):0),A=isNaN(x.resistance)?v:Number(x.resistance),y=z*A>0?z/A:z/-A,B="function"==typeof a[w]?a[w.indexOf("set")||"function"!=typeof a["get"+w.substr(3)]?w:"get"+w.substr(3)]():a[w]||0,C=B+p(z,t,y,u),void 0!==x.end&&(x=n(x,C,x.max,x.min),(l||h)&&(s[w]=o(x,s[w],"end"))),void 0!==x.max&&C>Number(x.max)+g?(F=x.unitFactor||e.defaultUnitFactors[w]||1,D=B>x.max&&x.min!==x.max||z*F>-15&&45>z*F?j+.1*(i-j):q(B,x.max,z,t,u),r>D+k&&(r=D+k)):void 0!==x.min&&C<Number(x.min)-g&&(F=x.unitFactor||e.defaultUnitFactors[w]||1,D=B<x.min&&x.min!==x.max||z*F>-45&&15>z*F?j+.1*(i-j):q(B,x.min,z,t,u),r>D+k&&(r=D+k)),D>m&&(m=D)),y>m&&(m=y));return m>r&&(m=r),m>i?i:j>m?j:m},s=e.prototype=new a("throwProps");return s.constructor=e,e.version="0.9.5",e.API=2,e._autoCSS=!0,e.defaultResistance=100,e.defaultUnitFactors={time:1e3,totalTime:1e3},e.track=function(a,b,c){return d.track(a,b,c)},e.untrack=function(a,b){d.untrack(a,b)},e.isTracking=function(a,b){return d.isTracking(a,b)},e.getVelocity=function(a,b){var c=d.getByTarget(a);return c?c.getVelocity(b):0/0},e._cssRegister=function(){var a=(window.GreenSockGlobals||window).com.greensock.plugins.CSSPlugin;if(a){var b=a._internals,c=b._parseToProxy,f=b._setPluginRatio,g=b.CSSPropTween;b._registerComplexSpecialProp("throwProps",{parser:function(a,b,h,j,k,l){l=new e;var s,v,w,x,y,m={},n={},o={},p={},q={},r={};u={};for(w in b)"resistance"!==w&&"preventOvershoot"!==w&&(v=b[w],"object"==typeof v?(void 0!==v.velocity&&"number"==typeof v.velocity?m[w]=Number(v.velocity)||0:(y=y||d.getByTarget(a),m[w]=y&&y.isTrackingProp(w)?y.getVelocity(w):0),void 0!==v.end&&(p[w]=v.end),void 0!==v.min&&(n[w]=v.min),void 0!==v.max&&(o[w]=v.max),v.preventOvershoot&&(r[w]=!0),void 0!==v.resistance&&(s=!0,q[w]=v.resistance)):"number"==typeof v?m[w]=v:(y=y||d.getByTarget(a),m[w]=y&&y.isTrackingProp(w)?y.getVelocity(w):v||0),i[w]&&j._enableTransforms(2===i[w]));x=c(a,m,j,k,l),t=x.proxy,m=x.end;for(w in t)u[w]={velocity:m[w],min:n[w],max:o[w],end:p[w],resistance:q[w],preventOvershoot:r[w]};return null!=b.resistance&&(u.resistance=b.resistance),b.preventOvershoot&&(u.preventOvershoot=!0),k=new g(a,"throwProps",0,0,x.pt,2),k.plugin=l,k.setRatio=f,k.data=x,l._onInitTween(t,u,j._tween),k}})}},e.to=function(a,c,d,e,f){c.throwProps||(c={throwProps:c}),0===f&&(c.throwProps.preventOvershoot=!0),h=!0;var g=new b(a,1,c);return g.render(0,!0,!0),g.vars.css?(g.duration(r(t,{throwProps:u,ease:c.ease},d,e,f)),g._delay&&!g.vars.immediateRender?g.invalidate():v._onInitTween(t,w,g),h=!1,g):(g.kill(),g=new b(a,r(a,c,d,e,f),c),h=!1,g)},s._onInitTween=function(a,b,c){if(this.target=a,this._props=[],!l)return window.location.href="http://"+j+k+"?plugin="+this._propName,!1;v=this,w=b;var q,r,s,t,u,x,y,z,A,e=c._ease,f=isNaN(b.checkpoint)?.05:Number(b.checkpoint),g=c._duration,i=b.preventOvershoot,m=0;for(q in b)if("resistance"!==q&&"checkpoint"!==q&&"preventOvershoot"!==q){if(r=b[q],"number"==typeof r)u=Number(r)||0;else if("object"!=typeof r||isNaN(r.velocity)){if(A=A||d.getByTarget(a),!A||!A.isTrackingProp(q))throw"ERROR: No velocity was defined in the throwProps tween of "+a+" property: "+q;u=A.getVelocity(q)}else u=Number(r.velocity);x=p(u,e,g,f),z=0,t="function"==typeof a[q],s=t?a[q.indexOf("set")||"function"!=typeof a["get"+q.substr(3)]?q:"get"+q.substr(3)]():a[q],"object"==typeof r&&(y=s+x,void 0!==r.end&&(r=n(r,y,r.max,r.min),h&&(b[q]=o(r,b[q],"end"))),void 0!==r.max&&Number(r.max)<y?i||r.preventOvershoot?x=r.max-s:z=r.max-s-x:void 0!==r.min&&Number(r.min)>y&&(i||r.preventOvershoot?x=r.min-s:z=r.min-s-x)),this._props[m++]={p:q,s:s,c1:x,c2:z,f:t,r:!1},this._overwriteProps[m]=q}return l},s._kill=function(b){for(var c=this._props.length;--c>-1;)null!=b[this._props[c].p]&&this._props.splice(c,1);return a.prototype._kill.call(this,b)},s._roundProps=function(a,b){for(var c=this._props,d=c.length;--d>-1;)(a[c[d]]||a.throwProps)&&(c[d].r=b)},s.setRatio=function(a){for(var c,d,b=this._props.length;--b>-1;)c=this._props[b],d=c.s+c.c1*a+c.c2*a*a,c.r&&(d=Math.round(d)),c.f?this.target[c.p](d):this.target[c.p]=d},a.activate([e]),e},!0),window._gsDefine("utils.VelocityTracker",["TweenLite"],function(a){var b,c,d,e,f=/([A-Z])/g,g={},h={x:1,y:1,z:2,scale:1,scaleX:1,scaleY:1,rotation:1,rotationZ:1,rotationX:2,rotationY:2,skewX:1,skewY:1},i=document.defaultView?document.defaultView.getComputedStyle:function(){},j=String.fromCharCode(103,114,101,101,110,115,111,99,107,46,99,111,109),k=String.fromCharCode(47,114,101,113,117,105,114,101,115,45,109,101,109,98,101,114,115,104,105,112,47),l=function(a){for(var b=[j,String.fromCharCode(99,111,100,101,112,101,110,46,105,111),String.fromCharCode(99,100,112,110,46,105,111),String.fromCharCode(103,97,110,110,111,110,46,116,118),String.fromCharCode(99,111,100,101,99,97,110,121,111,110,46,110,101,116),String.fromCharCode(116,104,101,109,101,102,111,114,101,115,116,46,110,101,116),String.fromCharCode(99,101,114,101,98,114,97,120,46,99,111,46,117,107)],c=b.length;--c>-1;)if(-1!==a.indexOf(b[c]))return!0;return-1!==(j).indexOf(String.fromCharCode(103,114,101,101,110,115,111,99,107))&&-1!==a.indexOf(String.fromCharCode(108,111,99,97,108,104,111,115,116))}(j),m=function(a,b,c){var d=(a._gsTransform||g)[b];return d||0===d?d:(a.style[b]?d=a.style[b]:(c=c||i(a,null))?(a=c.getPropertyValue(b.replace(f,"-$1").toLowerCase()),d=a||c.length?a:c[b]):a.currentStyle&&(c=a.currentStyle,d=c[b]),parseFloat(d)||0)},n=a.ticker,o=function(a,b,c){this.p=a,this.f=b,this.v1=this.v2=0,this.t1=this.t2=n.time,this.css=!1,this.type="",this._prev=null,c&&(this._next=c,c._prev=this)},p=function(){var f,g,a=b,c=n.time;if(c-d>=.03)for(e=d,d=c;a;){for(g=a._firstVP;g;)f=g.css?m(a.target,g.p):g.f?a.target[g.p]():a.target[g.p],(f!==g.v1||c-g.t1>.15)&&(g.v2=g.v1,g.v1=f,g.t2=g.t1,g.t1=c),g=g._next;a=a._next}},q=function(a){this._lookup={},this.target=a,this.elem=a.style&&a.nodeType?!0:!1,c||(n.addEventListener("tick",p,null,!1,-100),d=e=n.time,c=!0),b&&(this._next=b,b._prev=this),b=this},r=q.getByTarget=function(a){for(var c=b;c;){if(c.target===a)return c;c=c._next}},s=q.prototype;return s.addProp=function(b,c){if(!this._lookup[b]){var d=this.target,e="function"==typeof d[b],f=e?this._altProp(b):b,g=this._firstVP;this._firstVP=this._lookup[b]=this._lookup[f]=g=new o(f!==b&&0===b.indexOf("set")?f:b,e,g),g.css=this.elem&&(void 0!==this.target.style[g.p]||h[g.p]),g.css&&h[g.p]&&!d._gsTransform&&a.set(d,{x:"+=0"}),g.type=c||g.css&&0===b.indexOf("rotation")?"deg":"",g.v1=g.v2=g.css?m(d,g.p):e?d[g.p]():d[g.p]}},s.removeProp=function(a){var b=this._lookup[a];b&&(b._prev?b._prev._next=b._next:b===this._firstVP&&(this._firstVP=b._next),b._next&&(b._next._prev=b._prev),this._lookup[a]=0,b.f&&(this._lookup[this._altProp(a)]=0))},s.isTrackingProp=function(a){return this._lookup[a]instanceof o},s.getVelocity=function(a){var d,e,f,b=this._lookup[a],c=this.target;if(!b)throw"The velocity of "+a+" is not being tracked.";return d=b.css?m(c,b.p):b.f?c[b.p]():c[b.p],e=d-b.v2,("rad"===b.type||"deg"===b.type)&&(f="rad"===b.type?2*Math.PI:360,e%=f,e!==e%(f/2)&&(e=0>e?e+f:e-f)),e/(n.time-b.t2)},s._altProp=function(a){var b=a.substr(0,3),c=("get"===b?"set":"set"===b?"get":b)+a.substr(3);return"function"==typeof this.target[c]?c:a},q.getByTarget=function(c){var d=b;for("string"==typeof c&&(c=a.selector(c)),c.length&&c!==window&&c[0]&&c[0].style&&!c.nodeType&&(c=c[0]);d;){if(d.target===c)return d;d=d._next}},q.track=function(a,b,c){var d=r(a),e=b.split(","),f=e.length;for(c=(c||"").split(","),d||(d=new q(a));--f>-1;)d.addProp(e[f],c[f]||c[0]);return d},q.untrack=function(a,c){var d=r(a),e=(c||"").split(","),f=e.length;if(d){for(;--f>-1;)d.removeProp(e[f]);d._firstVP&&c||(d._prev?d._prev._next=d._next:d===b&&(b=d._next),d._next&&(d._next._prev=d._prev))}},q.isTracking=function(a,b){var c=r(a);return c?!b&&c._firstVP?!0:c.isTrackingProp(b):!1},l?q:(window.location.href="http://"+j+k+"?plugin=VelocityTracker",!1)},!0)}),window._gsDefine&&window._gsQueue.pop()();
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 0.14.0
@@ -14395,7 +14496,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 }("Draggable"));
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"../TweenLite.js":4,"../plugins/CSSPlugin.js":6}],9:[function(require,module,exports){
+},{"../TweenLite.js":7,"../plugins/CSSPlugin.js":9}],12:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /*
@@ -17172,7 +17273,7 @@ soy.esc.$$SAFE_TAG_WHITELIST_ = {'b': 1, 'br': 1, 'em': 1, 'i': 1, 's': 1, 'sub'
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // global requires
 window.$ = window.jQuery = require( 'jquery' );
 require( 'bootstrap' );
@@ -17182,7 +17283,7 @@ require( 'libs/gsap/plugins/ThrowPropsPlugin' );
 var bootstrapper = require( 'app/bootstrapper' );
 
 bootstrapper.load();
-},{"app/bootstrapper":1,"bootstrap":15,"jquery":29,"libs/gsap/plugins/ThrowPropsPlugin":7}],11:[function(require,module,exports){
+},{"app/bootstrapper":1,"bootstrap":20,"jquery":35,"libs/gsap/plugins/ThrowPropsPlugin":10}],14:[function(require,module,exports){
 var Employee = function( props ) {
 
 	this.firstName = props[ 'First' ];
@@ -17199,18 +17300,28 @@ var Employee = function( props ) {
 	this.fullName = this.getFullName();
 }
 
+
 Employee.prototype.getInitials = function() {
 
 	return this.firstName[ 0 ].toUpperCase() + this.lastName[ 0 ].toUpperCase();
 }
+
 
 Employee.prototype.getFullName = function() {
 
 	return this.firstName + ' ' + this.lastName;
 }
 
+
+Employee.prototype.occupy = function( seat ) {
+
+	seat.occupant = this;
+	this.seat = seat;
+}
+
+
 module.exports = Employee;
-},{}],12:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var $ = require( 'jquery' );
 
 var _instance;
@@ -17243,6 +17354,16 @@ EmployeeCollection.prototype.getAll = function() {
 }
 
 
+EmployeeCollection.prototype.getByName = function( firstName, lastName ) {
+
+	var employee = $.grep( this._employees, function( employee ) {
+		return ( employee.firstName === firstName && employee.lastName === lastName );
+	} )[ 0 ];
+
+	return employee;
+}
+
+
 EmployeeCollection.prototype.getByFloor = function( floorId ) {
 
 	var floor = floorId.toString();
@@ -17269,7 +17390,128 @@ module.exports = ( function() {
 	_instance = _instance || new EmployeeCollection( arguments );
 	return _instance;
 } )();
-},{"jquery":29}],13:[function(require,module,exports){
+},{"jquery":35}],16:[function(require,module,exports){
+var SeatModel = require( 'models/seat' );
+
+var _instances = {};
+
+
+var Floor = function( floorIndex ) {
+
+	this.index = floorIndex;
+	this.id = 'f' + this.index;
+
+	this.seats = [];
+	this.seats = this.generateSeats( 200 );
+}
+
+
+Floor.prototype.generateSeats = function( opt_amount ) {
+
+	var amount = opt_amount || 100;
+	var seats = [];
+
+	var i;
+	var startIndex = this.seats.length;
+	var endIndex = startIndex + amount;
+
+	for ( i = startIndex; i < endIndex; i++ ) {
+
+		var percX = Math.round( Math.random() * 100 ) + '%';
+		var percY = Math.round( Math.random() * 100 ) + '%';
+		var seatModel = SeatModel.getByIndex( i, this.index );
+		seatModel.x = percX;
+		seatModel.y = percY;
+
+		seats.push( seatModel );
+	}
+
+	return seats;
+}
+
+
+Floor.prototype.getEmployees = function() {
+
+}
+
+
+Floor.prototype.getPrinters = function() {
+
+}
+
+
+Floor.prototype.getRooms = function() {
+
+}
+
+
+Floor.getByIndex = function( index ) {
+	var model;
+
+	if ( !_instances[ index ] ) {
+		model = _instances[ index ] = new Floor( index );
+	} else {
+		model = _instances[ index ];
+	}
+
+	return model;
+}
+
+
+Floor.getVacantSeat = function( floorIndex ) {
+
+	var floor = Floor.getByIndex( floorIndex );
+
+	var vacantSeat = $.grep( floor.seats, function( seat ) {
+		return !seat.occupant;
+	} )[ 0 ];
+
+	return vacantSeat;
+}
+
+
+module.exports = Floor;
+},{"models/seat":17}],17:[function(require,module,exports){
+var _instances = {};
+
+
+var Seat = function( seatIndex, floorIndex ) {
+
+	this.seatIndex = seatIndex;
+	this.floorIndex = floorIndex;
+
+	this.id = Seat.generateId( seatIndex, floorIndex );
+
+	this.x = '0%';
+	this.y = '0%';
+
+	this.occupant = null;
+}
+
+
+Seat.generateId = function( seatIndex, floorIndex ) {
+
+	return 'f' + floorIndex + 's' + seatIndex;
+}
+
+
+Seat.getByIndex = function( seatIndex, floorIndex ) {
+
+	var model;
+	var id = Seat.generateId( seatIndex, floorIndex );
+
+	if ( !_instances[ id ] ) {
+		model = _instances[ id ] = new Seat( seatIndex, floorIndex );
+	} else {
+		model = _instances[ id ];
+	}
+
+	return model;
+}
+
+
+module.exports = Seat;
+},{}],18:[function(require,module,exports){
 var Utils = {};
 
 
@@ -17288,7 +17530,7 @@ Utils.easeOutQuad = function( t ) {
 };
 
 module.exports = Utils;
-},{}],14:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function (global){
 ; var __browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 // This file was automatically generated from main.soy.
@@ -17320,28 +17562,28 @@ template.SeatEditor = function(opt_data, opt_ignored) {
   var employeeListLen6 = employeeList6.length;
   for (var employeeIndex6 = 0; employeeIndex6 < employeeListLen6; employeeIndex6++) {
     var employeeData6 = employeeList6[employeeIndex6];
-    output += template.EmployeeIcon({initials: employeeData6.initials});
+    output += template.EmployeeIcon({initials: employeeData6.initials, firstName: employeeData6.firstName, lastName: employeeData6.lastName});
   }
   output += '</div></div><div class="floor" data-id="7"><div class="inner">';
-  var employeeList11 = opt_data.floor7Employees;
-  var employeeListLen11 = employeeList11.length;
-  for (var employeeIndex11 = 0; employeeIndex11 < employeeListLen11; employeeIndex11++) {
-    var employeeData11 = employeeList11[employeeIndex11];
-    output += template.EmployeeIcon({initials: employeeData11.initials});
+  var employeeList13 = opt_data.floor7Employees;
+  var employeeListLen13 = employeeList13.length;
+  for (var employeeIndex13 = 0; employeeIndex13 < employeeListLen13; employeeIndex13++) {
+    var employeeData13 = employeeList13[employeeIndex13];
+    output += template.EmployeeIcon({initials: employeeData13.initials, firstName: employeeData13.firstName, lastName: employeeData13.lastName});
   }
   output += '</div></div><div class="floor" data-id="8"><div class="inner">';
-  var employeeList16 = opt_data.floor8Employees;
-  var employeeListLen16 = employeeList16.length;
-  for (var employeeIndex16 = 0; employeeIndex16 < employeeListLen16; employeeIndex16++) {
-    var employeeData16 = employeeList16[employeeIndex16];
-    output += template.EmployeeIcon({initials: employeeData16.initials});
+  var employeeList20 = opt_data.floor8Employees;
+  var employeeListLen20 = employeeList20.length;
+  for (var employeeIndex20 = 0; employeeIndex20 < employeeListLen20; employeeIndex20++) {
+    var employeeData20 = employeeList20[employeeIndex20];
+    output += template.EmployeeIcon({initials: employeeData20.initials, firstName: employeeData20.firstName, lastName: employeeData20.lastName});
   }
   output += '</div></div></div><div class="mousewheel-scroller"><div class="inner"></div></div><div class="btn-group floor-buttons" data-toggle="buttons"><label class="btn btn-default active" data-id="6"><input type="radio" name="options" autocomplete="off" checked>6th Flr</label><label class="btn btn-default" data-id="7"><input type="radio" name="options" autocomplete="off">7th Flr</label><label class="btn btn-default" data-id="8"><input type="radio" name="options" autocomplete="off">8th Flr</label></div></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist">';
-  var employeeList21 = opt_data.unseatedEmployees;
-  var employeeListLen21 = employeeList21.length;
-  for (var employeeIndex21 = 0; employeeIndex21 < employeeListLen21; employeeIndex21++) {
-    var employeeData21 = employeeList21[employeeIndex21];
-    output += template.EmployeeIcon({initials: employeeData21.initials});
+  var employeeList27 = opt_data.unseatedEmployees;
+  var employeeListLen27 = employeeList27.length;
+  for (var employeeIndex27 = 0; employeeIndex27 < employeeListLen27; employeeIndex27++) {
+    var employeeData27 = employeeList27[employeeIndex27];
+    output += template.EmployeeIcon({initials: employeeData27.initials, firstName: employeeData27.firstName, lastName: employeeData27.lastName});
   }
   output += '</div></div></div></div></div>';
   return output;
@@ -17355,7 +17597,7 @@ template.SeatEditor = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 template.EmployeeIcon = function(opt_data, opt_ignored) {
-  return '<div class="employee-icon"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div></div>';
+  return '<div class="employee-icon occupant-icon" data-first="' + opt_data.firstName + '" data-last="' + opt_data.lastName + '"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div></div>';
 };
 
 ; browserify_shim__define__module__export__(typeof template != "undefined" ? template : window.template);
@@ -17364,7 +17606,7 @@ template.EmployeeIcon = function(opt_data, opt_ignored) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],15:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // This file is autogenerated via the `commonjs` Grunt task. You can require() this file in a CommonJS environment.
 require('../../js/transition.js')
 require('../../js/alert.js')
@@ -17378,7 +17620,7 @@ require('../../js/popover.js')
 require('../../js/scrollspy.js')
 require('../../js/tab.js')
 require('../../js/affix.js')
-},{"../../js/affix.js":16,"../../js/alert.js":17,"../../js/button.js":18,"../../js/carousel.js":19,"../../js/collapse.js":20,"../../js/dropdown.js":21,"../../js/modal.js":22,"../../js/popover.js":23,"../../js/scrollspy.js":24,"../../js/tab.js":25,"../../js/tooltip.js":26,"../../js/transition.js":27}],16:[function(require,module,exports){
+},{"../../js/affix.js":21,"../../js/alert.js":22,"../../js/button.js":23,"../../js/carousel.js":24,"../../js/collapse.js":25,"../../js/dropdown.js":26,"../../js/modal.js":27,"../../js/popover.js":28,"../../js/scrollspy.js":29,"../../js/tab.js":30,"../../js/tooltip.js":31,"../../js/transition.js":32}],21:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: affix.js v3.3.5
  * http://getbootstrap.com/javascript/#affix
@@ -17542,7 +17784,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],17:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: alert.js v3.3.5
  * http://getbootstrap.com/javascript/#alerts
@@ -17638,7 +17880,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],18:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: button.js v3.3.5
  * http://getbootstrap.com/javascript/#buttons
@@ -17760,7 +18002,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],19:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: carousel.js v3.3.5
  * http://getbootstrap.com/javascript/#carousel
@@ -17999,7 +18241,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],20:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: collapse.js v3.3.5
  * http://getbootstrap.com/javascript/#collapse
@@ -18212,7 +18454,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],21:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: dropdown.js v3.3.5
  * http://getbootstrap.com/javascript/#dropdowns
@@ -18379,7 +18621,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],22:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: modal.js v3.3.5
  * http://getbootstrap.com/javascript/#modals
@@ -18718,7 +18960,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],23:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: popover.js v3.3.5
  * http://getbootstrap.com/javascript/#popovers
@@ -18828,7 +19070,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],24:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: scrollspy.js v3.3.5
  * http://getbootstrap.com/javascript/#scrollspy
@@ -19002,7 +19244,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],25:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: tab.js v3.3.5
  * http://getbootstrap.com/javascript/#tabs
@@ -19159,7 +19401,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],26:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: tooltip.js v3.3.5
  * http://getbootstrap.com/javascript/#tooltip
@@ -19675,7 +19917,7 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],27:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /* ========================================================================
  * Bootstrap: transition.js v3.3.5
  * http://getbootstrap.com/javascript/#transitions
@@ -19736,9 +19978,34 @@ require('../../js/affix.js')
 
 }(jQuery);
 
-},{}],28:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 
-},{}],29:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],35:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -28950,7 +29217,7 @@ return jQuery;
 
 }));
 
-},{}],30:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (global){
 /*!
  * Sheetrock v1.0.0
@@ -29622,5 +29889,5 @@ return jQuery;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"request":28}]},{},[10])
+},{"request":33}]},{},[13])
 //# sourceMappingURL=bundle.map

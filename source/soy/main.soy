@@ -43,6 +43,8 @@
 							{foreach $employee in $floor6Employees}
 							{call .EmployeeIcon}
 								{param initials: $employee.initials /}
+								{param firstName: $employee.firstName /}
+								{param lastName: $employee.lastName /}
 							{/call}
 							{/foreach}
 						</div>
@@ -53,6 +55,8 @@
 							{foreach $employee in $floor7Employees}
 							{call .EmployeeIcon}
 								{param initials: $employee.initials /}
+								{param firstName: $employee.firstName /}
+								{param lastName: $employee.lastName /}
 							{/call}
 							{/foreach}
 						</div>
@@ -63,6 +67,8 @@
 							{foreach $employee in $floor8Employees}
 							{call .EmployeeIcon}
 								{param initials: $employee.initials /}
+								{param firstName: $employee.firstName /}
+								{param lastName: $employee.lastName /}
 							{/call}
 							{/foreach}
 						</div>
@@ -97,6 +103,8 @@
 					{foreach $employee in $unseatedEmployees}
 					{call .EmployeeIcon}
 						{param initials: $employee.initials /}
+						{param firstName: $employee.firstName /}
+						{param lastName: $employee.lastName /}
 					{/call}
 					{/foreach}
 				</div>
@@ -112,9 +120,11 @@
  * Employee Icon
  * An icon on the floor plan to represent employee
  * @param initials The employee name initials.
+ * @param firstName The employee's first name
+ * @param lastName The employee's last name.
  */
 {template .EmployeeIcon}
-<div class="employee-icon">
+<div class="employee-icon occupant-icon" data-first="{ $firstName }" data-last="{ $lastName }">
 	<div class="icon">
 		<span class="initials">{ $initials }</span>
 	</div>

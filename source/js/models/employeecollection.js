@@ -30,6 +30,16 @@ EmployeeCollection.prototype.getAll = function() {
 }
 
 
+EmployeeCollection.prototype.getByName = function( firstName, lastName ) {
+
+	var employee = $.grep( this._employees, function( employee ) {
+		return ( employee.firstName === firstName && employee.lastName === lastName );
+	} )[ 0 ];
+
+	return employee;
+}
+
+
 EmployeeCollection.prototype.getByFloor = function( floorId ) {
 
 	var floor = floorId.toString();

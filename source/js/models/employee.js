@@ -14,14 +14,24 @@ var Employee = function( props ) {
 	this.fullName = this.getFullName();
 }
 
+
 Employee.prototype.getInitials = function() {
 
 	return this.firstName[ 0 ].toUpperCase() + this.lastName[ 0 ].toUpperCase();
 }
 
+
 Employee.prototype.getFullName = function() {
 
 	return this.firstName + ' ' + this.lastName;
 }
+
+
+Employee.prototype.occupy = function( seat ) {
+
+	seat.occupant = this;
+	this.seat = seat;
+}
+
 
 module.exports = Employee;

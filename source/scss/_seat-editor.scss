@@ -26,6 +26,10 @@
 		height: 100%;
 		overflow: hidden;
 		background-image: image-url('grid.png');
+
+		.occupant-icon{
+			position: absolute;
+		}
 	}
 
 	>.split-handle{

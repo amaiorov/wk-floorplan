@@ -1,6 +1,7 @@
 var Utils = require( 'app/utils' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
+var Floor = require( 'controllers/floor' );
 
 var mousewheelHideDelay = null;
 var zoom = 0;
@@ -51,12 +52,14 @@ var FloorViewer = function( _$element ) {
 	this._windowScrollTop = null;
 	this._windowScrollLeft = null;
 
-	// Store floors by id
+	// Create and stores floors by index
 	var floors = this._floors = {};
 	$.each( this.$element.find( '.floor' ), function( i, el ) {
-		floors[ el.getAttribute( 'data-id' ) ] = $( el );
+		var floor = new Floor( el );
+		floors[ floor.getIndex() ] = floor;
 	} );
 
+	//
 	this.init();
 }
 
@@ -132,8 +135,12 @@ FloorViewer.prototype.setMousewheelSpeed = function( multiplier ) {
 
 FloorViewer.prototype.toggleFloor = function( floorId ) {
 
-	$.each( this._floors, function( id, $el ) {
-		$el.toggle( floorId === id );
+	$.each( this._floors, function( id, floor ) {
+		if ( floorId === id ) {
+			floor.show();
+		} else {
+			floor.hide();
+		}
 	} );
 }
 
