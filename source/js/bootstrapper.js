@@ -1,4 +1,3 @@
-var $ = require( 'jquery' );
 var sheetrock = require( 'sheetrock' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );

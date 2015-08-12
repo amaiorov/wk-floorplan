@@ -11,7 +11,7 @@ if (typeof template == 'undefined') { var template = {}; }
  * @notypecheck
  */
 template.Home = function(opt_data, opt_ignored) {
-  return '<div id="home"><div class="wk-logo"></div><table id="chart" class="table table-condensed table-striped"></table></div>';
+  return '<div id="home"><div id="main-container"><div id="toolbar"><div class="inner"><div class="wk-logo"></div></div></div><div id="editor-container"></div></div><table id="chart" class="table table-condensed table-striped"></table></div>';
 };
 
 
@@ -22,7 +22,7 @@ template.Home = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 template.SeatEditor = function(opt_data, opt_ignored) {
-  var output = '<div id="seat-editor"><div class="editing-region"><div class="floor-pane"><div class="floor-viewport"><div class="floor" data-id="6"><div class="inner">';
+  var output = '<div id="seat-editor"><div class="editing-region"><div class="floor-pane"><div class="floor-viewport"><div class="floor-container"><div class="floor" data-id="6"><div class="inner">';
   var employeeList6 = opt_data.floor6Employees;
   var employeeListLen6 = employeeList6.length;
   for (var employeeIndex6 = 0; employeeIndex6 < employeeListLen6; employeeIndex6++) {
@@ -43,7 +43,7 @@ template.SeatEditor = function(opt_data, opt_ignored) {
     var employeeData16 = employeeList16[employeeIndex16];
     output += template.EmployeeIcon({initials: employeeData16.initials});
   }
-  output += '</div></div></div><div class="btn-group floor-buttons" role="group" aria-label="..."><button type="button" class="btn btn-default" data-id="6">Floor 6</button><button type="button" class="btn btn-default" data-id="7">Floor 7</button><button type="button" class="btn btn-default" data-id="8">Floor 8</button></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist">';
+  output += '</div></div></div><div class="mousewheel-scroller"><div class="inner"></div></div><div class="btn-group floor-buttons" data-toggle="buttons"><label class="btn btn-default active" data-id="6"><input type="radio" name="options" autocomplete="off" checked>6th Flr</label><label class="btn btn-default" data-id="7"><input type="radio" name="options" autocomplete="off">7th Flr</label><label class="btn btn-default" data-id="8"><input type="radio" name="options" autocomplete="off">8th Flr</label></div></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist">';
   var employeeList21 = opt_data.unseatedEmployees;
   var employeeListLen21 = employeeList21.length;
   for (var employeeIndex21 = 0; employeeIndex21 < employeeListLen21; employeeIndex21++) {

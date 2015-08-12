@@ -1,6 +1,6 @@
-var $ = require( 'jquery' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
+var FloorViewer = require( 'controllers/floorviewer' );
 var employeeCollection = require( 'models/employeecollection' );
 
 var _instance;
@@ -19,7 +19,7 @@ var SeatEditor = function() {
 		unseatedEmployees: unseatedEmployees
 	} );
 
-	$( document.body ).append( this.element );
+	$( '#editor-container' ).append( this.element );
 
 	// declare vars
 	this._metrics = null;
@@ -40,6 +40,10 @@ var SeatEditor = function() {
 
 	this._$splitHandle = $( this.element ).find( '.split-handle' );
 	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
+
+	// create editor components
+	var $floorViewport = $( this.element ).find( '.floor-viewport' );
+	this._floorViewer = new FloorViewer( $floorViewport );
 }
 
 
