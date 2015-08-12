@@ -9,9 +9,16 @@ var Employee = function( props ) {
 	this.deskDrawerKey = props[ 'Desk Drawer Key #' ];
 	this.workEmail = props[ 'workEmail' ];
 	this.cellPhone = props[ 'Cell Phone #s' ];
-	this.seat = null;
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
+	this.x = null;
+	this.y = null;
+}
+
+
+Employee.prototype.isSeated = function() {
+
+	return ( this.x !== null && this.y !== null );
 }
 
 
@@ -27,10 +34,27 @@ Employee.prototype.getFullName = function() {
 }
 
 
-Employee.prototype.occupy = function( seat ) {
+Employee.prototype.seat = function( seat ) {
 
-	seat.occupant = this;
+	seat.entity = this;
 	this.seat = seat;
+
+	this.seatByPosition( seat.x, seat.y );
+}
+
+
+Employee.prototype.seatByPosition = function( x, y ) {
+
+	this.x = x;
+	this.y = y;
+}
+
+
+Employee.prototype.unseat = function() {
+
+	this.seat = null;
+	this.x = null;
+	this.y = null;
 }
 
 

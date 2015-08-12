@@ -11,7 +11,7 @@ var Seat = function( seatIndex, floorIndex ) {
 	this.x = '0%';
 	this.y = '0%';
 
-	this.occupant = null;
+	this.entity = null;
 }
 
 
@@ -34,6 +34,9 @@ Seat.getByIndex = function( seatIndex, floorIndex ) {
 
 	return model;
 }
+
+
+Seat.RADIUS = 15;
 
 
 module.exports = Seat;

@@ -46,7 +46,7 @@ module.exports = ( function() {
 } )();
 },{"controllers/seateditor":6,"libs/soyutils":12,"models/employee":14,"models/employeecollection":15,"sheetrock":36,"views/main.soy":19}],2:[function(require,module,exports){
 var inherits = require( 'inherits' );
-var OccupantIcon = require( 'controllers/occupanticon' );
+var EntityIcon = require( 'controllers/entityicon' );
 var employeeCollection = require( 'models/employeecollection' );
 
 
@@ -56,16 +56,37 @@ var EmployeeIcon = function( element, id ) {
 	var lastName = element.getAttribute( 'data-last' );
 	var model = employeeCollection.getByName( firstName, lastName );
 
-	OccupantIcon.call( this, element, model );
+	EntityIcon.call( this, element, model );
 
 }
-inherits( EmployeeIcon, OccupantIcon );
+inherits( EmployeeIcon, EntityIcon );
 
 
 //Creature.prototype.die.call( this );
 
 module.exports = EmployeeIcon;
-},{"controllers/occupanticon":5,"inherits":34,"models/employeecollection":15}],3:[function(require,module,exports){
+},{"controllers/entityicon":3,"inherits":34,"models/employeecollection":15}],3:[function(require,module,exports){
+var EntityIcon = function( element, model ) {
+
+	// assign view element
+	this.$element = $( element );
+
+	// assign model
+	this.model = model;
+}
+
+
+EntityIcon.prototype.updatePosition = function() {
+
+	this.$element.css( {
+		'top': this.model.seat.y,
+		'left': this.model.seat.x
+	} );
+};
+
+
+module.exports = EntityIcon;
+},{}],4:[function(require,module,exports){
 var FloorModel = require( 'models/floor' );
 
 var EmployeeIcon = require( 'controllers/employeeicon' );
@@ -81,18 +102,18 @@ var Floor = function( element ) {
 	var floorIndex = this.$element.attr( 'data-id' );
 	this._model = FloorModel.getByIndex( floorIndex );
 
-	// create occupants
-	var occupants = this._occupants = [];
+	// create entities
+	var entities = this._entities = [];
 
-	$.each( this.$element.find( '.occupant-icon' ), $.proxy( function( i, el ) {
+	$.each( this.$element.find( '.entity-icon' ), $.proxy( function( i, el ) {
 
-		var occupant = new EmployeeIcon( el );
-		occupants.push( occupant );
+		var entity = new EmployeeIcon( el );
+		entities.push( entity );
 
-		// WIP: NOW AUTOMATICALLY ASSIGN OCCUPANTS WITH VACANT SEATS
+		// WIP: NOW AUTOMATICALLY ASSIGN ENTITIES WITH VACANT SEATS
 		var seat = FloorModel.getVacantSeat( this._model.index );
-		occupant.model.occupy( seat );
-		occupant.updatePosition();
+		entity.model.seat( seat );
+		entity.updatePosition();
 
 	}, this ) );
 }
@@ -117,7 +138,7 @@ Floor.prototype.hide = function() {
 
 
 module.exports = Floor;
-},{"controllers/employeeicon":2,"models/floor":16,"models/seat":17}],4:[function(require,module,exports){
+},{"controllers/employeeicon":2,"models/floor":16,"models/seat":17}],5:[function(require,module,exports){
 var Utils = require( 'app/utils' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
@@ -391,28 +412,7 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 }
 
 module.exports = FloorViewer;
-},{"app/utils":18,"controllers/floor":3,"libs/gsap/TweenMax":8,"libs/gsap/utils/Draggable":11}],5:[function(require,module,exports){
-var OccupantIcon = function( element, model ) {
-
-	// assign view element
-	this.$element = $( element );
-
-	// assign model
-	this.model = model;
-}
-
-
-OccupantIcon.prototype.updatePosition = function() {
-
-	this.$element.css( {
-		'top': this.model.seat.y,
-		'left': this.model.seat.x
-	} );
-};
-
-
-module.exports = OccupantIcon;
-},{}],6:[function(require,module,exports){
+},{"app/utils":18,"controllers/floor":4,"libs/gsap/TweenMax":8,"libs/gsap/utils/Draggable":11}],6:[function(require,module,exports){
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorViewer = require( 'controllers/floorviewer' );
@@ -526,7 +526,7 @@ module.exports = {
 		return _instance;
 	}
 };
-},{"controllers/floorviewer":4,"libs/soyutils":12,"models/employeecollection":15,"views/main.soy":19}],7:[function(require,module,exports){
+},{"controllers/floorviewer":5,"libs/soyutils":12,"models/employeecollection":15,"views/main.soy":19}],7:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.17.0
@@ -17295,9 +17295,16 @@ var Employee = function( props ) {
 	this.deskDrawerKey = props[ 'Desk Drawer Key #' ];
 	this.workEmail = props[ 'workEmail' ];
 	this.cellPhone = props[ 'Cell Phone #s' ];
-	this.seat = null;
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
+	this.x = null;
+	this.y = null;
+}
+
+
+Employee.prototype.isSeated = function() {
+
+	return ( this.x !== null && this.y !== null );
 }
 
 
@@ -17313,10 +17320,27 @@ Employee.prototype.getFullName = function() {
 }
 
 
-Employee.prototype.occupy = function( seat ) {
+Employee.prototype.seat = function( seat ) {
 
-	seat.occupant = this;
+	seat.entity = this;
 	this.seat = seat;
+
+	this.seatByPosition( seat.x, seat.y );
+}
+
+
+Employee.prototype.seatByPosition = function( x, y ) {
+
+	this.x = x;
+	this.y = y;
+}
+
+
+Employee.prototype.unseat = function() {
+
+	this.seat = null;
+	this.x = null;
+	this.y = null;
 }
 
 
@@ -17463,7 +17487,7 @@ Floor.getVacantSeat = function( floorIndex ) {
 	var floor = Floor.getByIndex( floorIndex );
 
 	var vacantSeat = $.grep( floor.seats, function( seat ) {
-		return !seat.occupant;
+		return !seat.entity;
 	} )[ 0 ];
 
 	return vacantSeat;
@@ -17485,7 +17509,7 @@ var Seat = function( seatIndex, floorIndex ) {
 	this.x = '0%';
 	this.y = '0%';
 
-	this.occupant = null;
+	this.entity = null;
 }
 
 
@@ -17508,6 +17532,9 @@ Seat.getByIndex = function( seatIndex, floorIndex ) {
 
 	return model;
 }
+
+
+Seat.RADIUS = 15;
 
 
 module.exports = Seat;
@@ -17562,28 +17589,28 @@ template.SeatEditor = function(opt_data, opt_ignored) {
   var employeeListLen6 = employeeList6.length;
   for (var employeeIndex6 = 0; employeeIndex6 < employeeListLen6; employeeIndex6++) {
     var employeeData6 = employeeList6[employeeIndex6];
-    output += template.EmployeeIcon({initials: employeeData6.initials, firstName: employeeData6.firstName, lastName: employeeData6.lastName});
+    output += template.EmployeeIcon({initials: employeeData6.initials, firstName: employeeData6.firstName, lastName: employeeData6.lastName, extension: employeeData6.extension, showInfo: true});
   }
   output += '</div></div><div class="floor" data-id="7"><div class="inner">';
-  var employeeList13 = opt_data.floor7Employees;
-  var employeeListLen13 = employeeList13.length;
-  for (var employeeIndex13 = 0; employeeIndex13 < employeeListLen13; employeeIndex13++) {
-    var employeeData13 = employeeList13[employeeIndex13];
-    output += template.EmployeeIcon({initials: employeeData13.initials, firstName: employeeData13.firstName, lastName: employeeData13.lastName});
+  var employeeList15 = opt_data.floor7Employees;
+  var employeeListLen15 = employeeList15.length;
+  for (var employeeIndex15 = 0; employeeIndex15 < employeeListLen15; employeeIndex15++) {
+    var employeeData15 = employeeList15[employeeIndex15];
+    output += template.EmployeeIcon({initials: employeeData15.initials, firstName: employeeData15.firstName, lastName: employeeData15.lastName, extension: employeeData15.extension, showInfo: true});
   }
   output += '</div></div><div class="floor" data-id="8"><div class="inner">';
-  var employeeList20 = opt_data.floor8Employees;
-  var employeeListLen20 = employeeList20.length;
-  for (var employeeIndex20 = 0; employeeIndex20 < employeeListLen20; employeeIndex20++) {
-    var employeeData20 = employeeList20[employeeIndex20];
-    output += template.EmployeeIcon({initials: employeeData20.initials, firstName: employeeData20.firstName, lastName: employeeData20.lastName});
+  var employeeList24 = opt_data.floor8Employees;
+  var employeeListLen24 = employeeList24.length;
+  for (var employeeIndex24 = 0; employeeIndex24 < employeeListLen24; employeeIndex24++) {
+    var employeeData24 = employeeList24[employeeIndex24];
+    output += template.EmployeeIcon({initials: employeeData24.initials, firstName: employeeData24.firstName, lastName: employeeData24.lastName, extension: employeeData24.extension, showInfo: true});
   }
   output += '</div></div></div><div class="mousewheel-scroller"><div class="inner"></div></div><div class="btn-group floor-buttons" data-toggle="buttons"><label class="btn btn-default active" data-id="6"><input type="radio" name="options" autocomplete="off" checked>6th Flr</label><label class="btn btn-default" data-id="7"><input type="radio" name="options" autocomplete="off">7th Flr</label><label class="btn btn-default" data-id="8"><input type="radio" name="options" autocomplete="off">8th Flr</label></div></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist">';
-  var employeeList27 = opt_data.unseatedEmployees;
-  var employeeListLen27 = employeeList27.length;
-  for (var employeeIndex27 = 0; employeeIndex27 < employeeListLen27; employeeIndex27++) {
-    var employeeData27 = employeeList27[employeeIndex27];
-    output += template.EmployeeIcon({initials: employeeData27.initials, firstName: employeeData27.firstName, lastName: employeeData27.lastName});
+  var employeeList33 = opt_data.unseatedEmployees;
+  var employeeListLen33 = employeeList33.length;
+  for (var employeeIndex33 = 0; employeeIndex33 < employeeListLen33; employeeIndex33++) {
+    var employeeData33 = employeeList33[employeeIndex33];
+    output += template.EmployeeIcon({initials: employeeData33.initials, firstName: employeeData33.firstName, lastName: employeeData33.lastName, extension: employeeData33.extension});
   }
   output += '</div></div></div></div></div>';
   return output;
@@ -17597,7 +17624,7 @@ template.SeatEditor = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 template.EmployeeIcon = function(opt_data, opt_ignored) {
-  return '<div class="employee-icon occupant-icon" data-first="' + opt_data.firstName + '" data-last="' + opt_data.lastName + '" data-clickable="true"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div></div>';
+  return '<div class="employee-icon entity-icon" data-first="' + opt_data.firstName + '" data-last="' + opt_data.lastName + '" data-clickable="true"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div>' + ((opt_data.showInfo == true) ? '<div class="info"><p>' + opt_data.firstName + ' ' + opt_data.lastName + '</p>' + ((opt_data.extension) ? '<p><span>Ext</span> ' + opt_data.extension + '</p>' : '') + '</div>' : '') + '</div>';
 };
 
 ; browserify_shim__define__module__export__(typeof template != "undefined" ? template : window.template);

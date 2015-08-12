@@ -70,7 +70,7 @@ Floor.getVacantSeat = function( floorIndex ) {
 	var floor = Floor.getByIndex( floorIndex );
 
 	var vacantSeat = $.grep( floor.seats, function( seat ) {
-		return !seat.occupant;
+		return !seat.entity;
 	} )[ 0 ];
 
 	return vacantSeat;

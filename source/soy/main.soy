@@ -55,6 +55,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -67,6 +69,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -79,6 +83,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -115,6 +121,7 @@
 						{param initials: $employee.initials /}
 						{param firstName: $employee.firstName /}
 						{param lastName: $employee.lastName /}
+						{param extension: $employee.extension /}
 					{/call}
 					{/foreach}
 				</div>
@@ -132,11 +139,19 @@
  * @param initials The employee name initials.
  * @param firstName The employee's first name
  * @param lastName The employee's last name.
+ * @param? extension The employee's extension number.
+ * @param? showInfo The ability to show info panel.
  */
 {template .EmployeeIcon}
-<div class="employee-icon occupant-icon" data-first="{ $firstName }" data-last="{ $lastName }" data-clickable="true">
+<div class="employee-icon entity-icon" data-first="{ $firstName }" data-last="{ $lastName }" data-clickable="true">
 	<div class="icon">
 		<span class="initials">{ $initials }</span>
 	</div>
+	{if $showInfo == true}
+	<div class="info">
+		<p>{ $firstName } { $lastName }</p>
+		{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
+	</div>
+	{/if}
 </div>
 {/template}

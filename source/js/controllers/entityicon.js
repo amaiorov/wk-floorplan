@@ -1,4 +1,4 @@
-var OccupantIcon = function( element, model ) {
+var EntityIcon = function( element, model ) {
 
 	// assign view element
 	this.$element = $( element );
@@ -8,7 +8,7 @@ var OccupantIcon = function( element, model ) {
 }
 
 
-OccupantIcon.prototype.updatePosition = function() {
+EntityIcon.prototype.updatePosition = function() {
 
 	this.$element.css( {
 		'top': this.model.seat.y,
@@ -17,4 +17,4 @@ OccupantIcon.prototype.updatePosition = function() {
 };
 
 
-module.exports = OccupantIcon;
+module.exports = EntityIcon;
