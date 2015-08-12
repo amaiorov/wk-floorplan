@@ -62,5 +62,5 @@ template.SeatEditor = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 template.EmployeeIcon = function(opt_data, opt_ignored) {
-  return '<div class="employee-icon occupant-icon" data-first="' + opt_data.firstName + '" data-last="' + opt_data.lastName + '"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div></div>';
+  return '<div class="employee-icon occupant-icon" data-first="' + opt_data.firstName + '" data-last="' + opt_data.lastName + '" data-clickable="true"><div class="icon"><span class="initials">' + opt_data.initials + '</span></div></div>';
 };
