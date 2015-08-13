@@ -15,16 +15,15 @@ var Floor = function( element ) {
 
 	// create entities
 	var entities = this._entities = [];
+	var vacantSeats = FloorModel.getVacantSeats( this._model.index );
 
 	$.each( this.$element.find( '.entity-icon' ), $.proxy( function( i, el ) {
 
 		var entity = new EmployeeIcon( el );
 		entities.push( entity );
 
-		// WIP: NOW AUTOMATICALLY ASSIGN ENTITIES WITH VACANT SEATS
-		var seat = FloorModel.getVacantSeat( this._model.index );
-		entity.model.seat( seat );
-		entity.updatePosition();
+		var seat = vacantSeats.shift();
+		entity.model.seat = seat;
 
 	}, this ) );
 }

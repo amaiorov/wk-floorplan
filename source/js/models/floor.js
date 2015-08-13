@@ -65,15 +65,15 @@ Floor.getByIndex = function( index ) {
 }
 
 
-Floor.getVacantSeat = function( floorIndex ) {
+Floor.getVacantSeats = function( floorIndex ) {
 
 	var floor = Floor.getByIndex( floorIndex );
 
-	var vacantSeat = $.grep( floor.seats, function( seat ) {
+	var vacantSeats = $.grep( floor.seats, function( seat ) {
 		return !seat.entity;
-	} )[ 0 ];
+	} );
 
-	return vacantSeat;
+	return vacantSeats;
 }
 
 

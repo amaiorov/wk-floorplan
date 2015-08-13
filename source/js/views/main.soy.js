@@ -43,15 +43,26 @@ template.SeatEditor = function(opt_data, opt_ignored) {
     var employeeData24 = employeeList24[employeeIndex24];
     output += template.EmployeeIcon({initials: employeeData24.initials, firstName: employeeData24.firstName, lastName: employeeData24.lastName, extension: employeeData24.extension, showInfo: true});
   }
-  output += '</div></div></div><div class="mousewheel-scroller"><div class="inner"></div></div><div class="btn-group floor-buttons" data-toggle="buttons"><label class="btn btn-default active" data-id="6"><input type="radio" name="options" autocomplete="off" checked>6th Flr</label><label class="btn btn-default" data-id="7"><input type="radio" name="options" autocomplete="off">7th Flr</label><label class="btn btn-default" data-id="8"><input type="radio" name="options" autocomplete="off">8th Flr</label></div></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist">';
+  output += '</div></div></div><div class="mousewheel-scroller"><div class="inner"></div></div><div class="btn-group floor-buttons" data-toggle="buttons"><label class="btn btn-default active" data-id="6"><input type="radio" name="options" autocomplete="off" checked>6th Flr</label><label class="btn btn-default" data-id="7"><input type="radio" name="options" autocomplete="off">7th Flr</label><label class="btn btn-default" data-id="8"><input type="radio" name="options" autocomplete="off">8th Flr</label></div></div><div class="split-handle"></div></div><div class="waitlist-pane"><div class="container"><h3>Wait List</h3><div class="waitlist-container"><div class="waitlist">';
   var employeeList33 = opt_data.unseatedEmployees;
   var employeeListLen33 = employeeList33.length;
   for (var employeeIndex33 = 0; employeeIndex33 < employeeListLen33; employeeIndex33++) {
     var employeeData33 = employeeList33[employeeIndex33];
     output += template.EmployeeIcon({initials: employeeData33.initials, firstName: employeeData33.firstName, lastName: employeeData33.lastName, extension: employeeData33.extension});
   }
-  output += '</div></div></div></div></div>';
+  output += '</div><div class="info-container"></div></div></div></div></div></div>';
   return output;
+};
+
+
+/**
+ * @param {Object.<string, *>=} opt_data
+ * @param {(null|undefined)=} opt_ignored
+ * @return {string}
+ * @notypecheck
+ */
+template.WaitlistEmployeeInfo = function(opt_data, opt_ignored) {
+  return '<div class="info"><h3>' + opt_data.firstName + ' ' + opt_data.lastName + '</h3>' + ((opt_data.extension) ? '<p><span>Ext</span> ' + opt_data.extension + '</p>' : '') + ((opt_data.department) ? '<p>' + opt_data.department + '</p>' : '') + '</div>';
 };
 
 

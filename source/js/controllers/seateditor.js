@@ -88,7 +88,7 @@ SeatEditor.prototype.onSplitDrag = function( e ) {
 
 	var dragFracX = ( e.clientX - this._metrics.editingRegionLeft ) / this._metrics.editingRegionWidth;
 	var minFracX = .6;
-	var maxFracX = .9;
+	var maxFracX = 1;
 	dragFracX = Math.min( Math.max( dragFracX, minFracX ), maxFracX );
 
 	this._$floorPane.css( 'width', dragFracX * 100 + '%' );

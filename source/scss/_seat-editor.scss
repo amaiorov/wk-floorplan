@@ -125,13 +125,25 @@
 			height: 40px;
 		}
 
-		>.waitlist{
+		>.waitlist-container{
+			position: relative;
 			width: 100%;
 			height: calc(100% - 40px);
 			overflow: auto;
 
-			.employee-icon{
-				@include translate(0, 0);
+			>.waitlist{
+				height: calc(100% - 300px);
+
+				.employee-icon{
+					@include translate(0, 0);
+					margin: 0 10px 10px 0;
+					cursor: pointer;
+				}
+			}
+
+			>.info-container{
+				height: 300px;
+				border-top: 1px dashed lightgray;
 			}
 		}
 	}
@@ -203,7 +215,7 @@
 		z-index: 1;
 
 		>.icon{
-			background: darken(#99CCFF, 5);
+			background: darken(#99CCFF, 8);
 		}
 
 		>.info{
