@@ -5,3 +5,9 @@ source/.sass-cache
 release
 Gemfile.lock
 *.sublime-workspace
+source/js/views/*.js
+source/css/wkfp.css
+source/fonts/fontcustom/*.svg
+source/fonts/fontcustom/*.eot
+source/fonts/fontcustom/*.ttf
+source/fonts/fontcustom/*.woffm
