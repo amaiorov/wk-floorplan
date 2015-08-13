@@ -1,3 +1,5 @@
+var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+
 var Employee = function( props ) {
 
 	this.firstName = props[ 'First' ];
@@ -9,9 +11,22 @@ var Employee = function( props ) {
 	this.deskDrawerKey = props[ 'Desk Drawer Key #' ];
 	this.workEmail = props[ 'workEmail' ];
 	this.cellPhone = props[ 'Cell Phone #s' ];
-	this.seat = null;
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
+	this.seat = null;
+	this.x = null;
+	this.y = null;
+
+	this._$onObserved = $.proxy( this.onObserved, this );
+
+	this._observer = new ObjectObserver( this );
+	this._observer.open( this._$onObserved );
+}
+
+
+Employee.prototype.isSeated = function() {
+
+	return ( this.x !== null && this.y !== null );
 }
 
 
@@ -27,10 +42,41 @@ Employee.prototype.getFullName = function() {
 }
 
 
-Employee.prototype.occupy = function( seat ) {
+Employee.prototype.seatByPosition = function( x, y ) {
 
-	seat.occupant = this;
-	this.seat = seat;
+	this.x = x;
+	this.y = y;
+}
+
+
+Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+
+	for ( var key in changed ) {
+		var value = changed[ key ];
+
+		switch ( key ) {
+			case 'seat':
+				var seat = value;
+
+				if ( seat ) {
+
+					seat.entity = this;
+
+					this.seat = seat;
+					this.seatByPosition( this.seat.x, this.seat.y );
+
+				} else {
+
+					seat = null;
+					this.x = null;
+					this.y = null;
+				}
+				break;
+
+			default:
+				break;
+		}
+	}
 }
 
 

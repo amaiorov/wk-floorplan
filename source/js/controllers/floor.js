@@ -13,18 +13,17 @@ var Floor = function( element ) {
 	var floorIndex = this.$element.attr( 'data-id' );
 	this._model = FloorModel.getByIndex( floorIndex );
 
-	// create occupants
-	var occupants = this._occupants = [];
+	// create entities
+	var entities = this._entities = [];
+	var vacantSeats = FloorModel.getVacantSeats( this._model.index );
 
-	$.each( this.$element.find( '.occupant-icon' ), $.proxy( function( i, el ) {
+	$.each( this.$element.find( '.entity-icon' ), $.proxy( function( i, el ) {
 
-		var occupant = new EmployeeIcon( el );
-		occupants.push( occupant );
+		var entity = new EmployeeIcon( el );
+		entities.push( entity );
 
-		// WIP: NOW AUTOMATICALLY ASSIGN OCCUPANTS WITH VACANT SEATS
-		var seat = FloorModel.getVacantSeat( this._model.index );
-		occupant.model.occupy( seat );
-		occupant.updatePosition();
+		var seat = vacantSeats.shift();
+		entity.model.seat = seat;
 
 	}, this ) );
 }

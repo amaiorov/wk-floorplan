@@ -27,7 +27,7 @@
 		overflow: hidden;
 		background-image: image-url('grid.png');
 
-		.occupant-icon{
+		.entity-icon{
 			position: absolute;
 		}
 	}
@@ -125,19 +125,31 @@
 			height: 40px;
 		}
 
-		>.waitlist{
+		>.waitlist-container{
+			position: relative;
 			width: 100%;
 			height: calc(100% - 40px);
 			overflow: auto;
 
-			.employee-icon{
-				@include translate(0, 0);
+			>.waitlist{
+				height: calc(100% - 300px);
+
+				.employee-icon{
+					@include translate(0, 0);
+					margin: 0 10px 10px 0;
+					cursor: pointer;
+				}
+			}
+
+			>.info-container{
+				height: 300px;
+				border-top: 1px dashed lightgray;
 			}
 		}
 	}
 }
 
-.occupant-icon{
+.entity-icon{
 	@include inline-block(top);
 	position: relative;
 	z-index: 0;
@@ -147,6 +159,8 @@
 	@include user-select(none);
 
 	>.icon{
+		position: relative;
+		z-index: 0;
 		width: 40px;
 		height: 40px;
 		background: #99CCFF;
@@ -155,14 +169,60 @@
 		line-height: 40px;
 		font-size: 14px;
 		@include border-radius(100%);
+		@include box-shadow(0px 1px 2px 0px rgba(black,0.1));
 		@include transition(background .4s $easeOutCubic);
+	}
+
+	>.info{
+		position: absolute;
+		z-index: 1;
+		display: inline-block;
+		left: 20px;
+		top: 5px;
+		background: black;
+		color: white;
+		padding: 10px 20px;
+		font-size: 14px;
+		white-space: nowrap;
+		@include box-sizing(border-box);
+		@include box-shadow(2px 4px 10px 0px rgba(black,0.1));
+		@include translate(-50%, -100%);
+		@include backfaceHidden();
+		visibility: hidden;
+		opacity: 0;
+		@include transition( top .2s $easeOutCubic, visibility .2s, opacity .2s $easeOutCubic );
+
+		>p{
+			line-height: 1.4;
+		}
+
+		&:after{
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -10px;
+			display: block;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width: 10px 10px 0 10px;
+			border-color: #000000 transparent transparent transparent;
+		}
 	}
 
 	&:hover{
 		z-index: 1;
 
 		>.icon{
-			background: darken(#99CCFF, 5);
+			background: darken(#99CCFF, 8);
+		}
+
+		>.info{
+			visibility: visible;
+			opacity: 1;
+			top: -5px;
+			@include transition-delay(.2s);
 		}
 	}
 }

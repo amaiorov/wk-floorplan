@@ -61,6 +61,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -73,6 +75,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -85,6 +89,8 @@
 								{param initials: $employee.initials /}
 								{param firstName: $employee.firstName /}
 								{param lastName: $employee.lastName /}
+								{param extension: $employee.extension /}
+								{param showInfo: true /}
 							{/call}
 							{/foreach}
 						</div>
@@ -115,14 +121,19 @@
 		<div class="waitlist-pane">
 			<div class="container">
 				<h3>Wait List</h3>
-				<div class="waitlist">
+				<div class="waitlist-container">
+					<div class="waitlist">
 					{foreach $employee in $unseatedEmployees}
 					{call .EmployeeIcon}
 						{param initials: $employee.initials /}
 						{param firstName: $employee.firstName /}
 						{param lastName: $employee.lastName /}
+						{param extension: $employee.extension /}
 					{/call}
 					{/foreach}
+					</div>
+					<div class="info-container">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -133,16 +144,40 @@
 
 
 /**
+ * The employee info shown in the waitlist sidebar
+ * @param firstName The employee's first name
+ * @param lastName The employee's last name.
+ * @param? extension The employee's extension number.
+ * @param? department The employee's department.
+ */
+{template .WaitlistEmployeeInfo}
+<div class="info">
+	<h3>{ $firstName } { $lastName }</h3>
+	{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
+	{if $department }<p>{ $department }</p>{/if}
+</div>
+{/template}
+
+
+/**
  * Employee Icon
  * An icon on the floor plan to represent employee
  * @param initials The employee name initials.
  * @param firstName The employee's first name
  * @param lastName The employee's last name.
+ * @param? extension The employee's extension number.
+ * @param? showInfo The ability to show info panel.
  */
 {template .EmployeeIcon}
-<div class="employee-icon occupant-icon" data-first="{ $firstName }" data-last="{ $lastName }" data-clickable="true">
+<div class="employee-icon entity-icon" data-first="{ $firstName }" data-last="{ $lastName }" data-clickable="true">
 	<div class="icon">
 		<span class="initials">{ $initials }</span>
 	</div>
+	{if $showInfo == true}
+	<div class="info">
+		<p>{ $firstName } { $lastName }</p>
+		{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
+	</div>
+	{/if}
 </div>
 {/template}

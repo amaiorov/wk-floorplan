@@ -1,5 +1,5 @@
 var inherits = require( 'inherits' );
-var OccupantIcon = require( 'controllers/occupanticon' );
+var EntityIcon = require( 'controllers/entityicon' );
 var employeeCollection = require( 'models/employeecollection' );
 
 
@@ -9,10 +9,10 @@ var EmployeeIcon = function( element, id ) {
 	var lastName = element.getAttribute( 'data-last' );
 	var model = employeeCollection.getByName( firstName, lastName );
 
-	OccupantIcon.call( this, element, model );
+	EntityIcon.call( this, element, model );
 
 }
-inherits( EmployeeIcon, OccupantIcon );
+inherits( EmployeeIcon, EntityIcon );
 
 
 //Creature.prototype.die.call( this );
