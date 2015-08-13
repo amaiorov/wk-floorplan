@@ -1,0 +1,1 @@
+var employeeCollection = require( 'models/employeecollection' );
