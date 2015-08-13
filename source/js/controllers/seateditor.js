@@ -28,15 +28,23 @@ var SeatEditor = function() {
 	// query dom elements
 	this._$floorPane = $( this.element ).find( '.floor-pane' );
 	this._$waitlistPane = $( this.element ).find( '.waitlist-pane' );
+	this._$waitlist = this._$waitlistPane.find( '.waitlist' );
+	this._$waitlistContainer = this._$waitlistPane.find( '.waitlist-container' );
+	this._$waitlistInfoContainer = this._$waitlistPane.find( '.info-container' );
 
 	// scoped methods
 	this._$onSplitStart = $.proxy( this.onSplitStart, this );
 	this._$onSplitDrag = $.proxy( this.onSplitDrag, this );
 	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
+	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
+	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
 	this._$resize = $.proxy( this.resize, this );
 
 	// add events
 	$( window ).on( 'resize', this._$resize ).resize();
+
+	this._$waitlist.on( 'click', this._$onClickWaitlist );
+	this._$waitlistPane.on( 'click', '.entity-icon', this._$onClickWaitlistIcon );
 
 	this._$splitHandle = $( this.element ).find( '.split-handle' );
 	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
@@ -103,6 +111,33 @@ SeatEditor.prototype.onSplitEnd = function( e ) {
 
 	$( 'html' ).attr( 'data-cursor', '' );
 }
+
+
+SeatEditor.prototype.onClickWaitlist = function( e ) {
+
+	var notClickedOnIcons = ( e.delegateTarget === e.target );
+
+	if ( notClickedOnIcons ) {
+		this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
+		this._$waitlistContainer.removeClass( 'show-info' );
+	}
+};
+
+
+SeatEditor.prototype.onClickWaitlistIcon = function( e ) {
+
+	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
+
+	var $icon = $( e.currentTarget ).addClass( 'active' );
+	var employee = employeeCollection.getByName( $icon.attr( 'data-first' ), $icon.attr( 'data-last' ) );
+
+	var infoEl = soy.renderAsFragment( template.WaitlistInfo, {
+		employee: employee
+	} );
+
+	this._$waitlistInfoContainer.empty().append( infoEl );
+	this._$waitlistContainer.addClass( 'show-info' );
+};
 
 
 module.exports = {

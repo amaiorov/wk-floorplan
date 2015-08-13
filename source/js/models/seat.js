@@ -1,3 +1,5 @@
+var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+
 var _instances = {};
 
 
@@ -12,6 +14,11 @@ var Seat = function( seatIndex, floorIndex ) {
 	this.y = '0%';
 
 	this.entity = null;
+
+	this._$onObserved = $.proxy( this.onObserved, this );
+
+	this._observer = new ObjectObserver( this );
+	this._observer.open( this._$onObserved );
 }
 
 
@@ -33,6 +40,24 @@ Seat.getByIndex = function( seatIndex, floorIndex ) {
 	}
 
 	return model;
+}
+
+
+Seat.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+
+	for ( var key in changed ) {
+		var value = changed[ key ];
+
+		switch ( key ) {
+			case 'entity':
+				var entity = value;
+				entity.seat = this;
+				break;
+
+			default:
+				break;
+		}
+	}
 }
 
 
