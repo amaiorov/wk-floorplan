@@ -17546,7 +17546,7 @@ if (typeof template == 'undefined') { var template = {}; }
  * @notypecheck
  */
 template.Home = function(opt_data, opt_ignored) {
-  return '<div id="home"><div id="main-container"><div id="toolbar"><div class="inner"><div class="wk-logo"></div><div id="search"><input type="text"><button type="button" class="btn btn-default" data-id="search"><select><option>All</option><option value="people">People</option><option value="printers">Printers</option><option value="rooms">Rooms</option></select></div></div></div><div id="editor-container"></div></div><table id="chart" class="table table-condensed table-striped"></table></div>';
+  return '<div id="home"><div id="main-container"><div id="toolbar"><div class="inner"><div class="wk-logo"></div><div id="search"><div class="input-group"><input type="text" class="form-control" aria-label="..."><div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everything <span class="caret"></span></button><ul class="dropdown-menu dropdown-menu-right"><li><a href="#" data-value="all">Everything</a></li><li><a href="#" data-value="people">People</a></li><li><a href="#" data-value="rooms">Rooms</a></li><li><a href="#" data-value="printers">Printers</a></li></ul></div></div></div></div></div><div id="editor-container"></div></div><table id="chart" class="table table-condensed table-striped"></table></div>';
 };
 
 
