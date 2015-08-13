@@ -119,8 +119,8 @@
 		</div>
 
 		<div class="waitlist-pane">
-			<div class="container">
-				<h3>Wait List</h3>
+			<div class="inner">
+				<h3>Unseated</h3>
 				<div class="waitlist-container">
 					<div class="waitlist">
 					{foreach $employee in $unseatedEmployees}
@@ -144,17 +144,16 @@
 
 
 /**
- * The employee info shown in the waitlist sidebar
- * @param firstName The employee's first name
- * @param lastName The employee's last name.
- * @param? extension The employee's extension number.
- * @param? department The employee's department.
+ * The entity info shown in the waitlist sidebar
+ * @param employee The employee model
  */
-{template .WaitlistEmployeeInfo}
+{template .WaitlistInfo}
 <div class="info">
-	<h3>{ $firstName } { $lastName }</h3>
-	{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
-	{if $department }<p>{ $department }</p>{/if}
+	<h6>{ $employee.firstName } { $employee.lastName }</h6>
+	{if $employee.extension }<p><b>Extension</b> { $employee.extension }</p>{/if}
+	{if $employee.department }<p><b>Department</b> { $employee.department }</p>{/if}
+	{if $employee.workEmail }<p><b>Email</b> { $employee.workEmail }</p>{/if}
+	{if $employee.cellPhone }<p><b>Cell-Phone</b> { $employee.cellPhone }</p>{/if}
 </div>
 {/template}
 
