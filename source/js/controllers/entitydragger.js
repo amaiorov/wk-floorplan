@@ -4,7 +4,7 @@ var employeeCollection = require( 'models/employeecollection' );
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
 
 
-var EntityDragger = function( $element, $entityContainer ) {
+var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
 
 	this._$element = $element.hide();
 	this._$entityContainer = $entityContainer;
@@ -20,13 +20,21 @@ var EntityDragger = function( $element, $entityContainer ) {
 	this._$onDragMove = $.proxy( this.onDragMove, this );
 	this._$onDragEnd = $.proxy( this.onDragEnd, this );
 
+	this._onDragEndCallback = _onDragEndCallback;
+
 	this._$entityContainer.on( 'mousedown', '.entity-icon', this._$onDragStart );
 }
 
 
 EntityDragger.prototype.dispose = function() {
 
+	this._$element = null;
+	this._$entityContainer = null;
+	this._entityModel = null;
+	this._$actualEntityIcon = null;
+	this._$draggerEntityIcon = null;
 
+	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
 };
 
 
@@ -41,8 +49,6 @@ EntityDragger.prototype.onDragStart = function( e ) {
 	var iconOffset = this._$actualEntityIcon.offset();
 	this._iconOffsetX = e.pageX - iconOffset.left - this._$actualEntityIcon.width() / 2;
 	this._iconOffsetY = e.pageY - iconOffset.top - this._$actualEntityIcon.height() / 2;
-
-	console.log( this._iconOffsetX, this._iconOffsetY );
 
 	var firstName = this._$actualEntityIcon.attr( 'data-first' );
 	var lastName = this._$actualEntityIcon.attr( 'data-last' );
@@ -80,10 +86,15 @@ EntityDragger.prototype.onDragEnd = function( e ) {
 	$( document ).off( 'mousemove', this._$onDragMove );
 	$( document ).off( 'mouseup', this._$onDragEnd );
 
-	this._$element.hide();
+	var elementOffset = this._$element.offset();
+	var dragX = e.pageX - elementOffset.left - this._iconOffsetX;
+	var dragY = e.pageY - elementOffset.top - this._iconOffsetY;
+
+	this._$element.hide().empty();
 	this._$actualEntityIcon.show();
-	this._$draggerEntityIcon.remove();
 	$( 'html' ).attr( 'data-cursor', '' );
+
+	this._onDragEndCallback( dragX, dragY, this._entityModel );
 };
 
 

@@ -120,6 +120,21 @@ FloorViewer.prototype.updateBounds = function() {
 }
 
 
+FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
+
+	var floorX = this._$floorContainer.get( 0 )._gsTransform.x;
+	var floorY = this._$floorContainer.get( 0 )._gsTransform.y;
+
+	var percentX = ( viewerCoordX - floorX ) / this._floorWidth * 100 + '%';
+	var percentY = ( viewerCoordY - floorY ) / this._floorHeight * 100 + '%';
+
+	return {
+		x: percentX,
+		y: percentY
+	}
+};
+
+
 FloorViewer.prototype.setZoomSlider = function( fraction ) {
 
 	var scrollHeight = this._$mousewheelScroller.get( 0 ).scrollHeight;

@@ -16,17 +16,12 @@ var Employee = function( props ) {
 	this.seat = props[ 'Seat' ];
 	this.x = props[ 'X' ];
 	this.y = props[ 'Y' ];
+	this.isAssigned = this.x && this.y;
 
 	this._$onObserved = $.proxy( this.onObserved, this );
 
 	this._observer = new ObjectObserver( this );
 	this._observer.open( this._$onObserved );
-}
-
-
-Employee.prototype.isSeated = function() {
-
-	return ( !this.x && !this.y );
 }
 
 
@@ -71,6 +66,11 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 					this.x = undefined;
 					this.y = undefined;
 				}
+				break;
+
+			case 'x':
+			case 'y':
+				this.isAssigned = ( this.x && this.y );
 				break;
 
 			default:
