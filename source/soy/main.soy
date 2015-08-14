@@ -150,10 +150,10 @@
 {template .WaitlistInfo}
 <div class="info">
 	<h6>{ $employee.firstName } { $employee.lastName }</h6>
-	{if $employee.extension }<p><b>Extension</b> { $employee.extension }</p>{/if}
+	{if $employee.extension }<p><b>Extension</b> <span class="number">{ $employee.extension }</span></p>{/if}
 	{if $employee.department }<p><b>Department</b> { $employee.department }</p>{/if}
 	{if $employee.workEmail }<p><b>Email</b> { $employee.workEmail }</p>{/if}
-	{if $employee.cellPhone }<p><b>Cell-Phone</b> { $employee.cellPhone }</p>{/if}
+	{if $employee.cellPhone }<p><b>Cell-Phone</b> <span class="number">{ $employee.cellPhone }</span></p>{/if}
 </div>
 {/template}
 
@@ -175,7 +175,7 @@
 	{if $showInfo == true}
 	<div class="info">
 		<p>{ $firstName } { $lastName }</p>
-		{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
+		{if $extension }<p><b>Extension</b> <span class="number">{ $extension }</span></p>{/if}
 	</div>
 	{/if}
 </div>

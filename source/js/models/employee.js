@@ -13,9 +13,9 @@ var Employee = function( props ) {
 	this.cellPhone = props[ 'Cell Phone #s' ];
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
-	this.seat = null;
-	this.x = null;
-	this.y = null;
+	this.seat = props[ 'Seat' ];
+	this.x = props[ 'X' ];
+	this.y = props[ 'Y' ];
 
 	this._$onObserved = $.proxy( this.onObserved, this );
 
@@ -26,7 +26,7 @@ var Employee = function( props ) {
 
 Employee.prototype.isSeated = function() {
 
-	return ( this.x !== null && this.y !== null );
+	return ( !this.x && !this.y );
 }
 
 
@@ -67,9 +67,9 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 
 				} else {
 
-					seat = null;
-					this.x = null;
-					this.y = null;
+					seat = undefined;
+					this.x = undefined;
+					this.y = undefined;
 				}
 				break;
 

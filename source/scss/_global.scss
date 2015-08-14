@@ -58,6 +58,15 @@ body{
   min-height: $min-height;
 }
 
+h1,h2,h3,h4,h5,h6,b{
+  font-family: $font_medium;
+}
+
+.number{
+  font-family: $font_condensed;
+  letter-spacing: 0.05em;
+}
+
 .btn:focus,.btn:active:focus,.btn.active:focus,
 .btn.focus,.btn:active.focus,.btn.active.focus {
     outline: none;
