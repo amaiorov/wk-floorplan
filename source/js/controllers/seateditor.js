@@ -1,9 +1,11 @@
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
+var EntityDragger = require( 'controllers/entitydragger' );
 var FloorViewer = require( 'controllers/floorviewer' );
 var employeeCollection = require( 'models/employeecollection' );
 
 var _instance;
+
 
 var SeatEditor = function() {
 
@@ -52,6 +54,9 @@ var SeatEditor = function() {
 	// create editor components
 	var $floorViewport = $( this.element ).find( '.floor-viewport' );
 	this._floorViewer = new FloorViewer( $floorViewport );
+
+	this._entityDragger = new EntityDragger(
+		$( this.element ).find( '.entity-dragger-viewport' ), $( this.element ).find( '.floor-viewport' ) );
 }
 
 

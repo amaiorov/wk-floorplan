@@ -1,0 +1,90 @@
+var soy = require( 'libs/soyutils' );
+var template = require( 'views/main.soy' );
+var employeeCollection = require( 'models/employeecollection' );
+var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+
+
+var EntityDragger = function( $element, $entityContainer ) {
+
+	this._$element = $element.hide();
+	this._$entityContainer = $entityContainer;
+
+	this._entityModel = null;
+	this._$actualEntityIcon = null;
+	this._$draggerEntityIcon = null;
+
+	this._iconOffsetX = 0;
+	this._iconOffsetY = 0;
+
+	this._$onDragStart = $.proxy( this.onDragStart, this );
+	this._$onDragMove = $.proxy( this.onDragMove, this );
+	this._$onDragEnd = $.proxy( this.onDragEnd, this );
+
+	this._$entityContainer.on( 'mousedown', '.entity-icon', this._$onDragStart );
+}
+
+
+EntityDragger.prototype.dispose = function() {
+
+
+};
+
+
+EntityDragger.prototype.onDragStart = function( e ) {
+
+	if ( e.button > 0 ) return;
+
+	$( document ).on( 'mousemove', this._$onDragMove );
+	$( document ).on( 'mouseup', this._$onDragEnd );
+
+	this._$actualEntityIcon = $( e.currentTarget );
+	var iconOffset = this._$actualEntityIcon.offset();
+	this._iconOffsetX = e.pageX - iconOffset.left - this._$actualEntityIcon.width() / 2;
+	this._iconOffsetY = e.pageY - iconOffset.top - this._$actualEntityIcon.height() / 2;
+
+	console.log( this._iconOffsetX, this._iconOffsetY );
+
+	var firstName = this._$actualEntityIcon.attr( 'data-first' );
+	var lastName = this._$actualEntityIcon.attr( 'data-last' );
+	this._entityModel = employeeCollection.getByName( firstName, lastName );
+
+	var draggerEntityIcon = soy.renderAsFragment( template.EmployeeIcon, {
+		employee: this._entityModel,
+		showInfo: true
+	} );
+
+	this._$draggerEntityIcon = $( draggerEntityIcon ).hide().addClass( 'dragging' );
+
+	this._$element.append( this._$draggerEntityIcon ).show();
+	$( 'html' ).attr( 'data-cursor', 'dragging' );
+};
+
+
+EntityDragger.prototype.onDragMove = function( e ) {
+
+	var elementOffset = this._$element.offset();
+	var dragX = e.pageX - elementOffset.left - this._iconOffsetX;
+	var dragY = e.pageY - elementOffset.top - this._iconOffsetY;
+
+	this._$draggerEntityIcon.css( {
+		'left': dragX + 'px',
+		'top': dragY + 'px'
+	} ).show();
+
+	this._$actualEntityIcon.hide();
+};
+
+
+EntityDragger.prototype.onDragEnd = function( e ) {
+
+	$( document ).off( 'mousemove', this._$onDragMove );
+	$( document ).off( 'mouseup', this._$onDragEnd );
+
+	this._$element.hide();
+	this._$actualEntityIcon.show();
+	this._$draggerEntityIcon.remove();
+	$( 'html' ).attr( 'data-cursor', '' );
+};
+
+
+module.exports = EntityDragger;

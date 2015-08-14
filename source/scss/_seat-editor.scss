@@ -18,7 +18,6 @@
 	position: relative;
 	width: 80%;
 	height: 100%;
-	overflow: hidden;
 	white-space: normal;
 
 	>.floor-viewport{
@@ -26,6 +25,17 @@
 		height: 100%;
 		overflow: hidden;
 		background-image: image-url('grid.png');
+
+		.entity-icon{
+			position: absolute;
+		}
+	}
+
+	>.entity-dragger-viewport{
+		@include absoluteTopLeft;
+		z-index: 11;
+		width: 100%;
+		height: 100%;
 
 		.entity-icon{
 			position: absolute;
@@ -87,14 +97,20 @@
 		}
 	}
 
-	.mousewheel-scroller{
+	.mousewheel-container{
 		@include absoluteTopLeft;
 		z-index: 1;
-		//width: 100%;
-		width: calc(100% + 50px);
+		width: 100%;
 		height: 100%;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden;
+		visibility: hidden;
+
+		>.mousewheel-scroller{
+			width: calc(100% + 50px);
+			height: 100%;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
 	}
 
 	.floor-buttons{
@@ -136,7 +152,7 @@
 				overflow: auto;
 				@include transition(height, .25s);
 
-				.employee-icon{
+				.entity-icon{
 					@include translate(0, 0);
 					margin: 0 10px 10px 0;
 					cursor: pointer;
@@ -187,6 +203,7 @@
 	height: 40px;
 	@include translate(-50%, -50%);
 	@include user-select(none);
+	@include grab-cursor;
 
 	>.icon{
 		position: relative;
@@ -241,7 +258,7 @@
 		}
 	}
 
-	&:hover{
+	&:hover, &.dragging{
 		z-index: 1;
 
 		>.icon{
