@@ -19,7 +19,9 @@ EntityIcon.prototype.dispose = function() {
 
 	this._observer.close( this._$onObserved );
 
+	this.$element.remove();
 	this.$element = null;
+
 	this.model = null;
 };
 

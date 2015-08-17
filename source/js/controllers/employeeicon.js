@@ -3,11 +3,11 @@ var EntityIcon = require( 'controllers/entityicon' );
 var employeeCollection = require( 'models/employeecollection' );
 
 
-var EmployeeIcon = function( element, id ) {
+var EmployeeIcon = function( element, opt_model ) {
 
 	var firstName = element.getAttribute( 'data-first' );
 	var lastName = element.getAttribute( 'data-last' );
-	var model = employeeCollection.getByName( firstName, lastName );
+	var model = opt_model || employeeCollection.getByName( firstName, lastName );
 
 	EntityIcon.call( this, element, model );
 

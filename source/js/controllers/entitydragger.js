@@ -90,11 +90,16 @@ EntityDragger.prototype.onDragEnd = function( e ) {
 	var dragX = e.pageX - elementOffset.left - this._iconOffsetX;
 	var dragY = e.pageY - elementOffset.top - this._iconOffsetY;
 
+	var outOfRangeX = ( dragX < 0 || dragX > this._$element.width() );
+	var outOfRangeY = ( dragY < 0 || dragY > this._$element.height() );
+
+	dragX = outOfRangeX ? null : dragX;
+	dragY = outOfRangeY ? null : dragY;
+
 	this._$element.hide().empty();
-	this._$actualEntityIcon.show();
 	$( 'html' ).attr( 'data-cursor', '' );
 
-	this._onDragEndCallback( dragX, dragY, this._entityModel );
+	this._onDragEndCallback( dragX, dragY, this._$actualEntityIcon, this._entityModel );
 };
 
 

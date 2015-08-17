@@ -150,7 +150,7 @@
 			>.waitlist{
 				height: 100%;
 				overflow: auto;
-				@include transition(height, .25s);
+				@include transition(height, .3s ease-in-out);
 
 				.entity-icon{
 					@include translate(0, 0);
@@ -164,26 +164,36 @@
 				left: 0;
 				bottom: 0;
 				width: 100%;
-				height: 200px;
+				height: 300px;
 				border-top: 1px dashed lightgray;
 				@include translateY(100%);
 				opacity: 0;
-				@include transition(transform .25s, opacity .25s);
+				@include transition(transform .3s ease-in-out, opacity .3s ease-in-out);
 
 				h6{
 					font-size: 18px;
 					line-height: 3;
 				}
 
-				p{
+				li{
 					font-size: 14px;
-					line-height: 1.6;
+					margin-bottom: 15px;
+
+					>b{
+						display: block;
+						line-height: 1.6;
+						color: #C0C0C0;
+					}
+
+					>span{
+						font-size: 16px;
+					}
 				}
 			}
 
 			&.show-info{
 				>.waitlist{
-					height: calc(100% - 200px);
+					height: calc(100% - 300px);
 				}
 
 				>.info-container{
@@ -203,7 +213,6 @@
 	height: 40px;
 	@include translate(-50%, -50%);
 	@include user-select(none);
-	@include grab-cursor;
 
 	>.icon{
 		position: relative;
@@ -279,5 +288,9 @@
 		>.icon{
 			background: black !important;
 		}
+	}
+
+	&:not(.dragging) {
+		@include grab-cursor;
 	}
 }

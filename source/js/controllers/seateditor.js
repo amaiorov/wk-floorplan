@@ -13,13 +13,13 @@ var SeatEditor = function() {
 	var floor6Employees = employeeCollection.getByFloor( 6 );
 	var floor7Employees = employeeCollection.getByFloor( 7 );
 	var floor8Employees = employeeCollection.getByFloor( 8 );
-	var unseatedEmployees = employeeCollection.getUnseated();
+	var unassignedEmployees = employeeCollection.getUnassigned();
 
 	this.element = soy.renderAsFragment( template.SeatEditor, {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
 		floor8Employees: floor8Employees,
-		unseatedEmployees: unseatedEmployees
+		unassignedEmployees: unassignedEmployees
 	} );
 
 	$( '#editor-container' ).append( this.element );
@@ -55,18 +55,8 @@ var SeatEditor = function() {
 
 	this._entityDragger = new EntityDragger(
 		$( this.element ).find( '.entity-dragger-viewport' ),
-		$( this.element ).find( '.floor-viewport' ),
+		$( this.element ),
 		this._$onEntityDragEnd );
-}
-
-
-SeatEditor.prototype.show = function() {
-
-}
-
-
-SeatEditor.prototype.hide = function() {
-
 }
 
 
@@ -118,12 +108,31 @@ SeatEditor.prototype.onSplitEnd = function( e ) {
 }
 
 
-SeatEditor.prototype.onEntityDragEnd = function( x, y, entityModel ) {
+SeatEditor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
-	var newEntityPosition = this._floorViewer.getFloorPositionByViewerCoordinates( x, y );
+	var entityPositionInFloor = this._floorViewer.getFloorPositionByViewerCoordinates( x, y );
+	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
+	var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
 
-	entityModel.x = newEntityPosition.x;
-	entityModel.y = newEntityPosition.y;
+	var shouldUnassign = ( !entityX || !entityY );
+
+	entityModel.x = entityX;
+	entityModel.y = entityY;
+	entityModel.floorIndex = shouldUnassign ? null : this._floorViewer.currentFloorIndex;
+
+	if ( shouldUnassign && entityModel.isAssigned ) {
+
+		this._floorViewer.currentFloor.removeEntityIcon( entityModel );
+
+	} else {
+
+		$entityIcon.show();
+	}
+
+	if ( !shouldUnassign && !entityModel.isAssigned ) {
+
+		this._floorViewer.currentFloor.addEntityIcon( entityModel );
+	}
 };
 
 

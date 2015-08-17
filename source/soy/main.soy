@@ -44,7 +44,7 @@
  * @param floor6Employees All employees on floor 6
  * @param floor7Employees All employees on floor 7
  * @param floor8Employees All employees on floor 8
- * @param unseatedEmployees All employees who are not yet seated
+ * @param unassignedEmployees All employees who are not yet seated
  */
 {template .SeatEditor}
 <div id="seat-editor">
@@ -115,14 +115,12 @@
 
 		<div class="waitlist-pane">
 			<div class="inner">
-				<h3>Unseated</h3>
+				<h3>Not Assigned</h3>
 				<div class="waitlist-container">
 					<div class="waitlist">
-					{foreach $employee in $unseatedEmployees}
-					{call .EmployeeIcon}
-						{param employee: $employee /}
+					{call .WaitlistEmployees}
+					{param employees: $unassignedEmployees /}
 					{/call}
-					{/foreach}
 					</div>
 					<div class="info-container">
 					</div>
@@ -136,16 +134,54 @@
 
 
 /**
+ * The unassigned employees on waitlist
+ * @param employees The unassigned employees' models
+ */
+{template .WaitlistEmployees}
+{foreach $employee in $employees}
+{call .EmployeeIcon}
+	{param employee: $employee /}
+{/call}
+{/foreach}
+{/template}
+
+
+/**
  * The entity info shown in the waitlist sidebar
  * @param employee The employee model
  */
 {template .WaitlistInfo}
 <div class="info">
 	<h6>{ $employee.firstName } { $employee.lastName }</h6>
-	{if $employee.extension }<p><b>Extension</b> <span class="number">{ $employee.extension }</span></p>{/if}
-	{if $employee.department }<p><b>Department</b> { $employee.department }</p>{/if}
-	{if $employee.workEmail }<p><b>Email</b> { $employee.workEmail }</p>{/if}
-	{if $employee.cellPhone }<p><b>Cell-Phone</b> <span class="number">{ $employee.cellPhone }</span></p>{/if}
+	<ul>
+		{if $employee.extension }
+		<li>
+			<b>Extension</b>
+			<span class="number">{ $employee.extension }</span>
+		</li>
+		{/if}
+
+		{if $employee.department }
+		<li>
+			<b>Department</b>
+			<span>{ $employee.department }</span>
+		</li>
+		{/if}
+
+		{if $employee.workEmail }
+		<li>
+			<b>Email</b>
+			<span>{ $employee.workEmail }</span>
+		</li>
+		{/if}
+		
+		{if $employee.cellPhone }
+		<li>
+			<b>Cell-Phone</b>
+			<span class="number">{ $employee.cellPhone }</span>
+		</li>
+		{/if}
+	</ul>
 </div>
 {/template}
 

@@ -1,5 +1,6 @@
+var soy = require( 'libs/soyutils' );
+var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
-
 var EmployeeIcon = require( 'controllers/employeeicon' );
 var Seat = require( 'models/seat' );
 
@@ -8,6 +9,7 @@ var Floor = function( element ) {
 
 	// assign view element
 	this.$element = $( element );
+	this._$inner = this.$element.find( '.inner' );
 
 	// create model
 	var floorIndex = this.$element.attr( 'data-id' );
@@ -44,6 +46,35 @@ Floor.prototype.show = function() {
 Floor.prototype.hide = function() {
 
 	this.$element.hide();
+};
+
+
+Floor.prototype.addEntityIcon = function( model ) {
+
+	var icon = soy.renderAsFragment( template.EmployeeIcon, {
+		employee: model,
+		showInfo: true
+	} );
+
+	$( icon ).css( {
+		'left': model.x,
+		'top': model.y
+	} );
+
+	this._$inner.append( icon );
+
+	var entity = new EmployeeIcon( icon, model );
+	this._entities.push( entity );
+};
+
+
+Floor.prototype.removeEntityIcon = function( model ) {
+
+	var entity = $.grep( this._entities, function( employeeIcon ) {
+		return ( employeeIcon.model === model );
+	} )[ 0 ];
+
+	this._entities.splice( this._entities.indexOf( entity ), 1 );
 };
 
 

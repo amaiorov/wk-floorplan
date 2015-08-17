@@ -5,7 +5,7 @@ var Employee = function( props ) {
 	this.firstName = props[ 'First' ];
 	this.lastName = props[ 'Last' ];
 	this.extension = props[ 'Ext.' ];
-	this.floor = props[ 'Floor' ];
+	this.floorIndex = props[ 'Floor' ];
 	this.department = props[ 'Department' ];
 	this.mailbox = props[ 'Desk #/ Mailbox #' ];
 	this.deskDrawerKey = props[ 'Desk Drawer Key #' ];
@@ -16,12 +16,18 @@ var Employee = function( props ) {
 	this.seat = props[ 'Seat' ];
 	this.x = props[ 'X' ];
 	this.y = props[ 'Y' ];
-	this.isAssigned = this.x && this.y;
+	this.isAssigned = this.updateAssignedState();
 
 	this._$onObserved = $.proxy( this.onObserved, this );
 
 	this._observer = new ObjectObserver( this );
 	this._observer.open( this._$onObserved );
+}
+
+
+Employee.prototype.updateAssignedState = function() {
+
+	return ( typeof this.x === 'string' && typeof this.y === 'string' && $.isNumeric( this.floorIndex ) );
 }
 
 
@@ -58,6 +64,7 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 					seat.entity = this;
 
 					this.seat = seat;
+					this.floorIndex = this.seat.floorIndex;
 					this.seatByPosition( this.seat.x, this.seat.y );
 
 				} else {
@@ -65,12 +72,15 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 					seat = undefined;
 					this.x = undefined;
 					this.y = undefined;
+					this.floorIndex = undefined;
 				}
+
+				this.isAssigned = this.updateAssignedState();
 				break;
 
 			case 'x':
 			case 'y':
-				this.isAssigned = ( this.x && this.y );
+				this.isAssigned = this.updateAssignedState();
 				break;
 
 			default:
