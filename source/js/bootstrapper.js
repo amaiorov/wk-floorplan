@@ -4,6 +4,7 @@ var template = require( 'views/main.soy' );
 var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
 var SeatEditor = require( 'controllers/seateditor' );
+var search = require( 'controllers/search' );
 
 var _instance;
 

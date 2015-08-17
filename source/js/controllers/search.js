@@ -3,8 +3,10 @@ var employeeCollection = require( 'models/employeecollection' );
 var _instance;
 
 var Search = function() {
-	alert( 'search yo!' );
+	// alert( 'search yo!' );
+	console.log( employeeCollection );
 }
+
 
 
 module.exports = ( function() {
