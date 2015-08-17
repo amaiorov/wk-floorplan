@@ -44,7 +44,7 @@
  * @param floor6Employees All employees on floor 6
  * @param floor7Employees All employees on floor 7
  * @param floor8Employees All employees on floor 8
- * @param unseatedEmployees All employees who are not yet seated
+ * @param unassignedEmployees All employees who are not yet seated
  */
 {template .SeatEditor}
 <div id="seat-editor">
@@ -58,10 +58,7 @@
 						<div class="inner">
 							{foreach $employee in $floor6Employees}
 							{call .EmployeeIcon}
-								{param initials: $employee.initials /}
-								{param firstName: $employee.firstName /}
-								{param lastName: $employee.lastName /}
-								{param extension: $employee.extension /}
+								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
@@ -72,10 +69,7 @@
 						<div class="inner">
 							{foreach $employee in $floor7Employees}
 							{call .EmployeeIcon}
-								{param initials: $employee.initials /}
-								{param firstName: $employee.firstName /}
-								{param lastName: $employee.lastName /}
-								{param extension: $employee.extension /}
+								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
@@ -86,10 +80,7 @@
 						<div class="inner">
 							{foreach $employee in $floor8Employees}
 							{call .EmployeeIcon}
-								{param initials: $employee.initials /}
-								{param firstName: $employee.firstName /}
-								{param lastName: $employee.lastName /}
-								{param extension: $employee.extension /}
+								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
@@ -97,8 +88,10 @@
 					</div>
 				</div>
 
-				<div class="mousewheel-scroller">
-					<div class="inner"></div>
+				<div class="mousewheel-container">
+					<div class="mousewheel-scroller">
+						<div class="inner"></div>
+					</div>
 				</div>
 
 				<div class="btn-group floor-buttons" data-toggle="buttons">
@@ -115,22 +108,19 @@
 
 			</div>
 
+			<div class="entity-dragger-viewport"></div>
+
 			<div class="split-handle"></div>
 		</div>
 
 		<div class="waitlist-pane">
 			<div class="inner">
-				<h3>Unseated</h3>
+				<h3>Not Assigned</h3>
 				<div class="waitlist-container">
 					<div class="waitlist">
-					{foreach $employee in $unseatedEmployees}
-					{call .EmployeeIcon}
-						{param initials: $employee.initials /}
-						{param firstName: $employee.firstName /}
-						{param lastName: $employee.lastName /}
-						{param extension: $employee.extension /}
+					{call .WaitlistEmployees}
+					{param employees: $unassignedEmployees /}
 					{/call}
-					{/foreach}
 					</div>
 					<div class="info-container">
 					</div>
@@ -144,16 +134,54 @@
 
 
 /**
+ * The unassigned employees on waitlist
+ * @param employees The unassigned employees' models
+ */
+{template .WaitlistEmployees}
+{foreach $employee in $employees}
+{call .EmployeeIcon}
+	{param employee: $employee /}
+{/call}
+{/foreach}
+{/template}
+
+
+/**
  * The entity info shown in the waitlist sidebar
  * @param employee The employee model
  */
 {template .WaitlistInfo}
 <div class="info">
 	<h6>{ $employee.firstName } { $employee.lastName }</h6>
-	{if $employee.extension }<p><b>Extension</b> { $employee.extension }</p>{/if}
-	{if $employee.department }<p><b>Department</b> { $employee.department }</p>{/if}
-	{if $employee.workEmail }<p><b>Email</b> { $employee.workEmail }</p>{/if}
-	{if $employee.cellPhone }<p><b>Cell-Phone</b> { $employee.cellPhone }</p>{/if}
+	<ul>
+		{if $employee.extension }
+		<li>
+			<b>Extension</b>
+			<span class="number">{ $employee.extension }</span>
+		</li>
+		{/if}
+
+		{if $employee.department }
+		<li>
+			<b>Department</b>
+			<span>{ $employee.department }</span>
+		</li>
+		{/if}
+
+		{if $employee.workEmail }
+		<li>
+			<b>Email</b>
+			<span>{ $employee.workEmail }</span>
+		</li>
+		{/if}
+		
+		{if $employee.cellPhone }
+		<li>
+			<b>Cell-Phone</b>
+			<span class="number">{ $employee.cellPhone }</span>
+		</li>
+		{/if}
+	</ul>
 </div>
 {/template}
 
@@ -161,21 +189,18 @@
 /**
  * Employee Icon
  * An icon on the floor plan to represent employee
- * @param initials The employee name initials.
- * @param firstName The employee's first name
- * @param lastName The employee's last name.
- * @param? extension The employee's extension number.
+ * @param employee The employee model.
  * @param? showInfo The ability to show info panel.
  */
 {template .EmployeeIcon}
-<div class="employee-icon entity-icon" data-first="{ $firstName }" data-last="{ $lastName }" data-clickable="true">
+<div class="employee-icon entity-icon" data-first="{ $employee.firstName }" data-last="{ $employee.lastName }" data-clickable="true">
 	<div class="icon">
-		<span class="initials">{ $initials }</span>
+		<span class="initials">{ $employee.initials }</span>
 	</div>
 	{if $showInfo == true}
 	<div class="info">
-		<p>{ $firstName } { $lastName }</p>
-		{if $extension }<p><span>Ext</span> { $extension }</p>{/if}
+		<p>{ $employee.firstName } { $employee.lastName }</p>
+		{if $employee.extension }<p><b>Extension</b> <span class="number">{ $employee.extension }</span></p>{/if}
 	</div>
 	{/if}
 </div>

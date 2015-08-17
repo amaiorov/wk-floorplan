@@ -39,6 +39,9 @@ var FloorViewer = function( _$element ) {
 		'onDragStartScope': this
 	} );
 
+	this.currentFloorIndex = null;
+	this.currentFloor = null;
+
 	this._floorWidth = this._$floorContainer.width();
 	this._floorHeight = this._$floorContainer.height();
 	this._floorZoomFractionX = null;
@@ -120,6 +123,28 @@ FloorViewer.prototype.updateBounds = function() {
 }
 
 
+FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
+
+	var floorX = this._$floorContainer.get( 0 )._gsTransform.x;
+	var floorY = this._$floorContainer.get( 0 )._gsTransform.y;
+
+	var fractionX = ( viewerCoordX - floorX ) / this._floorWidth;
+	var fractionY = ( viewerCoordY - floorY ) / this._floorHeight;
+
+	if ( fractionX < 0 || fractionX > 1 || fractionY < 0 || fractionY > 1 ) {
+		return {
+			x: null,
+			y: null
+		}
+	}
+
+	return {
+		x: fractionX * 100 + '%',
+		y: fractionY * 100 + '%'
+	}
+};
+
+
 FloorViewer.prototype.setZoomSlider = function( fraction ) {
 
 	var scrollHeight = this._$mousewheelScroller.get( 0 ).scrollHeight;
@@ -135,10 +160,18 @@ FloorViewer.prototype.setMousewheelSpeed = function( multiplier ) {
 
 FloorViewer.prototype.toggleFloor = function( floorId ) {
 
+	var self = this;
+
 	$.each( this._floors, function( id, floor ) {
+
 		if ( floorId === id ) {
+
 			floor.show();
+			self.currentFloor = floor;
+			self.currentFloorIndex = floorId;
+
 		} else {
+
 			floor.hide();
 		}
 	} );

@@ -18,7 +18,6 @@
 	position: relative;
 	width: 80%;
 	height: 100%;
-	overflow: hidden;
 	white-space: normal;
 
 	>.floor-viewport{
@@ -26,6 +25,17 @@
 		height: 100%;
 		overflow: hidden;
 		background-image: image-url('grid.png');
+
+		.entity-icon{
+			position: absolute;
+		}
+	}
+
+	>.entity-dragger-viewport{
+		@include absoluteTopLeft;
+		z-index: 11;
+		width: 100%;
+		height: 100%;
 
 		.entity-icon{
 			position: absolute;
@@ -87,14 +97,20 @@
 		}
 	}
 
-	.mousewheel-scroller{
+	.mousewheel-container{
 		@include absoluteTopLeft;
 		z-index: 1;
-		//width: 100%;
-		width: calc(100% + 50px);
+		width: 100%;
 		height: 100%;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden;
+		visibility: hidden;
+
+		>.mousewheel-scroller{
+			width: calc(100% + 50px);
+			height: 100%;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
 	}
 
 	.floor-buttons{
@@ -134,9 +150,9 @@
 			>.waitlist{
 				height: 100%;
 				overflow: auto;
-				@include transition(height, .25s);
+				@include transition(height, .3s ease-in-out);
 
-				.employee-icon{
+				.entity-icon{
 					@include translate(0, 0);
 					margin: 0 10px 10px 0;
 					cursor: pointer;
@@ -148,26 +164,36 @@
 				left: 0;
 				bottom: 0;
 				width: 100%;
-				height: 200px;
+				height: 300px;
 				border-top: 1px dashed lightgray;
 				@include translateY(100%);
 				opacity: 0;
-				@include transition(transform .25s, opacity .25s);
+				@include transition(transform .3s ease-in-out, opacity .3s ease-in-out);
 
 				h6{
 					font-size: 18px;
 					line-height: 3;
 				}
 
-				p{
+				li{
 					font-size: 14px;
-					line-height: 1.6;
+					margin-bottom: 15px;
+
+					>b{
+						display: block;
+						line-height: 1.6;
+						color: #C0C0C0;
+					}
+
+					>span{
+						font-size: 16px;
+					}
 				}
 			}
 
 			&.show-info{
 				>.waitlist{
-					height: calc(100% - 200px);
+					height: calc(100% - 300px);
 				}
 
 				>.info-container{
@@ -241,7 +267,7 @@
 		}
 	}
 
-	&:hover{
+	&:hover, &.dragging{
 		z-index: 1;
 
 		>.icon{
@@ -262,5 +288,9 @@
 		>.icon{
 			background: black !important;
 		}
+	}
+
+	&:not(.dragging) {
+		@include grab-cursor;
 	}
 }

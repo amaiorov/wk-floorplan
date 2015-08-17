@@ -1,22 +1,25 @@
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
+var Waitlist = require( 'controllers/waitlist' );
+var EntityDragger = require( 'controllers/entitydragger' );
 var FloorViewer = require( 'controllers/floorviewer' );
 var employeeCollection = require( 'models/employeecollection' );
 
 var _instance;
+
 
 var SeatEditor = function() {
 
 	var floor6Employees = employeeCollection.getByFloor( 6 );
 	var floor7Employees = employeeCollection.getByFloor( 7 );
 	var floor8Employees = employeeCollection.getByFloor( 8 );
-	var unseatedEmployees = employeeCollection.getUnseated();
+	var unassignedEmployees = employeeCollection.getUnassigned();
 
 	this.element = soy.renderAsFragment( template.SeatEditor, {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
 		floor8Employees: floor8Employees,
-		unseatedEmployees: unseatedEmployees
+		unassignedEmployees: unassignedEmployees
 	} );
 
 	$( '#editor-container' ).append( this.element );
@@ -28,9 +31,6 @@ var SeatEditor = function() {
 	// query dom elements
 	this._$floorPane = $( this.element ).find( '.floor-pane' );
 	this._$waitlistPane = $( this.element ).find( '.waitlist-pane' );
-	this._$waitlist = this._$waitlistPane.find( '.waitlist' );
-	this._$waitlistContainer = this._$waitlistPane.find( '.waitlist-container' );
-	this._$waitlistInfoContainer = this._$waitlistPane.find( '.info-container' );
 
 	// scoped methods
 	this._$onSplitStart = $.proxy( this.onSplitStart, this );
@@ -38,30 +38,25 @@ var SeatEditor = function() {
 	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
+	this._$onEntityDragEnd = $.proxy( this.onEntityDragEnd, this );
 	this._$resize = $.proxy( this.resize, this );
 
 	// add events
 	$( window ).on( 'resize', this._$resize ).resize();
 
-	this._$waitlist.on( 'click', this._$onClickWaitlist );
-	this._$waitlistPane.on( 'click', '.entity-icon', this._$onClickWaitlistIcon );
-
 	this._$splitHandle = $( this.element ).find( '.split-handle' );
 	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
 
 	// create editor components
+	this._waitlist = new Waitlist( this._$waitlistPane );
+
 	var $floorViewport = $( this.element ).find( '.floor-viewport' );
 	this._floorViewer = new FloorViewer( $floorViewport );
-}
 
-
-SeatEditor.prototype.show = function() {
-
-}
-
-
-SeatEditor.prototype.hide = function() {
-
+	this._entityDragger = new EntityDragger(
+		$( this.element ).find( '.entity-dragger-viewport' ),
+		$( this.element ),
+		this._$onEntityDragEnd );
 }
 
 
@@ -113,30 +108,31 @@ SeatEditor.prototype.onSplitEnd = function( e ) {
 }
 
 
-SeatEditor.prototype.onClickWaitlist = function( e ) {
+SeatEditor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
-	var notClickedOnIcons = ( e.delegateTarget === e.target );
+	var entityPositionInFloor = this._floorViewer.getFloorPositionByViewerCoordinates( x, y );
+	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
+	var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
 
-	if ( notClickedOnIcons ) {
-		this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
-		this._$waitlistContainer.removeClass( 'show-info' );
+	var shouldUnassign = ( !entityX || !entityY );
+
+	entityModel.x = entityX;
+	entityModel.y = entityY;
+	entityModel.floorIndex = shouldUnassign ? null : this._floorViewer.currentFloorIndex;
+
+	if ( shouldUnassign && entityModel.isAssigned ) {
+
+		this._floorViewer.currentFloor.removeEntityIcon( entityModel );
+
+	} else {
+
+		$entityIcon.show();
 	}
-};
 
+	if ( !shouldUnassign && !entityModel.isAssigned ) {
 
-SeatEditor.prototype.onClickWaitlistIcon = function( e ) {
-
-	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
-
-	var $icon = $( e.currentTarget ).addClass( 'active' );
-	var employee = employeeCollection.getByName( $icon.attr( 'data-first' ), $icon.attr( 'data-last' ) );
-
-	var infoEl = soy.renderAsFragment( template.WaitlistInfo, {
-		employee: employee
-	} );
-
-	this._$waitlistInfoContainer.empty().append( infoEl );
-	this._$waitlistContainer.addClass( 'show-info' );
+		this._floorViewer.currentFloor.addEntityIcon( entityModel );
+	}
 };
 
 

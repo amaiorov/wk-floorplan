@@ -31,6 +31,24 @@ $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
   -webkit-backface-visibility: hidden;
 }
 
+@mixin grab-cursor {
+  // http://www.google.com/intl/en_ALL/mapfiles/openhand.cur
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: -o-grab;
+  cursor: -ms-grab;
+  cursor: grab;
+}
+
+@mixin grabbing-cursor {
+  // http://www.google.com/intl/en_ALL/mapfiles/closedhand.cur
+  cursor: -webkit-grabbing !important;
+  cursor: -moz-grabbing !important;
+  cursor: -o-grabbing !important;
+  cursor: -ms-grabbing !important;
+  cursor: grabbing !important;
+}
+
 //
 html, body{
   position: absolute;
@@ -56,6 +74,15 @@ html{
 body{
   min-width: $min-width;
   min-height: $min-height;
+}
+
+h1,h2,h3,h4,h5,h6,b{
+  font-family: $font_medium;
+}
+
+.number{
+  font-family: $font_condensed;
+  letter-spacing: 0.05em;
 }
 
 .btn:focus,.btn:active:focus,.btn.active:focus,

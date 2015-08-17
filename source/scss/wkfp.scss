@@ -3,7 +3,7 @@
 
 html{
 	&[data-cursor="dragging"] {
-		cursor: move !important;
+		@include grabbing-cursor;
 	}
 	&[data-cursor="horizontal-dragging"] {
 		cursor: ew-resize !important;
@@ -19,6 +19,7 @@ html{
 	width: 100%;
 	height: 100px;
 	padding: 0 40px;
+	@include user-select(none);
 
 	>.inner{
 		width: 100%;

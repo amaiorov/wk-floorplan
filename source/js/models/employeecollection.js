@@ -45,17 +45,17 @@ EmployeeCollection.prototype.getByFloor = function( floorId ) {
 	var floor = floorId.toString();
 
 	var employees = $.grep( this._employees, function( employee ) {
-		return ( employee.floor === floor );
+		return ( employee.floorIndex === floor );
 	} );
 
 	return employees;
 }
 
 
-EmployeeCollection.prototype.getUnseated = function() {
+EmployeeCollection.prototype.getUnassigned = function() {
 
 	var employees = $.grep( this._employees, function( employee ) {
-		return !employee.floor;
+		return !employee.isAssigned;
 	} );
 
 	return employees;
