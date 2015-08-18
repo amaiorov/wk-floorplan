@@ -7,7 +7,6 @@ var mousewheelHideDelay = null;
 var zoom = 0;
 var minWidth = 1200;
 var maxWidth = 8000;
-var aspectRatio = 1024 / 576;
 
 var FloorViewer = function( _$element ) {
 
@@ -25,8 +24,10 @@ var FloorViewer = function( _$element ) {
 	}, .5, {
 		'paused': true,
 		'ease': Strong.easeOut,
-		'onUpdate': this.onZoomAnimate,
-		'onUpdateScope': this
+		'onUpdate': this.onZoomUpdate,
+		'onUpdateScope': this,
+		'onComplete': this.onZoomComplete,
+		'onCompleteScope': this
 	} );
 
 	this._draggable = new Draggable( this._$floorContainer.get( 0 ), {
@@ -36,7 +37,11 @@ var FloorViewer = function( _$element ) {
 		'throwProps': true,
 		'zIndexBoost': false,
 		'onDragStart': this.onDragStart,
-		'onDragStartScope': this
+		'onDragStartScope': this,
+		'onDrag': this.onDrag,
+		'onDragScope': this,
+		'onThrowComplete': this.onThrowComplete,
+		'onThrowCompleteScope': this
 	} );
 
 	this.currentFloorIndex = null;
@@ -55,10 +60,13 @@ var FloorViewer = function( _$element ) {
 	this._windowScrollTop = null;
 	this._windowScrollLeft = null;
 
+	this._viewportMetrics = this.updateViewportMetrics();
+
 	// Create and stores floors by index
 	var floors = this._floors = {};
+	var viewportMetrics = this._viewportMetrics;
 	$.each( this.$element.find( '.floor' ), function( i, el ) {
-		var floor = new Floor( el );
+		var floor = new Floor( el, viewportMetrics );
 		floors[ floor.getIndex() ] = floor;
 	} );
 
@@ -123,6 +131,20 @@ FloorViewer.prototype.updateBounds = function() {
 }
 
 
+FloorViewer.prototype.updateViewportMetrics = function() {
+
+	this._viewportMetrics = this._viewportMetrics || {};
+
+	var offset = this.$element.offset();
+	this._viewportMetrics.x = offset.left;
+	this._viewportMetrics.y = offset.top;
+	this._viewportMetrics.width = this.$element.width();
+	this._viewportMetrics.height = this.$element.height();
+
+	return this._viewportMetrics;
+}
+
+
 FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
 
 	var floorX = this._$floorContainer.get( 0 )._gsTransform.x;
@@ -161,12 +183,15 @@ FloorViewer.prototype.setMousewheelSpeed = function( multiplier ) {
 FloorViewer.prototype.toggleFloor = function( floorId ) {
 
 	var self = this;
+	var zoom = this._zoomTweener.target.zoom;
 
 	$.each( this._floors, function( id, floor ) {
 
 		if ( floorId === id ) {
 
 			floor.show();
+			floor.updateTiles( zoom );
+
 			self.currentFloor = floor;
 			self.currentFloorIndex = floorId;
 
@@ -193,6 +218,7 @@ FloorViewer.prototype.resize = function() {
 	this._editingRegionWidth = $editingRegion.width();
 	this._editingRegionHeight = $editingRegion.height();
 
+	this.updateViewportMetrics();
 	this.updateBounds();
 }
 
@@ -215,13 +241,13 @@ FloorViewer.prototype.hideMousewheelScroller = function( e ) {
 }
 
 
-FloorViewer.prototype.onZoomAnimate = function() {
+FloorViewer.prototype.onZoomUpdate = function() {
 
 	this._floorWidth = Math.round( Utils.lerp( minWidth, maxWidth, this._zoomTweener.target.zoom ) );
-	this._floorHeight = Math.round( this._floorWidth / aspectRatio );
+	this._floorHeight = Math.round( this._floorWidth / Floor.aspectRatio );
 
-	var floorOffsetX = this._viewportZoomX - this._floorWidth * this._floorZoomFractionX;
-	var floorOffsetY = this._viewportZoomY - this._floorHeight * this._floorZoomFractionY;
+	var floorOffsetX = Math.round( this._viewportZoomX - this._floorWidth * this._floorZoomFractionX );
+	var floorOffsetY = Math.round( this._viewportZoomY - this._floorHeight * this._floorZoomFractionY );
 
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': floorOffsetX,
@@ -231,6 +257,12 @@ FloorViewer.prototype.onZoomAnimate = function() {
 	} );
 
 	this.updateBounds();
+}
+
+
+FloorViewer.prototype.onZoomComplete = function() {
+
+	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
 }
 
 
@@ -244,6 +276,18 @@ FloorViewer.prototype.onClickFloorButton = function( e ) {
 FloorViewer.prototype.onDragStart = function() {
 
 	this._zoomTweener.pause();
+}
+
+
+FloorViewer.prototype.onDrag = function() {
+
+	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
+}
+
+
+FloorViewer.prototype.onThrowComplete = function() {
+
+	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
 }
 
 
@@ -302,5 +346,6 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 		this.zoom( scrollFraction );
 	}
 }
+
 
 module.exports = FloorViewer;

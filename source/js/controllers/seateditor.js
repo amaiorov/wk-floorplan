@@ -105,6 +105,8 @@ SeatEditor.prototype.onSplitEnd = function( e ) {
 	$( document.body ).off( 'mouseup', this._$onSplitEnd );
 
 	$( 'html' ).attr( 'data-cursor', '' );
+
+	this._floorViewer.updateViewportMetrics();
 }
 
 

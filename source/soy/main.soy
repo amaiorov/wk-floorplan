@@ -208,3 +208,23 @@
 	{/if}
 </div>
 {/template}
+
+
+/**
+ * Tiles
+ * The tile map structure for a floorplan image.
+ * @param cols The number of columns.
+ * @param rows The number of rows.
+ * @param tileSize The tile size percentage string
+ */
+{template .Tiles}
+<div class="inner">
+{for $y in range($rows)}
+	<div class="tile-row">
+		{for $x in range($cols)}
+		<div class="tile" style="width:{ $tileSize }; padding-bottom:{ $tileSize };" data-x="{ $x }" data-y="{ $y }"></div>
+		{/for}
+	</div>
+{/for}
+</div>
+{/template}
