@@ -90,7 +90,12 @@
 				background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%208&w=1024&h=576);
 			}
 
+			>.tiles{
+				@include absoluteTopLeft;
+			}
+
 			>.inner{
+				@include absoluteTopLeft;
 				width: 100%;
 				height: 100%;
 			}

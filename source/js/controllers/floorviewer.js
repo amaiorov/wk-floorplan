@@ -6,7 +6,7 @@ var Floor = require( 'controllers/floor' );
 var mousewheelHideDelay = null;
 var zoom = 0;
 var minWidth = 1200;
-var maxWidth = minWidth * 4;
+var maxWidth = 8000;
 var aspectRatio = 1024 / 576;
 
 var FloorViewer = function( _$element ) {
@@ -83,7 +83,7 @@ FloorViewer.prototype.init = function() {
 	} );
 
 	this.updateBounds();
-	this.setMousewheelSpeed( 4 );
+	this.setMousewheelSpeed( 8 );
 	this.setZoomSlider( 0 );
 	this.toggleFloor( this.$element.find( '.floor-buttons .active' ).attr( 'data-id' ) );
 
