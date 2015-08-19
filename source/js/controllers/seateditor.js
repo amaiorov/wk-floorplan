@@ -134,6 +134,7 @@ SeatEditor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel 
 	if ( !shouldUnassign && !entityModel.isAssigned ) {
 
 		this._floorViewer.currentFloor.addEntityIcon( entityModel );
+		this._floorViewer.updateIconSize();
 	}
 };
 

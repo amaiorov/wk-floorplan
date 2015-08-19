@@ -196,9 +196,9 @@
  * @param? showInfo The ability to show info panel.
  */
 {template .EmployeeIcon}
-<div class="employee-icon entity-icon" data-first="{ $employee.firstName }" data-last="{ $employee.lastName }" data-clickable="true">
-	<div class="icon">
-		<span class="initials">{ $employee.initials }</span>
+<div class="employee-icon entity-icon" data-first="{ $employee.firstName }" data-last="{ $employee.lastName }">
+	<div class="icon" data-clickable="true">
+		{ $employee.initials }
 	</div>
 	{if $showInfo == true}
 	<div class="info">

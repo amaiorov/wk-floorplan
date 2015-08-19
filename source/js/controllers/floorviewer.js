@@ -90,6 +90,7 @@ FloorViewer.prototype.init = function() {
 		'y': ( this._editingRegionHeight - this._floorHeight ) / 2,
 	} );
 
+	this.updateIconSize();
 	this.updateBounds();
 	this.setMousewheelSpeed( 8 );
 	this.setZoomSlider( 0 );
@@ -108,6 +109,22 @@ FloorViewer.prototype.zoom = function( fraction ) {
 	this._zoomTweener.updateTo( {
 		zoom: zoom
 	}, true );
+
+	this.updateIconSize();
+}
+
+
+FloorViewer.prototype.updateIconSize = function() {
+
+	var iconSize;
+
+	if ( zoom < 0.3 ) {
+		iconSize = 'min';
+	} else {
+		iconSize = 'max';
+	}
+
+	this.$element.find( '.entity-icon' ).attr( 'data-size', iconSize );
 }
 
 
@@ -262,7 +279,7 @@ FloorViewer.prototype.onZoomUpdate = function() {
 
 FloorViewer.prototype.onZoomComplete = function() {
 
-	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
+	this.currentFloor.updateTiles( zoom );
 }
 
 
@@ -281,13 +298,13 @@ FloorViewer.prototype.onDragStart = function() {
 
 FloorViewer.prototype.onDrag = function() {
 
-	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
+	this.currentFloor.updateTiles( zoom );
 }
 
 
 FloorViewer.prototype.onThrowComplete = function() {
 
-	this.currentFloor.updateTiles( this._zoomTweener.target.zoom );
+	this.currentFloor.updateTiles( zoom );
 }
 
 
