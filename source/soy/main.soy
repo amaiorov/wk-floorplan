@@ -9,9 +9,10 @@
 
 		<div id="toolbar">
 			<div class="inner">
-				<div class="wk-logo"></div>
-				<div id="search">
 
+				<div class="wk-logo"></div>
+
+				<div id="search">
 					<div class="input-group">
 						<input type="text" class="form-control" aria-label="...">
 						<div class="input-group-btn">
@@ -24,8 +25,8 @@
 							</ul>
 						</div>
 					</div>
-
 				</div>
+
 			</div>
 		</div>
 
@@ -40,14 +41,14 @@
 
 
 /**
- * Seat Editor
+ * Editor
  * @param floor6Employees All employees on floor 6
  * @param floor7Employees All employees on floor 7
  * @param floor8Employees All employees on floor 8
  * @param unassignedEmployees All employees who are not yet seated
  */
-{template .SeatEditor}
-<div id="seat-editor">
+{template .Editor}
+<div id="editor">
 	<div class="editing-region">
 
 		<div class="floor-pane">
@@ -107,6 +108,12 @@
 					<label class="btn btn-default" data-id="8">
 						<input type="radio" name="options" autocomplete="off">8th Flr
 					</label>
+				</div>
+
+				<div class="other-buttons">
+					<div class="admin-buttons">
+						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
+					</div>
 				</div>
 
 			</div>

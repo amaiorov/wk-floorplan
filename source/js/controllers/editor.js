@@ -8,14 +8,14 @@ var employeeCollection = require( 'models/employeecollection' );
 var _instance;
 
 
-var SeatEditor = function() {
+var Editor = function() {
 
 	var floor6Employees = employeeCollection.getByFloor( 6 );
 	var floor7Employees = employeeCollection.getByFloor( 7 );
 	var floor8Employees = employeeCollection.getByFloor( 8 );
 	var unassignedEmployees = employeeCollection.getUnassigned();
 
-	this.element = soy.renderAsFragment( template.SeatEditor, {
+	this.element = soy.renderAsFragment( template.Editor, {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
 		floor8Employees: floor8Employees,
@@ -39,6 +39,7 @@ var SeatEditor = function() {
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
 	this._$onEntityDragEnd = $.proxy( this.onEntityDragEnd, this );
+	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
 
 	// add events
@@ -57,10 +58,16 @@ var SeatEditor = function() {
 		$( this.element ).find( '.entity-dragger-viewport' ),
 		$( this.element ),
 		this._$onEntityDragEnd );
+
+	// controls
+	this._$modeToggler = $( '#mode-toggler' ).bootstrapToggle();
+	this._$modeToggler.change( this._$changeMode );
+
+	this._$changeMode();
 }
 
 
-SeatEditor.prototype.resize = function() {
+Editor.prototype.resize = function() {
 
 	var $editingRegion = $( this.element ).find( '.editing-region' );
 	var editingRegionPosition = $editingRegion.offset();
@@ -76,7 +83,7 @@ SeatEditor.prototype.resize = function() {
 }
 
 
-SeatEditor.prototype.onSplitStart = function( e ) {
+Editor.prototype.onSplitStart = function( e ) {
 
 	$( document.body ).on( 'mousemove', this._$onSplitDrag );
 	$( document.body ).on( 'mouseup', this._$onSplitEnd );
@@ -87,7 +94,7 @@ SeatEditor.prototype.onSplitStart = function( e ) {
 }
 
 
-SeatEditor.prototype.onSplitDrag = function( e ) {
+Editor.prototype.onSplitDrag = function( e ) {
 
 	var dragFracX = ( e.clientX - this._metrics.editingRegionLeft ) / this._metrics.editingRegionWidth;
 	var minFracX = .6;
@@ -99,7 +106,7 @@ SeatEditor.prototype.onSplitDrag = function( e ) {
 }
 
 
-SeatEditor.prototype.onSplitEnd = function( e ) {
+Editor.prototype.onSplitEnd = function( e ) {
 
 	$( document.body ).off( 'mousemove', this._$onSplitDrag );
 	$( document.body ).off( 'mouseup', this._$onSplitEnd );
@@ -110,7 +117,7 @@ SeatEditor.prototype.onSplitEnd = function( e ) {
 }
 
 
-SeatEditor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
+Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 	var entityPositionInFloor = this._floorViewer.getFloorPositionByViewerCoordinates( x, y );
 	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
@@ -139,9 +146,24 @@ SeatEditor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel 
 };
 
 
+Editor.prototype.changeMode = function() {
+
+	var isEditMode = this._$modeToggler.prop( 'checked' );
+
+	if ( isEditMode ) {
+
+		this._waitlist.activate();
+
+	} else {
+
+		this._waitlist.deactivate();
+	}
+};
+
+
 module.exports = {
 	getInstance: function() {
-		_instance = _instance || new SeatEditor( arguments );
+		_instance = _instance || new Editor( arguments );
 		return _instance;
 	}
 };

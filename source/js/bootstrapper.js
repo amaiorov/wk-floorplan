@@ -3,7 +3,7 @@ var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
-var SeatEditor = require( 'controllers/seateditor' );
+var Editor = require( 'controllers/editor' );
 var search = require( 'controllers/search' );
 
 var _instance;
@@ -36,7 +36,7 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl ) {
 				employeeCollection.add( employee );
 			} );
 
-			var seatEditor = SeatEditor.getInstance();
+			Editor.getInstance();
 		}
 	} );
 }

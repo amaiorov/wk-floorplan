@@ -45,8 +45,8 @@ html{
 	@include box-sizing(borde-box);
 }
 
-#seat-editor{
-	@import "seat-editor";
+#editor{
+	@import "editor";
 }
 
 #search {

@@ -30,6 +30,18 @@ var Waitlist = function( $element ) {
 }
 
 
+Waitlist.prototype.activate = function() {
+
+
+}
+
+
+Waitlist.prototype.deactivate = function() {
+
+
+}
+
+
 Waitlist.prototype.reset = function() {
 
 	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
