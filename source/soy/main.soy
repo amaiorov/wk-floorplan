@@ -27,6 +27,17 @@
 					</div>
 				</div>
 
+				<div class="other-buttons">
+					<div class="admin-buttons">
+						<div class="edit-buttons">
+							<button type="button" class="btn btn-default btn-add-seat">Add Seat</button>
+							<button type="button" class="btn btn-default btn-remove-seat">Remove Seat</button>
+						</div>
+						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
+					</div>
+					<button type="button" class="btn btn-primary btn-login">Log In</button>
+				</div>
+
 			</div>
 		</div>
 
@@ -110,32 +121,28 @@
 					</label>
 				</div>
 
-				<div class="other-buttons">
-					<div class="admin-buttons">
-						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
-					</div>
-				</div>
-
 			</div>
 
 			<div class="entity-dragger-viewport"></div>
-
-			<div class="split-handle"></div>
 		</div>
 
 		<div class="waitlist-pane">
-			<div class="inner">
-				<h3>Not Assigned</h3>
-				<div class="waitlist-container">
-					<div class="waitlist">
-					{call .WaitlistEmployees}
-					{param employees: $unassignedEmployees /}
-					{/call}
-					</div>
-					<div class="info-container">
+			<div class="inner-container">
+				<div class="inner">
+					<h3>Not Assigned</h3>
+					<div class="waitlist-container">
+						<div class="waitlist">
+						{call .WaitlistEmployees}
+						{param employees: $unassignedEmployees /}
+						{/call}
+						</div>
+						<div class="info-container">
+						</div>
 					</div>
 				</div>
 			</div>
+
+			<div class="split-handle"></div>
 		</div>
 
 	</div>

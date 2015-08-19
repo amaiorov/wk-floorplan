@@ -15,26 +15,26 @@ var Editor = function() {
 	var floor8Employees = employeeCollection.getByFloor( 8 );
 	var unassignedEmployees = employeeCollection.getUnassigned();
 
-	this.element = soy.renderAsFragment( template.Editor, {
+	var element = soy.renderAsFragment( template.Editor, {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
 		floor8Employees: floor8Employees,
 		unassignedEmployees: unassignedEmployees
 	} );
 
-	$( '#editor-container' ).append( this.element );
+	this.$element = $( element );
+
+	$( '#editor-container' ).append( this.$element );
 
 	// declare vars
-	this._metrics = null;
-	this._handleOffsetX = 0;
+	this._metrics = {};
 
 	// query dom elements
-	this._$floorPane = $( this.element ).find( '.floor-pane' );
-	this._$waitlistPane = $( this.element ).find( '.waitlist-pane' );
+	this._$floorPane = this.$element.find( '.floor-pane' );
+	this._$waitlistPane = this.$element.find( '.waitlist-pane' );
 
 	// scoped methods
-	this._$onSplitStart = $.proxy( this.onSplitStart, this );
-	this._$onSplitDrag = $.proxy( this.onSplitDrag, this );
+	this._$onSplitUpdate = $.proxy( this.onSplitUpdate, this );
 	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
@@ -44,19 +44,18 @@ var Editor = function() {
 
 	// add events
 	$( window ).on( 'resize', this._$resize ).resize();
-
-	this._$splitHandle = $( this.element ).find( '.split-handle' );
-	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
+	$( window ).on( 'editorsplitupdate', this._$onSplitUpdate );
+	$( window ).on( 'editorsplitend', this._$onSplitEnd );
 
 	// create editor components
-	this._waitlist = new Waitlist( this._$waitlistPane );
+	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );
 
-	var $floorViewport = $( this.element ).find( '.floor-viewport' );
+	var $floorViewport = this.$element.find( '.floor-viewport' );
 	this._floorViewer = new FloorViewer( $floorViewport );
 
 	this._entityDragger = new EntityDragger(
-		$( this.element ).find( '.entity-dragger-viewport' ),
-		$( this.element ),
+		this.$element.find( '.entity-dragger-viewport' ),
+		this.$element,
 		this._$onEntityDragEnd );
 
 	// controls
@@ -69,49 +68,26 @@ var Editor = function() {
 
 Editor.prototype.resize = function() {
 
-	var $editingRegion = $( this.element ).find( '.editing-region' );
+	var $editingRegion = this.$element.find( '.editing-region' );
 	var editingRegionPosition = $editingRegion.offset();
 
-	this._metrics = {
-		editingRegionWidth: $editingRegion.width(),
-		editingRegionHeight: $editingRegion.height(),
-		editingRegionTop: editingRegionPosition.top,
-		editingRegionLeft: editingRegionPosition.left
-	};
+	this._metrics.editingRegionWidth = $editingRegion.width();
+	this._metrics.editingRegionHeight = $editingRegion.height();
+	this._metrics.editingRegionTop = editingRegionPosition.top;
+	this._metrics.editingRegionLeft = editingRegionPosition.left;
 
 	return this._metrics;
 }
 
 
-Editor.prototype.onSplitStart = function( e ) {
+Editor.prototype.onSplitUpdate = function( e ) {
 
-	$( document.body ).on( 'mousemove', this._$onSplitDrag );
-	$( document.body ).on( 'mouseup', this._$onSplitEnd );
-
-	this._handleOffsetX = e.offsetX;
-
-	$( 'html' ).attr( 'data-cursor', 'horizontal-dragging' );
-}
-
-
-Editor.prototype.onSplitDrag = function( e ) {
-
-	var dragFracX = ( e.clientX - this._metrics.editingRegionLeft ) / this._metrics.editingRegionWidth;
-	var minFracX = .6;
-	var maxFracX = 1;
-	dragFracX = Math.min( Math.max( dragFracX, minFracX ), maxFracX );
-
-	this._$floorPane.css( 'width', dragFracX * 100 + '%' );
-	this._$waitlistPane.css( 'width', ( 1 - dragFracX ) * 100 + '%' );
+	this._$floorPane.css( 'width', e.fraction * 100 + '%' );
+	this._$waitlistPane.css( 'width', ( 1 - e.fraction ) * 100 + '%' );
 }
 
 
 Editor.prototype.onSplitEnd = function( e ) {
-
-	$( document.body ).off( 'mousemove', this._$onSplitDrag );
-	$( document.body ).off( 'mouseup', this._$onSplitEnd );
-
-	$( 'html' ).attr( 'data-cursor', '' );
 
 	this._floorViewer.updateViewportMetrics();
 }
@@ -152,11 +128,17 @@ Editor.prototype.changeMode = function() {
 
 	if ( isEditMode ) {
 
+		this._entityDragger.activate();
 		this._waitlist.activate();
+
+		$( '#toolbar .edit-buttons .btn' ).removeClass( 'disabled' );
 
 	} else {
 
+		this._entityDragger.deactivate();
 		this._waitlist.deactivate();
+
+		$( '#toolbar .edit-buttons .btn' ).addClass( 'disabled' );
 	}
 };
 
