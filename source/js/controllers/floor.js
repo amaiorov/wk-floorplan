@@ -153,13 +153,26 @@ Floor.prototype.updateTiles = function( zoom ) {
 			var tx = parseInt( $tile.attr( 'data-x' ) );
 			var ty = parseInt( $tile.attr( 'data-y' ) );
 			var tileIndex = ty * settings.cols + tx;
+			var lowTileUrl = 'images/floorplan/' + floorIndex + '/low/' + tileIndex + '.jpg';
 			var tileUrl = 'images/floorplan/' + floorIndex + '/' + res + '/' + tileIndex + '.jpg';
 
-			$tile.css( 'background-image', 'url(' + tileUrl + ')' );
+			if ( !$tile.data( 'hasImage' ) ) {
+				var $imageDiv = $( '<div>' );
+				$tile.append( $imageDiv );
+
+				var $img = $( '<img>' ).prop( 'src', tileUrl ).one( 'load', function() {
+					$imageDiv.css( 'background-image', 'url(' + tileUrl + ')' ).addClass( 'loaded' );
+				} );
+
+				$tile.data( 'hasImage', true );
+			}
 
 		} else {
 
-			$tile.css( 'background-image', 'none' );
+			if ( $tile.data( 'hasImage' ) ) {
+				$tile.empty();
+				$tile.data( 'hasImage', false );
+			}
 		}
 	} );
 };
