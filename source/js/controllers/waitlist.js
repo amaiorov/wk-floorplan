@@ -1,10 +1,16 @@
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
+var Utils = require( 'app/utils' );
 var employeeCollection = require( 'models/employeecollection' );
 var PathObserver = require( 'libs/observe' ).PathObserver;
 
+var minFracX = .6;
+var maxFracX = 1;
 
-var Waitlist = function( $element ) {
+var Waitlist = function( $element, editorMetrics ) {
+
+	this._editorMetrics = editorMetrics;
+	this._dragFracX = 1;
 
 	this._$element = $element;
 	this._$waitlist = this._$element.find( '.waitlist' );
@@ -13,9 +19,11 @@ var Waitlist = function( $element ) {
 
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
+	this._$onSplitStart = $.proxy( this.onSplitStart, this );
+	this._$onSplitUpdate = $.proxy( this.onSplitUpdate, this );
+	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
 
-	this._$element.on( 'click', '.entity-icon', this._$onClickWaitlistIcon );
-	this._$waitlist.on( 'click', this._$onClickWaitlist );
+	this._$splitHandle = this._$element.find( '.split-handle' );
 
 	// listen for all employee assigned state changes
 	var $onEmployeeStateChanged = $.proxy( this.onEmployeeStateChanged, this );
@@ -32,13 +40,37 @@ var Waitlist = function( $element ) {
 
 Waitlist.prototype.activate = function() {
 
+	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
+	this._$element.on( 'click', '.entity-icon', this._$onClickWaitlistIcon );
+	this._$waitlist.on( 'click', this._$onClickWaitlist );
 
+	TweenMax.to( this, .5, {
+		_dragFracX: Utils.lerp( minFracX, maxFracX, .5 ),
+		ease: Expo.easeInOut,
+		onUpdate: this.triggerSplitUpdate,
+		onUpdateScope: this,
+		onComplete: this.triggerSplitEnd,
+		onCompleteScope: this
+	} );
 }
 
 
 Waitlist.prototype.deactivate = function() {
 
+	this._$splitHandle.off( 'mousedown', this._$onSplitStart );
+	this._$element.off( 'click', '.entity-icon', this._$onClickWaitlistIcon );
+	this._$waitlist.off( 'click', this._$onClickWaitlist );
+	$( window ).off( 'mousemove', this._$onSplitUpdate );
+	$( window ).off( 'mouseup', this._$onSplitEnd );
 
+	TweenMax.to( this, .5, {
+		_dragFracX: 1,
+		ease: Expo.easeInOut,
+		onUpdate: this.triggerSplitUpdate,
+		onUpdateScope: this,
+		onComplete: this.triggerSplitEnd,
+		onCompleteScope: this
+	} );
 }
 
 
@@ -46,6 +78,23 @@ Waitlist.prototype.reset = function() {
 
 	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
 	this._$waitlistContainer.removeClass( 'show-info' );
+}
+
+
+Waitlist.prototype.triggerSplitUpdate = function( e ) {
+
+	$.event.trigger( {
+		type: 'editorsplitupdate',
+		fraction: this._dragFracX
+	} );
+}
+
+
+Waitlist.prototype.triggerSplitEnd = function( e ) {
+
+	$.event.trigger( {
+		type: 'editorsplitend'
+	} );
 }
 
 
@@ -83,6 +132,35 @@ Waitlist.prototype.onEmployeeStateChanged = function( newValue, oldValue ) {
 
 	this._$waitlist.empty().append( this.element );
 	this.reset();
+}
+
+
+Waitlist.prototype.onSplitStart = function( e ) {
+
+	$( window ).on( 'mousemove', this._$onSplitUpdate );
+	$( window ).on( 'mouseup', this._$onSplitEnd );
+
+	$( 'html' ).attr( 'data-cursor', 'horizontal-dragging' );
+}
+
+
+Waitlist.prototype.onSplitUpdate = function( e ) {
+
+	var dragFracX = ( e.clientX - this._editorMetrics.editingRegionLeft ) / this._editorMetrics.editingRegionWidth;
+	this._dragFracX = Math.min( Math.max( dragFracX, minFracX ), maxFracX );
+
+	this.triggerSplitUpdate();
+}
+
+
+Waitlist.prototype.onSplitEnd = function( e ) {
+
+	$( window ).off( 'mousemove', this._$onSplitUpdate );
+	$( window ).off( 'mouseup', this._$onSplitEnd );
+
+	$( 'html' ).attr( 'data-cursor', '' );
+
+	this.triggerSplitEnd();
 }
 
 

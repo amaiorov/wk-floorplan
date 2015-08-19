@@ -21,9 +21,19 @@ var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
 	this._$onDragEnd = $.proxy( this.onDragEnd, this );
 
 	this._onDragEndCallback = _onDragEndCallback;
+}
+
+
+EntityDragger.prototype.activate = function() {
 
 	this._$entityContainer.on( 'mousedown', '.entity-icon', this._$onDragStart );
-}
+};
+
+
+EntityDragger.prototype.deactivate = function() {
+
+	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
+};
 
 
 EntityDragger.prototype.dispose = function() {
