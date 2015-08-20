@@ -14,7 +14,6 @@ var Employee = function( props ) {
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
 	this.type = this.getType( props );
-	console.log( this.type );
 	this.seat = props[ 'Seat' ];
 	this.x = props[ 'X' ];
 	this.y = props[ 'Y' ];

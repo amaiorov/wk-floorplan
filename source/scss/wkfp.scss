@@ -87,6 +87,23 @@ html{
 	}
 	.name {
 		float: left;
+		@extend .icon;
+
+		&:before{
+			margin-right: 10px;
+		}
+
+		&.employee, &.freelance{
+			@extend .icon-person;
+		}
+
+		&.room{
+			@extend .icon-room;
+		}
+
+		&.printer{
+			@extend .icon-printer;
+		}
 	}
 	.department {
 		float: right;
