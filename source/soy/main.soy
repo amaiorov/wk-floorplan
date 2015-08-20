@@ -14,9 +14,9 @@
 
 				<div id="search">
 					<div class="input-group">
-						<input type="text" class="form-control" aria-label="...">
+						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everything <span class="caret"></span></button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-submit">Everything <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
@@ -25,8 +25,8 @@
 							</ul>
 						</div>
 					</div>
+					<div id="autocomplete-list"></div>
 				</div>
-
 				<div class="other-buttons">
 					<div class="admin-buttons">
 						<div class="edit-buttons">
@@ -244,7 +244,6 @@
 </div>
 {/template}
 
-
 /**
  * Seat pin
  * A floor pin representing a seat
@@ -274,4 +273,33 @@
 	</div>
 {/for}
 </div>
+{/template}
+
+
+/**
+ * Autocomplete list 
+ * @param currentFloorEntities The entities array within the current floor.
+ * @param otherFloorEntities The object keyed by the floor index, containing the floor's entites.
+ */
+{template .AutocompleteList}
+<ul class="dropdown-menu dropdown-menu-left">
+
+{if length($currentFloorEntities) > 0}
+<li><h6>This Floor</h6></li>
+{foreach $entity in $currentFloorEntities}
+	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
+{/foreach}
+{/if}
+
+{foreach $floorIndex in keys($otherFloorEntities)}
+{let $entitiesOnfloor: $otherFloorEntities[$floorIndex] /}
+{if length($entitiesOnfloor) > 0}
+<li><h6>{$floorIndex}th Floor</h6></li>
+{foreach $entity in $entitiesOnfloor}
+	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
+{/foreach}
+{/if}
+{/foreach}
+
+</ul>
 {/template}

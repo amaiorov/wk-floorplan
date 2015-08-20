@@ -1,3 +1,4 @@
+var Utils = require( 'app/utils' );
 var template = require( 'views/main.soy' );
 var Waitlist = require( 'controllers/waitlist' );
 var EntityDragger = require( 'controllers/entitydragger' );
@@ -62,7 +63,7 @@ var Editor = function() {
 	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );
 
 	var $floorViewport = this.$element.find( '.floor-viewport' );
-	this._floorViewer = new FloorViewer( $floorViewport );
+	this.floorViewer = new FloorViewer( $floorViewport );
 
 	this._entityDragger = new EntityDragger(
 		this.$element.find( '.entity-dragger-viewport' ),
@@ -103,13 +104,13 @@ Editor.prototype.onSplitUpdate = function( e ) {
 
 Editor.prototype.onSplitEnd = function( e ) {
 
-	this._floorViewer.updateViewportMetrics();
+	this.floorViewer.updateViewportMetrics();
 }
 
 
 Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
-	var entityPositionInFloor = this._floorViewer.getFloorPositionByViewerCoordinates( x, y );
+	var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
 	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
 	var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
 
@@ -124,7 +125,7 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 		if ( outOfViewport ) {
 
-			this._floorViewer.currentFloor.removeSeatPin( entityModel );
+			this.floorViewer.currentFloor.removeSeatPin( entityModel );
 
 		} else {
 
@@ -135,11 +136,11 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 		entityModel.x = entityX;
 		entityModel.y = entityY;
-		entityModel.floorIndex = outOfViewport ? null : this._floorViewer.currentFloorIndex;
+		entityModel.floorIndex = outOfViewport ? null : this.floorViewer.currentFloorIndex;
 
 		if ( outOfViewport && entityModel.isAssigned ) {
 
-			this._floorViewer.currentFloor.removeEntityIcon( entityModel );
+			this.floorViewer.currentFloor.removeEntityIcon( entityModel );
 
 		} else {
 
@@ -148,8 +149,8 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 		if ( !outOfViewport && !entityModel.isAssigned ) {
 
-			this._floorViewer.currentFloor.addEntityIcon( entityModel );
-			this._floorViewer.updateIconSize();
+			this.floorViewer.currentFloor.addEntityIcon( entityModel );
+			this.floorViewer.updateIconSize();
 		}
 	}
 };
@@ -158,10 +159,10 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 Editor.prototype.onClickAddSeat = function( e ) {
 
-	this._floorViewer.currentFloor.addSeatPin(
-		this._floorViewer.getFloorPosition(), this._floorViewer.getFloorSize() );
+	this.floorViewer.currentFloor.addSeatPin(
+		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
 
-	this._floorViewer.updateIconSize();
+	this.floorViewer.updateIconSize();
 };
 
 
@@ -199,9 +200,4 @@ Editor.prototype.changeMode = function() {
 };
 
 
-module.exports = {
-	getInstance: function() {
-		_instance = _instance || new Editor( arguments );
-		return _instance;
-	}
-};
+module.exports = Utils.createSingleton( _instance, Editor );

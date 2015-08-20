@@ -13,6 +13,8 @@ var Employee = function( props ) {
 	this.cellPhone = props[ 'Cell Phone #s' ];
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
+	this.type = this.getType( props );
+	console.log( this.type );
 	this.seat = props[ 'Seat' ];
 	this.x = props[ 'X' ];
 	this.y = props[ 'Y' ];
@@ -22,6 +24,23 @@ var Employee = function( props ) {
 
 	this._observer = new ObjectObserver( this );
 	this._observer.open( this._$onObserved );
+}
+
+
+Employee.prototype.getType = function( props ) {
+
+	switch ( true ) {
+		case ( props[ 'Printer' ].length > 0 ):
+			return 'printer';
+		case ( props[ 'Room' ].length > 0 ):
+			return 'room';
+		case ( props[ 'Freelance' ].length > 0 ):
+			return 'freelance';
+		case ( props[ 'Intern' ].length > 0 ):
+			return 'intern';
+		default:
+			return 'employee';
+	}
 }
 
 
