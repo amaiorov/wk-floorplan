@@ -73,14 +73,14 @@
 						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor6Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
 
 							{foreach $seatId in keys($floor6Seats)}
-							{call .SeatIcon}
+							{call .SeatPin}
 								{param seat: $floor6Seats[$seatId] /}
 							{/call}
 							{/foreach}
@@ -91,14 +91,14 @@
 						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor7Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
 
 							{foreach $seatId in keys($floor7Seats)}
-							{call .SeatIcon}
+							{call .SeatPin}
 								{param seat: $floor7Seats[$seatId] /}
 							{/call}
 							{/foreach}
@@ -109,14 +109,14 @@
 						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor8Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
 
 							{foreach $seatId in keys($floor8Seats)}
-							{call .SeatIcon}
+							{call .SeatPin}
 								{param seat: $floor8Seats[$seatId] /}
 							{/call}
 							{/foreach}
@@ -177,7 +177,7 @@
  */
 {template .WaitlistEmployees}
 {foreach $employee in $employees}
-{call .EmployeeIcon}
+{call .EmployeePin}
 	{param employee: $employee /}
 {/call}
 {/foreach}
@@ -225,13 +225,13 @@
 
 
 /**
- * Employee Icon
- * A floor icon representing an employee
+ * Employee pin
+ * A floor pin representing an employee
  * @param employee The employee model.
  * @param? showInfo The ability to show info panel.
  */
-{template .EmployeeIcon}
-<div class="employee-icon entity-icon" data-id="{ $employee.fullName }">
+{template .EmployeePin}
+<div class="employee-pin entity-pin" data-id="{ $employee.fullName }">
 	<div class="icon" data-clickable="true">
 		{ $employee.initials }
 	</div>
@@ -246,12 +246,12 @@
 
 
 /**
- * Seat Icon
- * A floor icon representing a seat
+ * Seat pin
+ * A floor pin representing a seat
  * @param seat The seat model.
  */
-{template .SeatIcon}
-<div class="seat-icon" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
+{template .SeatPin}
+<div class="seat-pin" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
 	<div class="icon" data-clickable="true"></div>
 </div>
 {/template}

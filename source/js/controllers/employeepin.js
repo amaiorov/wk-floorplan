@@ -1,17 +1,17 @@
 var inherits = require( 'inherits' );
-var EntityIcon = require( 'controllers/entityicon' );
+var Pin = require( 'controllers/pin' );
 var employeeCollection = require( 'models/employeecollection' );
 
 
-var EmployeeIcon = function( element, opt_model ) {
+var EmployeePin = function( element, opt_model ) {
 
 	var fullName = element.getAttribute( 'data-id' );
 	var model = opt_model || employeeCollection.getByName( fullName );
 
-	EntityIcon.call( this, element, model );
+	Pin.call( this, element, model );
 
 }
-inherits( EmployeeIcon, EntityIcon );
+inherits( EmployeePin, Pin );
 
 
-module.exports = EmployeeIcon;
+module.exports = EmployeePin;

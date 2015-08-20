@@ -41,7 +41,7 @@ var Waitlist = function( $element, editorMetrics ) {
 Waitlist.prototype.activate = function() {
 
 	this._$splitHandle.on( 'mousedown', this._$onSplitStart );
-	this._$element.on( 'click', '.entity-icon', this._$onClickWaitlistIcon );
+	this._$element.on( 'click', '.entity-pin', this._$onClickWaitlistIcon );
 	this._$waitlist.on( 'click', this._$onClickWaitlist );
 
 	TweenMax.to( this, .5, {
@@ -58,7 +58,7 @@ Waitlist.prototype.activate = function() {
 Waitlist.prototype.deactivate = function() {
 
 	this._$splitHandle.off( 'mousedown', this._$onSplitStart );
-	this._$element.off( 'click', '.entity-icon', this._$onClickWaitlistIcon );
+	this._$element.off( 'click', '.entity-pin', this._$onClickWaitlistIcon );
 	this._$waitlist.off( 'click', this._$onClickWaitlist );
 	$( window ).off( 'mousemove', this._$onSplitUpdate );
 	$( window ).off( 'mouseup', this._$onSplitEnd );
@@ -76,7 +76,7 @@ Waitlist.prototype.deactivate = function() {
 
 Waitlist.prototype.reset = function() {
 
-	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
+	this._$waitlist.find( '.entity-pin' ).removeClass( 'active' );
 	this._$waitlistContainer.removeClass( 'show-info' );
 }
 
@@ -110,7 +110,7 @@ Waitlist.prototype.onClickWaitlist = function( e ) {
 
 Waitlist.prototype.onClickWaitlistIcon = function( e ) {
 
-	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
+	this._$waitlist.find( '.entity-pin' ).removeClass( 'active' );
 
 	var $icon = $( e.currentTarget ).addClass( 'active' );
 	var employee = employeeCollection.getByName( $icon.attr( 'data-id' ) );

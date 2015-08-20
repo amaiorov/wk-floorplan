@@ -1,6 +1,7 @@
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
 
-var EntityIcon = function( element, model ) {
+
+var Pin = function( element, model ) {
 
 	// assign view element
 	this.$element = $( element );
@@ -15,19 +16,16 @@ var EntityIcon = function( element, model ) {
 }
 
 
-EntityIcon.prototype.dispose = function() {
+Pin.prototype.dispose = function() {
 
 	this._observer.close( this._$onObserved );
-	this._observer = null;
 
 	this.$element.remove();
 	this.$element = null;
-
-	this.model = null;
 };
 
 
-EntityIcon.prototype.setX = function( x ) {
+Pin.prototype.setX = function( x ) {
 
 	this.$element.css( {
 		'left': x
@@ -35,7 +33,7 @@ EntityIcon.prototype.setX = function( x ) {
 };
 
 
-EntityIcon.prototype.setY = function( y ) {
+Pin.prototype.setY = function( y ) {
 
 	this.$element.css( {
 		'top': y
@@ -43,7 +41,7 @@ EntityIcon.prototype.setY = function( y ) {
 };
 
 
-EntityIcon.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+Pin.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 
 	for ( var key in changed ) {
 		var value = changed[ key ];
@@ -64,4 +62,4 @@ EntityIcon.prototype.onObserved = function( added, removed, changed, getOldValue
 }
 
 
-module.exports = EntityIcon;
+module.exports = Pin;

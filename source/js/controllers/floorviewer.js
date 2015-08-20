@@ -144,8 +144,8 @@ FloorViewer.prototype.updateIconSize = function() {
 			iconSize = 'max';
 		}
 
-		this.$element.find( '.entity-icon' ).attr( 'data-size', iconSize );
-		this.$element.find( '.seat-icon' ).attr( 'data-size', iconSize );
+		this.$element.find( '.entity-pin' ).attr( 'data-size', iconSize );
+		this.$element.find( '.seat-pin' ).attr( 'data-size', iconSize );
 
 	}, this ), 0 );
 }

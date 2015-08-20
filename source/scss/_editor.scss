@@ -5,7 +5,7 @@
 }
 
 &.preview{
-	.seat-icon{
+	.seat-pin{
 		display: none !important;
 	}
 }
@@ -33,7 +33,7 @@
 		overflow: hidden;
 		background-image: image-url('grid.png');
 
-		.entity-icon{
+		.entity-pin{
 			position: absolute;
 			z-index: 1;
 
@@ -52,17 +52,20 @@
 			}
 		}
 
-		.seat-icon{
+		.seat-pin{
 			z-index: 0;
 
 			.icon{
-				@include scale(.3);
+				margin: 13px;
+				width: 14px;
+				height: 14px;
 			}
 
 			&[data-size="min"] .icon{
-				@include scale(.3);
+				margin: 13px;
+				width: 14px;
+				height: 14px;
 				font-size: 0;
-				border: none;
 
 				&:after{
 					content: none;
@@ -70,7 +73,9 @@
 			}
 
 			&[data-size="max"] .icon{
-				@include scale(1);
+				margin: 0;
+				width: 40px;
+				height: 40px;
 			}
 		}
 	}
@@ -81,7 +86,7 @@
 		width: 100%;
 		height: 100%;
 
-		.entity-icon{
+		.entity-pin{
 			position: absolute;
 		}
 	}
@@ -246,7 +251,7 @@
 					overflow: auto;
 					@include transition(height, .3s ease-in-out);
 
-					.entity-icon{
+					.entity-pin{
 						@include translate(0, 0);
 						margin: 0 10px 10px 0;
 						cursor: pointer;
@@ -300,7 +305,7 @@
 	}
 }
 
-.entity-icon{
+.entity-pin{
 	@include inline-block(top);
 	position: relative;
 	z-index: 0;
@@ -391,7 +396,7 @@
 	}
 }
 
-.seat-icon{
+.seat-pin{
 	position: absolute;
 	width: 40px;
 	height: 40px;

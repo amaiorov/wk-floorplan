@@ -2,7 +2,7 @@ var Utils = require( 'app/utils' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
-var EmployeeIcon = require( 'controllers/employeeicon' );
+var EmployeePin = require( 'controllers/employeepin' );
 var SeatPin = require( 'controllers/seatpin' );
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
 
@@ -25,7 +25,7 @@ var Floor = function( element, viewportMetrics ) {
 	var entities = this._entities = {};
 	var vacantSeats = this.model.getVacantSeats();
 
-	$.each( this.$element.find( '.seat-icon' ), $.proxy( function( i, el ) {
+	$.each( this.$element.find( '.seat-pin' ), $.proxy( function( i, el ) {
 
 		var seatId = el.getAttribute( 'data-id' );
 		var seat = new SeatPin( el, FloorModel.getSeatById( seatId ) );
@@ -33,10 +33,10 @@ var Floor = function( element, viewportMetrics ) {
 
 	}, this ) );
 
-	$.each( this.$element.find( '.entity-icon' ), $.proxy( function( i, el ) {
+	$.each( this.$element.find( '.entity-pin' ), $.proxy( function( i, el ) {
 
 		var entityId = el.getAttribute( 'data-id' );
-		var entity = new EmployeeIcon( el );
+		var entity = new EmployeePin( el );
 		entities[ entityId ] = entity;
 
 		var seat = vacantSeats.shift();
@@ -71,7 +71,7 @@ Floor.prototype.hide = function() {
 
 Floor.prototype.addEntityIcon = function( model ) {
 
-	var icon = soy.renderAsFragment( template.EmployeeIcon, {
+	var icon = soy.renderAsFragment( template.EmployeePin, {
 		employee: model,
 		showInfo: true
 	} );
@@ -83,7 +83,7 @@ Floor.prototype.addEntityIcon = function( model ) {
 
 	this._$inner.append( icon );
 
-	var entity = new EmployeeIcon( icon, model );
+	var entity = new EmployeePin( icon, model );
 	this._entities[ model.fullName ] = entity;
 };
 
@@ -224,7 +224,7 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 
 		var seatModel = added[ key ];
 
-		var el = soy.renderAsFragment( template.SeatIcon, {
+		var el = soy.renderAsFragment( template.SeatPin, {
 			seat: seatModel
 		} );
 

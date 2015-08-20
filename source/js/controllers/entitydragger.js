@@ -26,15 +26,15 @@ var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
 
 EntityDragger.prototype.activate = function() {
 
-	this._$entityContainer.on( 'mousedown', '.entity-icon', this._$onDragStart );
-	this._$entityContainer.on( 'mousedown', '.seat-icon', this._$onDragStart );
+	this._$entityContainer.on( 'mousedown', '.entity-pin', this._$onDragStart );
+	this._$entityContainer.on( 'mousedown', '.seat-pin', this._$onDragStart );
 };
 
 
 EntityDragger.prototype.deactivate = function() {
 
-	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
-	this._$entityContainer.off( 'mousedown', '.seat-icon', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.entity-pin', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.seat-pin', this._$onDragStart );
 };
 
 
@@ -46,8 +46,8 @@ EntityDragger.prototype.dispose = function() {
 	this._$actualEntityIcon = null;
 	this._$draggerEntityIcon = null;
 
-	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
-	this._$entityContainer.off( 'mousedown', '.seat-icon', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.entity-pin', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.seat-pin', this._$onDragStart );
 };
 
 
@@ -65,21 +65,21 @@ EntityDragger.prototype.onDragStart = function( e ) {
 
 	var draggerEntityIcon;
 
-	if ( this._$actualEntityIcon.hasClass( 'seat-icon' ) ) {
+	if ( this._$actualEntityIcon.hasClass( 'seat-pin' ) ) {
 
 		var seatId = this._$actualEntityIcon.attr( 'data-id' );
 		this._entityModel = Floor.getSeatById( seatId );
 
-		draggerEntityIcon = soy.renderAsFragment( template.SeatIcon, {
+		draggerEntityIcon = soy.renderAsFragment( template.SeatPin, {
 			seat: this._entityModel
 		} );
 
-	} else if ( this._$actualEntityIcon.hasClass( 'entity-icon' ) ) {
+	} else if ( this._$actualEntityIcon.hasClass( 'entity-pin' ) ) {
 
 		var fullName = this._$actualEntityIcon.attr( 'data-id' );
 		this._entityModel = employeeCollection.getByName( fullName );
 
-		draggerEntityIcon = soy.renderAsFragment( template.EmployeeIcon, {
+		draggerEntityIcon = soy.renderAsFragment( template.EmployeePin, {
 			employee: this._entityModel,
 			showInfo: true
 		} );
