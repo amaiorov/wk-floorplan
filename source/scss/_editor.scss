@@ -368,7 +368,7 @@
 		}
 	}
 
-	&:hover, &.dragging{
+	&:hover, &.dragging, &.active{
 		z-index: 1;
 
 		>.icon{
@@ -426,6 +426,17 @@
 			height: 4px;
 			background-color: #FFCC00;
 			@include border-radius(100%);
+		}
+	}
+
+	&.dragging, &.active{
+
+		>.icon{
+			border: 2px solid #FF6600;
+
+			&:after{
+				background-color: #FF6600;
+			}
 		}
 	}
 }
