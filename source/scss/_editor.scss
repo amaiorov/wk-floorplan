@@ -4,6 +4,12 @@
 	@include user-select(none);
 }
 
+&.preview{
+	.seat-icon{
+		display: none !important;
+	}
+}
+
 .editing-region{
 	margin: 0 auto;
 	width: 100%;
@@ -29,6 +35,7 @@
 
 		.entity-icon{
 			position: absolute;
+			z-index: 1;
 
 			.icon{
 				@include scale(.3);
@@ -38,6 +45,28 @@
 			&[data-size="min"] .icon{
 				@include scale(.3);
 				font-size: 0;
+			}
+
+			&[data-size="max"] .icon{
+				@include scale(1);
+			}
+		}
+
+		.seat-icon{
+			z-index: 0;
+
+			.icon{
+				@include scale(.3);
+			}
+
+			&[data-size="min"] .icon{
+				@include scale(.3);
+				font-size: 0;
+				border: none;
+
+				&:after{
+					content: none;
+				}
 			}
 
 			&[data-size="max"] .icon{
@@ -172,7 +201,7 @@
 		width: 20px;
 		height: 100%;
 		cursor: ew-resize;
-		
+
 		&:after{
 			content: "";
 			position: absolute;
@@ -359,5 +388,39 @@
 
 	&:not(.dragging) {
 		@include grab-cursor;
+	}
+}
+
+.seat-icon{
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	@include translate(-50%, -50%);
+	@include user-select(none);
+
+	>.icon{
+		position: relative;
+		z-index: 0;
+		width: 40px;
+		height: 40px;
+		background: rgba(#FFFFCC, .8);
+		border: 1px solid #FFCC00;
+		@include border-radius(100%);
+		@include box-sizing(border-box);
+		@include transition(background .4s $easeOutCubic);
+		@include backfaceHidden;
+
+		&:after{
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			display: block;
+			margin: -2px;
+			width: 4px;
+			height: 4px;
+			background-color: #FFCC00;
+			@include border-radius(100%);
+		}
 	}
 }

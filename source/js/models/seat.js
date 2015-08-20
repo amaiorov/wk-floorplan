@@ -3,15 +3,15 @@ var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
 var _instances = {};
 
 
-var Seat = function( seatIndex, floorIndex ) {
+var Seat = function( seatIndex, floorIndex, opt_x, opt_y ) {
 
 	this.seatIndex = seatIndex;
 	this.floorIndex = floorIndex;
 
 	this.id = Seat.generateId( seatIndex, floorIndex );
 
-	this.x = '0%';
-	this.y = '0%';
+	this.x = opt_x || '0%';
+	this.y = opt_y || '0%';
 
 	this.entity = null;
 
@@ -22,24 +22,12 @@ var Seat = function( seatIndex, floorIndex ) {
 }
 
 
-Seat.generateId = function( seatIndex, floorIndex ) {
+Seat.prototype.dispose = function() {
 
-	return 'f' + floorIndex + 's' + seatIndex;
-}
+	this.entity = null;
 
-
-Seat.getByIndex = function( seatIndex, floorIndex ) {
-
-	var model;
-	var id = Seat.generateId( seatIndex, floorIndex );
-
-	if ( !_instances[ id ] ) {
-		model = _instances[ id ] = new Seat( seatIndex, floorIndex );
-	} else {
-		model = _instances[ id ];
-	}
-
-	return model;
+	this._observer.close( this._$onObserved );
+	this._observer = null;
 }
 
 
@@ -58,6 +46,12 @@ Seat.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 				break;
 		}
 	}
+}
+
+
+Seat.generateId = function( seatIndex, floorIndex ) {
+
+	return 'f' + floorIndex + 's' + seatIndex;
 }
 
 

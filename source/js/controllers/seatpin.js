@@ -1,6 +1,8 @@
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+var FloorModel = require( 'models/floor' );
 
-var EntityIcon = function( element, model ) {
+
+var SeatPin = function( element, model ) {
 
 	// assign view element
 	this.$element = $( element );
@@ -15,19 +17,19 @@ var EntityIcon = function( element, model ) {
 }
 
 
-EntityIcon.prototype.dispose = function() {
+SeatPin.prototype.dispose = function() {
 
 	this._observer.close( this._$onObserved );
-	this._observer = null;
 
 	this.$element.remove();
 	this.$element = null;
 
+	this.model.dispose();
 	this.model = null;
 };
 
 
-EntityIcon.prototype.setX = function( x ) {
+SeatPin.prototype.setX = function( x ) {
 
 	this.$element.css( {
 		'left': x
@@ -35,7 +37,7 @@ EntityIcon.prototype.setX = function( x ) {
 };
 
 
-EntityIcon.prototype.setY = function( y ) {
+SeatPin.prototype.setY = function( y ) {
 
 	this.$element.css( {
 		'top': y
@@ -43,7 +45,7 @@ EntityIcon.prototype.setY = function( y ) {
 };
 
 
-EntityIcon.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+SeatPin.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 
 	for ( var key in changed ) {
 		var value = changed[ key ];
@@ -64,4 +66,4 @@ EntityIcon.prototype.onObserved = function( added, removed, changed, getOldValue
 }
 
 
-module.exports = EntityIcon;
+module.exports = SeatPin;

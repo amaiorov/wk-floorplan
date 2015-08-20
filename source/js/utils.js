@@ -6,6 +6,23 @@ Utils.lerp = function( a, b, x ) {
 };
 
 
+Utils.pad = function( n, width, z ) {
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array( width - n.length + 1 ).join( z ) + n;
+};
+
+
+Utils.uniformRandom = function( a, b ) {
+	return a + Math.random() * ( b - a );
+};
+
+
+Utils.clamp = function( value, min, max ) {
+	return Math.min( Math.max( value, min ), max );
+};
+
+
 Utils.easeOutCubic = function( t ) {
 	return ( --t ) * t * t + 1;
 };

@@ -100,6 +100,24 @@ FloorViewer.prototype.init = function() {
 }
 
 
+FloorViewer.prototype.getFloorPosition = function() {
+
+	return {
+		x: this._$floorContainer.get( 0 )._gsTransform.x,
+		y: this._$floorContainer.get( 0 )._gsTransform.y
+	}
+}
+
+
+FloorViewer.prototype.getFloorSize = function() {
+
+	return {
+		width: this._floorWidth,
+		height: this._floorHeight
+	}
+}
+
+
 FloorViewer.prototype.zoom = function( fraction ) {
 
 	zoom = fraction;
@@ -116,15 +134,20 @@ FloorViewer.prototype.zoom = function( fraction ) {
 
 FloorViewer.prototype.updateIconSize = function() {
 
-	var iconSize;
+	window.setTimeout( $.proxy( function() {
 
-	if ( zoom < 0.3 ) {
-		iconSize = 'min';
-	} else {
-		iconSize = 'max';
-	}
+		var iconSize;
 
-	this.$element.find( '.entity-icon' ).attr( 'data-size', iconSize );
+		if ( zoom < 0.3 ) {
+			iconSize = 'min';
+		} else {
+			iconSize = 'max';
+		}
+
+		this.$element.find( '.entity-icon' ).attr( 'data-size', iconSize );
+		this.$element.find( '.seat-icon' ).attr( 'data-size', iconSize );
+
+	}, this ), 0 );
 }
 
 
@@ -164,8 +187,9 @@ FloorViewer.prototype.updateViewportMetrics = function() {
 
 FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
 
-	var floorX = this._$floorContainer.get( 0 )._gsTransform.x;
-	var floorY = this._$floorContainer.get( 0 )._gsTransform.y;
+	var floorPosition = this.getFloorPosition();
+	var floorX = floorPosition.x;
+	var floorY = floorPosition.y;
 
 	var fractionX = ( viewerCoordX - floorX ) / this._floorWidth;
 	var fractionY = ( viewerCoordY - floorY ) / this._floorHeight;
@@ -323,8 +347,9 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 		this._windowScrollLeft = $( window ).scrollLeft();
 	}
 
-	var floorX = this._$floorContainer.get( 0 )._gsTransform.x;
-	var floorY = this._$floorContainer.get( 0 )._gsTransform.y;
+	var floorPosition = this.getFloorPosition();
+	var floorX = floorPosition.x;
+	var floorY = floorPosition.y;
 
 	this._viewportZoomX = e.clientX - ( this._elementOffset.left - this._windowScrollLeft );
 	this._viewportZoomY = e.clientY - ( this._elementOffset.top - this._windowScrollTop );

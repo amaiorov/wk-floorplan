@@ -1,8 +1,10 @@
+var Utils = require( 'app/utils' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
 var EmployeeIcon = require( 'controllers/employeeicon' );
-var Seat = require( 'models/seat' );
+var SeatPin = require( 'controllers/seatpin' );
+var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
 
 
 var Floor = function( element, viewportMetrics ) {
@@ -19,18 +21,33 @@ var Floor = function( element, viewportMetrics ) {
 	this.model = FloorModel.getByIndex( floorIndex );
 
 	// create entities
-	var entities = this._entities = [];
-	var vacantSeats = FloorModel.getVacantSeats( this.model.index );
+	var seats = this._seats = {};
+	var entities = this._entities = {};
+	var vacantSeats = this.model.getVacantSeats();
+
+	$.each( this.$element.find( '.seat-icon' ), $.proxy( function( i, el ) {
+
+		var seatId = el.getAttribute( 'data-id' );
+		var seat = new SeatPin( el, FloorModel.getSeatById( seatId ) );
+		seats[ seatId ] = seat;
+
+	}, this ) );
 
 	$.each( this.$element.find( '.entity-icon' ), $.proxy( function( i, el ) {
 
+		var entityId = el.getAttribute( 'data-id' );
 		var entity = new EmployeeIcon( el );
-		entities.push( entity );
+		entities[ entityId ] = entity;
 
 		var seat = vacantSeats.shift();
 		entity.model.seat = seat;
 
 	}, this ) );
+
+	// listen for seat models change
+	this._$onObserved = $.proxy( this.onObserved, this );
+	this._observer = new ObjectObserver( this.model.seats );
+	this._observer.open( this._$onObserved );
 }
 
 
@@ -67,17 +84,40 @@ Floor.prototype.addEntityIcon = function( model ) {
 	this._$inner.append( icon );
 
 	var entity = new EmployeeIcon( icon, model );
-	this._entities.push( entity );
+	this._entities[ model.fullName ] = entity;
 };
 
 
 Floor.prototype.removeEntityIcon = function( model ) {
 
-	var entity = $.grep( this._entities, function( employeeIcon ) {
-		return ( employeeIcon.model === model );
-	} )[ 0 ];
+	var entity = this._entities[ model.fullName ];
+	entity.dispose();
 
-	this._entities.splice( this._entities.indexOf( entity ), 1 );
+	delete this._entities[ model.fullName ];
+};
+
+
+Floor.prototype.addSeatPin = function( floorPosition, floorSize ) {
+
+	var x = this._viewportMetrics.width / 2 - floorPosition.x;
+	var y = this._viewportMetrics.height / 2 - floorPosition.y;
+
+	x += Utils.uniformRandom( -100, 100 );
+	y += Utils.uniformRandom( -100, 100 );
+
+	x = Utils.clamp( x, 0, floorSize.width );
+	y = Utils.clamp( y, 0, floorSize.height );
+
+	var percX = x / floorSize.width * 100 + '%';
+	var percY = y / floorSize.height * 100 + '%';
+
+	this.model.addSeat( percX, percY );
+};
+
+
+Floor.prototype.removeSeatPin = function( model ) {
+
+	this.model.removeSeat( model );
 };
 
 
@@ -175,6 +215,36 @@ Floor.prototype.updateTiles = function( zoom ) {
 			}
 		}
 	} );
+};
+
+
+Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+
+	for ( var key in added ) {
+
+		var seatModel = added[ key ];
+
+		var el = soy.renderAsFragment( template.SeatIcon, {
+			seat: seatModel
+		} );
+
+		this._$inner.append( el );
+
+		var seat = new SeatPin( el, seatModel );
+		this._seats[ key ] = seat;
+
+		console.log( 'Seat "' + key + '" added. Current seats total is: ' + this.model.getSeatsTotal() );
+	}
+
+	for ( var key in removed ) {
+
+		var seat = this._seats[ key ];
+		seat.dispose();
+
+		delete this._seats[ key ];
+
+		console.log( 'Seat "' + key + '" removed. Current seats total is: ' + this.model.getSeatsTotal() );
+	}
 };
 
 

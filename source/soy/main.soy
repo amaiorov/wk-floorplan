@@ -56,6 +56,9 @@
  * @param floor6Employees All employees on floor 6
  * @param floor7Employees All employees on floor 7
  * @param floor8Employees All employees on floor 8
+ * @param floor6Seats All seats on floor 6
+ * @param floor7Seats All seats on floor 7
+ * @param floor8Seats All seats on floor 8
  * @param unassignedEmployees All employees who are not yet seated
  */
 {template .Editor}
@@ -75,6 +78,12 @@
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
+
+							{foreach $seatId in keys($floor6Seats)}
+							{call .SeatIcon}
+								{param seat: $floor6Seats[$seatId] /}
+							{/call}
+							{/foreach}
 						</div>
 					</div>
 
@@ -87,6 +96,12 @@
 								{param showInfo: true /}
 							{/call}
 							{/foreach}
+
+							{foreach $seatId in keys($floor7Seats)}
+							{call .SeatIcon}
+								{param seat: $floor7Seats[$seatId] /}
+							{/call}
+							{/foreach}
 						</div>
 					</div>
 
@@ -97,6 +112,12 @@
 							{call .EmployeeIcon}
 								{param employee: $employee /}
 								{param showInfo: true /}
+							{/call}
+							{/foreach}
+
+							{foreach $seatId in keys($floor8Seats)}
+							{call .SeatIcon}
+								{param seat: $floor8Seats[$seatId] /}
 							{/call}
 							{/foreach}
 						</div>
@@ -205,12 +226,12 @@
 
 /**
  * Employee Icon
- * An icon on the floor plan to represent employee
+ * A floor icon representing an employee
  * @param employee The employee model.
  * @param? showInfo The ability to show info panel.
  */
 {template .EmployeeIcon}
-<div class="employee-icon entity-icon" data-first="{ $employee.firstName }" data-last="{ $employee.lastName }">
+<div class="employee-icon entity-icon" data-id="{ $employee.fullName }">
 	<div class="icon" data-clickable="true">
 		{ $employee.initials }
 	</div>
@@ -220,6 +241,18 @@
 		{if $employee.extension }<p><b>Extension</b> <span class="number">{ $employee.extension }</span></p>{/if}
 	</div>
 	{/if}
+</div>
+{/template}
+
+
+/**
+ * Seat Icon
+ * A floor icon representing a seat
+ * @param seat The seat model.
+ */
+{template .SeatIcon}
+<div class="seat-icon" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
+	<div class="icon" data-clickable="true"></div>
 </div>
 {/template}
 

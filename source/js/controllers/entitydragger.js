@@ -1,7 +1,7 @@
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var employeeCollection = require( 'models/employeecollection' );
-var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+var Floor = require( 'models/floor' );
 
 
 var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
@@ -27,12 +27,14 @@ var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
 EntityDragger.prototype.activate = function() {
 
 	this._$entityContainer.on( 'mousedown', '.entity-icon', this._$onDragStart );
+	this._$entityContainer.on( 'mousedown', '.seat-icon', this._$onDragStart );
 };
 
 
 EntityDragger.prototype.deactivate = function() {
 
 	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.seat-icon', this._$onDragStart );
 };
 
 
@@ -45,6 +47,7 @@ EntityDragger.prototype.dispose = function() {
 	this._$draggerEntityIcon = null;
 
 	this._$entityContainer.off( 'mousedown', '.entity-icon', this._$onDragStart );
+	this._$entityContainer.off( 'mousedown', '.seat-icon', this._$onDragStart );
 };
 
 
@@ -60,14 +63,27 @@ EntityDragger.prototype.onDragStart = function( e ) {
 	this._iconOffsetX = e.pageX - iconOffset.left - this._$actualEntityIcon.width() / 2;
 	this._iconOffsetY = e.pageY - iconOffset.top - this._$actualEntityIcon.height() / 2;
 
-	var firstName = this._$actualEntityIcon.attr( 'data-first' );
-	var lastName = this._$actualEntityIcon.attr( 'data-last' );
-	this._entityModel = employeeCollection.getByName( firstName, lastName );
+	var draggerEntityIcon;
 
-	var draggerEntityIcon = soy.renderAsFragment( template.EmployeeIcon, {
-		employee: this._entityModel,
-		showInfo: true
-	} );
+	if ( this._$actualEntityIcon.hasClass( 'seat-icon' ) ) {
+
+		var seatId = this._$actualEntityIcon.attr( 'data-id' );
+		this._entityModel = Floor.getSeatById( seatId );
+
+		draggerEntityIcon = soy.renderAsFragment( template.SeatIcon, {
+			seat: this._entityModel
+		} );
+
+	} else if ( this._$actualEntityIcon.hasClass( 'entity-icon' ) ) {
+
+		var fullName = this._$actualEntityIcon.attr( 'data-id' );
+		this._entityModel = employeeCollection.getByName( fullName );
+
+		draggerEntityIcon = soy.renderAsFragment( template.EmployeeIcon, {
+			employee: this._entityModel,
+			showInfo: true
+		} );
+	}
 
 	this._$draggerEntityIcon = $( draggerEntityIcon ).hide().addClass( 'dragging' );
 

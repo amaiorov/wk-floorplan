@@ -113,7 +113,7 @@ Waitlist.prototype.onClickWaitlistIcon = function( e ) {
 	this._$waitlist.find( '.entity-icon' ).removeClass( 'active' );
 
 	var $icon = $( e.currentTarget ).addClass( 'active' );
-	var employee = employeeCollection.getByName( $icon.attr( 'data-first' ), $icon.attr( 'data-last' ) );
+	var employee = employeeCollection.getByName( $icon.attr( 'data-id' ) );
 
 	var infoEl = soy.renderAsFragment( template.WaitlistInfo, {
 		employee: employee

@@ -5,16 +5,13 @@ var employeeCollection = require( 'models/employeecollection' );
 
 var EmployeeIcon = function( element, opt_model ) {
 
-	var firstName = element.getAttribute( 'data-first' );
-	var lastName = element.getAttribute( 'data-last' );
-	var model = opt_model || employeeCollection.getByName( firstName, lastName );
+	var fullName = element.getAttribute( 'data-id' );
+	var model = opt_model || employeeCollection.getByName( fullName );
 
 	EntityIcon.call( this, element, model );
 
 }
 inherits( EmployeeIcon, EntityIcon );
 
-
-//Creature.prototype.die.call( this );
 
 module.exports = EmployeeIcon;

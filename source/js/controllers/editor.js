@@ -1,14 +1,20 @@
-var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var Waitlist = require( 'controllers/waitlist' );
 var EntityDragger = require( 'controllers/entitydragger' );
 var FloorViewer = require( 'controllers/floorviewer' );
+var FloorModel = require( 'models/floor' );
+var SeatModel = require( 'models/seat' );
+var EmployeeModel = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
 
 var _instance;
 
 
 var Editor = function() {
+
+	var floor6Seats = FloorModel.getByIndex( '6' ).seats;
+	var floor7Seats = FloorModel.getByIndex( '7' ).seats;
+	var floor8Seats = FloorModel.getByIndex( '8' ).seats;
 
 	var floor6Employees = employeeCollection.getByFloor( 6 );
 	var floor7Employees = employeeCollection.getByFloor( 7 );
@@ -19,6 +25,9 @@ var Editor = function() {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
 		floor8Employees: floor8Employees,
+		floor6Seats: floor6Seats,
+		floor7Seats: floor7Seats,
+		floor8Seats: floor8Seats,
 		unassignedEmployees: unassignedEmployees
 	} );
 
@@ -39,6 +48,8 @@ var Editor = function() {
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
 	this._$onEntityDragEnd = $.proxy( this.onEntityDragEnd, this );
+	this._$onClickAddSeat = $.proxy( this.onClickAddSeat, this );
+	this._$onClickRemoveSeat = $.proxy( this.onClickRemoveSeat, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
 
@@ -59,6 +70,9 @@ var Editor = function() {
 		this._$onEntityDragEnd );
 
 	// controls
+	this._$addSeatButton = $( '#toolbar .btn-add-seat' );
+	this._$removeSeatButton = $( '#toolbar .btn-remove-seat' );
+
 	this._$modeToggler = $( '#mode-toggler' ).bootstrapToggle();
 	this._$modeToggler.change( this._$changeMode );
 
@@ -99,26 +113,60 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
 	var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
 
-	var shouldUnassign = ( !entityX || !entityY );
+	var outOfViewport = ( !entityX || !entityY );
+	var isSeat = ( entityModel instanceof SeatModel );
+	var isEntity = ( entityModel instanceof EmployeeModel );
 
-	entityModel.x = entityX;
-	entityModel.y = entityY;
-	entityModel.floorIndex = shouldUnassign ? null : this._floorViewer.currentFloorIndex;
+	if ( isSeat ) {
 
-	if ( shouldUnassign && entityModel.isAssigned ) {
+		entityModel.x = entityX;
+		entityModel.y = entityY;
 
-		this._floorViewer.currentFloor.removeEntityIcon( entityModel );
+		if ( outOfViewport ) {
 
-	} else {
+			this._floorViewer.currentFloor.removeSeatPin( entityModel );
 
-		$entityIcon.show();
+		} else {
+
+			$entityIcon.show();
+		}
+
+	} else if ( isEntity ) {
+
+		entityModel.x = entityX;
+		entityModel.y = entityY;
+		entityModel.floorIndex = outOfViewport ? null : this._floorViewer.currentFloorIndex;
+
+		if ( outOfViewport && entityModel.isAssigned ) {
+
+			this._floorViewer.currentFloor.removeEntityIcon( entityModel );
+
+		} else {
+
+			$entityIcon.show();
+		}
+
+		if ( !outOfViewport && !entityModel.isAssigned ) {
+
+			this._floorViewer.currentFloor.addEntityIcon( entityModel );
+			this._floorViewer.updateIconSize();
+		}
 	}
+};
 
-	if ( !shouldUnassign && !entityModel.isAssigned ) {
 
-		this._floorViewer.currentFloor.addEntityIcon( entityModel );
-		this._floorViewer.updateIconSize();
-	}
+
+Editor.prototype.onClickAddSeat = function( e ) {
+
+	this._floorViewer.currentFloor.addSeatPin(
+		this._floorViewer.getFloorPosition(), this._floorViewer.getFloorSize() );
+
+	this._floorViewer.updateIconSize();
+};
+
+
+Editor.prototype.onClickRemoveSeat = function( e ) {
+
 };
 
 
@@ -131,6 +179,9 @@ Editor.prototype.changeMode = function() {
 		this._entityDragger.activate();
 		this._waitlist.activate();
 
+		this._$addSeatButton.on( 'click', this._$onClickAddSeat );
+		this._$removeSeatButton.on( 'click', this._$onClickRemoveSeat );
+
 		$( '#toolbar .edit-buttons .btn' ).removeClass( 'disabled' );
 
 	} else {
@@ -138,8 +189,13 @@ Editor.prototype.changeMode = function() {
 		this._entityDragger.deactivate();
 		this._waitlist.deactivate();
 
+		this._$addSeatButton.off( 'click', this._$onClickAddSeat );
+		this._$removeSeatButton.off( 'click', this._$onClickRemoveSeat );
+
 		$( '#toolbar .edit-buttons .btn' ).addClass( 'disabled' );
 	}
+
+	this.$element.toggleClass( 'preview', !isEditMode );
 };
 
 
