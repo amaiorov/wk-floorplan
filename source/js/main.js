@@ -1,5 +1,6 @@
 // global requires
 window.$ = window.jQuery = require( 'jquery' );
+window.soy = require( 'libs/soyutils' );
 require( 'bootstrap' );
 require( 'libs/gsap/plugins/ThrowPropsPlugin' );
 

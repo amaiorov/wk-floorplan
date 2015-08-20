@@ -13,9 +13,9 @@
 				<div id="search">
 
 					<div class="input-group">
-						<input type="text" class="form-control" aria-label="...">
+						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Everything <span class="caret"></span></button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-submit">Everything <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
@@ -24,6 +24,8 @@
 							</ul>
 						</div>
 					</div>
+
+					<div id="autocomplete-list" class="input-group-btn"></div>
 
 				</div>
 			</div>
@@ -204,4 +206,16 @@
 	</div>
 	{/if}
 </div>
+{/template}
+
+/**
+ * Autocomplete list 
+ * @param entities The entities model
+ */
+{template .AutocompleteList}
+	<ul class="dropdown-menu dropdown-menu-left">
+	{foreach $entity in $entities}
+		<li><a>{$entity.fullName}<span class="floor">{$entity.floor}</span><span class="department">{$entity.department}</span></a></li>
+	{/foreach}
+	</ul>
 {/template}

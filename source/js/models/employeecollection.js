@@ -1,4 +1,5 @@
 var $ = require( 'jquery' );
+var Utils = require( 'app/utils' );
 
 var _instance;
 
@@ -62,7 +63,4 @@ EmployeeCollection.prototype.getUnassigned = function() {
 }
 
 
-module.exports = ( function() {
-	_instance = _instance || new EmployeeCollection( arguments );
-	return _instance;
-} )();
+module.exports = Utils.createSingletonNow( _instance, EmployeeCollection, 'employeeCollection' );

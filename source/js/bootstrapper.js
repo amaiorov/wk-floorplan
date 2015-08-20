@@ -4,7 +4,7 @@ var template = require( 'views/main.soy' );
 var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
 var SeatEditor = require( 'controllers/seateditor' );
-var search = require( 'controllers/search' );
+var Search = require( 'controllers/search' );
 
 var _instance;
 
@@ -12,6 +12,8 @@ var Bootstrapper = function() {
 
 	var frag = soy.renderAsFragment( template.Home );
 	$( document.body ).append( frag );
+
+	var search = Search();
 }
 
 Bootstrapper.prototype.load = function( opt_ssUrl ) {
