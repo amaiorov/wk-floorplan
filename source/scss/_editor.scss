@@ -1,0 +1,431 @@
+&{
+	width: 100%;
+	height: 100%;
+	@include user-select(none);
+}
+
+&.preview{
+	.seat-pin{
+		display: none !important;
+	}
+}
+
+.editing-region{
+	margin: 0 auto;
+	width: 100%;
+	max-width: 1920px;
+	height: 100%;
+	border: 1px solid lightgray;
+	white-space: nowrap;
+}
+
+.floor-pane{
+	@include inline-block(top);
+	position: relative;
+	width: 80%;
+	height: 100%;
+	white-space: normal;
+
+	>.floor-viewport{
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		background-image: image-url('grid.png');
+
+		.entity-pin{
+			position: absolute;
+			z-index: 1;
+
+			.icon{
+				@include scale(.3);
+				@include transition(transform .3s);
+			}
+
+			&[data-size="min"] .icon{
+				@include scale(.3);
+				font-size: 0;
+			}
+
+			&[data-size="max"] .icon{
+				@include scale(1);
+			}
+		}
+
+		.seat-pin{
+			z-index: 0;
+
+			.icon{
+				margin: 13px;
+				width: 14px;
+				height: 14px;
+			}
+
+			&[data-size="min"] .icon{
+				margin: 13px;
+				width: 14px;
+				height: 14px;
+				font-size: 0;
+
+				&:after{
+					content: none;
+				}
+			}
+
+			&[data-size="max"] .icon{
+				margin: 0;
+				width: 40px;
+				height: 40px;
+			}
+		}
+	}
+
+	>.entity-dragger-viewport{
+		@include absoluteTopLeft;
+		z-index: 11;
+		width: 100%;
+		height: 100%;
+
+		.entity-pin{
+			position: absolute;
+		}
+	}
+
+	.floor-container{
+		position: relative;
+		z-index: 0;
+		width: 1024px;
+		height: 576px;
+
+		.floor{
+			@include absoluteTopLeft;
+			width: 100%;
+			height: 100%;
+			//background-color: white;
+			background-size: 100% 100%;
+
+			&[data-id="6"] {
+				//background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%206&w=1024&h=576);
+			}
+
+			&[data-id="7"] {
+				//background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%207&w=1024&h=576);
+			}
+
+			&[data-id="8"] {
+				//background-image: url(https://placeholdit.imgix.net/~text?txtsize=33&txt=Floor%20Plan%208&w=1024&h=576);
+			}
+
+			>.tiles{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				height: 0;
+				overflow: hidden;
+				@include translate(-50%, -50%);
+				//outline: 1px solid red;
+
+				>.inner{
+					@include absoluteTopLeft;
+					width: 100%;
+					height: 100%;
+
+					.tile-row{
+						width: 100%;
+						font-size: 0;
+						white-space: nowrap;
+
+						.tile{
+							position: relative;
+							@include inline-block(top);
+							height: 0;
+							background-color: rgba(#dfdfdf, .5);
+							//outline: 1px solid yellow;
+
+							>div{
+								@include absoluteTopLeft;
+								width: 100%;
+								height: 100%;
+								background-repeat: no-repeat;
+								background-size: 100% 100%;
+								opacity: 0;
+								@include transition(opacity 1s);
+
+								&.loaded{
+									opacity: 1;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			>.inner{
+				@include absoluteTopLeft;
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	.mousewheel-container{
+		@include absoluteTopLeft;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		visibility: hidden;
+
+		>.mousewheel-scroller{
+			width: calc(100% + 50px);
+			height: 100%;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+	}
+
+	.floor-buttons{
+		position: absolute;
+		z-index: 2;
+		top: 30px;
+		left: 30px;
+	}
+}
+
+.waitlist-pane{
+	@include inline-block(top);
+	position: relative;
+	width: 20%;
+	height: 100%;
+
+	>.split-handle{
+		position: absolute;
+		z-index: 10;
+		top: 0;
+		left: -20px;
+		width: 20px;
+		height: 100%;
+		cursor: ew-resize;
+
+		&:after{
+			content: "";
+			position: absolute;
+			display: block;
+			right: 0;
+			width: 1px;
+			height: 100%;
+			background: lightgray;
+
+			[data-cursor="horizontal-dragging"] &{
+				background: gray;
+			}
+		}
+	}
+
+	>.inner-container{
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+
+		>.inner{
+			width: 100%;
+			min-width: 250px;
+			height: 100%;
+			white-space: normal;
+			padding: 30px 20px 0 20px;
+			@include box-sizing(border-box);
+
+			>h3{
+				font-size: 20px;
+				height: 40px;
+			}
+
+			>.waitlist-container{
+				position: relative;
+				width: 100%;
+				height: calc(100% - 40px);
+				overflow: hidden;
+
+				>.waitlist{
+					height: 100%;
+					overflow: auto;
+					@include transition(height, .3s ease-in-out);
+
+					.entity-pin{
+						@include translate(0, 0);
+						margin: 0 10px 10px 0;
+						cursor: pointer;
+					}
+				}
+
+				>.info-container{
+					position: absolute;
+					left: 0;
+					bottom: 0;
+					width: 100%;
+					height: 300px;
+					border-top: 1px dashed lightgray;
+					@include translateY(100%);
+					opacity: 0;
+					@include transition(transform .3s ease-in-out, opacity .3s ease-in-out);
+
+					h6{
+						font-size: 18px;
+						line-height: 3;
+					}
+
+					li{
+						font-size: 14px;
+						margin-bottom: 15px;
+
+						>b{
+							display: block;
+							line-height: 1.6;
+							color: #C0C0C0;
+						}
+
+						>span{
+							font-size: 16px;
+						}
+					}
+				}
+
+				&.show-info{
+					>.waitlist{
+						height: calc(100% - 300px);
+					}
+
+					>.info-container{
+						opacity: 1;
+						@include translateY(0);
+					}
+				}
+			}
+		}
+	}
+}
+
+.entity-pin{
+	@include inline-block(top);
+	position: relative;
+	z-index: 0;
+	width: 40px;
+	height: 40px;
+	@include translate(-50%, -50%);
+	@include user-select(none);
+
+	>.icon{
+		position: relative;
+		z-index: 0;
+		width: 40px;
+		height: 40px;
+		background: #99CCFF;
+		text-align: center;
+		color: white;
+		line-height: 40px;
+		font-size: 13px;
+		@include border-radius(100%);
+		@include box-shadow(0px 1px 2px 0px rgba(black,0.3));
+		@include transition(background .4s $easeOutCubic);
+		@include backfaceHidden;
+	}
+
+	>.info{
+		position: absolute;
+		z-index: 1;
+		display: inline-block;
+		left: 20px;
+		top: 5px;
+		background: black;
+		color: white;
+		padding: 10px 20px;
+		font-size: 14px;
+		white-space: nowrap;
+		@include box-sizing(border-box);
+		@include box-shadow(2px 4px 10px 0px rgba(black,0.1));
+		@include translate(-50%, -100%);
+		@include backfaceHidden();
+		visibility: hidden;
+		opacity: 0;
+		@include transition( top .2s $easeOutCubic, visibility .2s, opacity .2s $easeOutCubic );
+
+		>p{
+			line-height: 1.4;
+		}
+
+		&:after{
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -10px;
+			display: block;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width: 10px 10px 0 10px;
+			border-color: #000000 transparent transparent transparent;
+		}
+	}
+
+	&:hover, &.dragging{
+		z-index: 1;
+
+		>.icon{
+			background: darken(#99CCFF, 8);
+		}
+
+		>.info{
+			visibility: visible;
+			opacity: 1;
+			top: -5px;
+			@include transition-delay(.2s);
+		}
+	}
+
+	&.active{
+		z-index: 1 !important;
+
+		>.icon{
+			background: black !important;
+		}
+	}
+
+	&:not(.dragging) {
+		@include grab-cursor;
+	}
+}
+
+.seat-pin{
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	@include translate(-50%, -50%);
+	@include user-select(none);
+
+	>.icon{
+		position: relative;
+		z-index: 0;
+		width: 40px;
+		height: 40px;
+		background: rgba(#FFFFCC, .8);
+		border: 1px solid #FFCC00;
+		@include border-radius(100%);
+		@include box-sizing(border-box);
+		@include transition(background .4s $easeOutCubic);
+		@include backfaceHidden;
+
+		&:after{
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			display: block;
+			margin: -2px;
+			width: 4px;
+			height: 4px;
+			background-color: #FFCC00;
+			@include border-radius(100%);
+		}
+	}
+}

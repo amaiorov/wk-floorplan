@@ -1,3 +1,4 @@
+var Utils = require( 'app/utils' );
 var SeatModel = require( 'models/seat' );
 
 var _instances = {};
@@ -8,51 +9,80 @@ var Floor = function( floorIndex ) {
 	this.index = floorIndex;
 	this.id = 'f' + this.index;
 
-	this.seats = [];
-	this.seats = this.generateSeats( 200 );
+	this.freeSeatIndexes = [];
+	this.usedSeatIndexes = [];
+
+	for ( var i = 1; i <= 300; i++ ) {
+		this.freeSeatIndexes.push( Utils.pad( i, 3 ) );
+	}
+
+	this.seats = {};
+	this.generateSeats( 150 );
+}
+
+
+Floor.prototype.getSeatsTotal = function() {
+
+	return Object.keys( this.seats ).length;
+}
+
+
+Floor.prototype.addSeat = function( x, y ) {
+
+	var seatIndex = this.freeSeatIndexes.shift();
+	this.usedSeatIndexes.push( seatIndex );
+
+	var floorIndex = this.index;
+
+	var seatModel = new SeatModel( seatIndex, floorIndex, x, y );
+	this.seats[ seatModel.id ] = seatModel;
+
+	return seatModel;
+}
+
+
+Floor.prototype.removeSeat = function( seatModel ) {
+
+	this.freeSeatIndexes.push( seatModel.seatIndex );
+	this.usedSeatIndexes.splice( this.usedSeatIndexes.indexOf( seatModel.seatIndex ), 1 );
+
+	delete this.seats[ seatModel.id ];
+
+	return seatModel;
 }
 
 
 Floor.prototype.generateSeats = function( opt_amount ) {
 
 	var amount = opt_amount || 100;
-	var seats = [];
 
-	var i;
-	var startIndex = this.seats.length;
-	var endIndex = startIndex + amount;
-
-	for ( i = startIndex; i < endIndex; i++ ) {
+	for ( var i = 0; i < amount; i++ ) {
 
 		var percX = Math.round( Math.random() * 100 ) + '%';
 		var percY = Math.round( Math.random() * 100 ) + '%';
-		var seatModel = SeatModel.getByIndex( i, this.index );
-		seatModel.x = percX;
-		seatModel.y = percY;
-
-		seats.push( seatModel );
+		this.addSeat( percX, percY );
 	}
 
-	return seats;
+	return this.seats;
 }
 
 
-Floor.prototype.getEmployees = function() {
+Floor.prototype.getVacantSeats = function() {
 
-}
+	var vacantSeats = [];
 
+	$.each( this.seats, function( seatId, seat ) {
+		if ( !seat.entity ) {
+			vacantSeats.push( seat );
+		}
+	} );
 
-Floor.prototype.getPrinters = function() {
-
-}
-
-
-Floor.prototype.getRooms = function() {
-
+	return vacantSeats;
 }
 
 
 Floor.getByIndex = function( index ) {
+
 	var model;
 
 	if ( !_instances[ index ] ) {
@@ -65,15 +95,13 @@ Floor.getByIndex = function( index ) {
 }
 
 
-Floor.getVacantSeats = function( floorIndex ) {
+Floor.getSeatById = function( id ) {
 
+	var floorIndex = id.charAt( 1 );
 	var floor = Floor.getByIndex( floorIndex );
+	var seat = floor.seats[ id ];
 
-	var vacantSeats = $.grep( floor.seats, function( seat ) {
-		return !seat.entity;
-	} );
-
-	return vacantSeats;
+	return seat;
 }
 
 

@@ -1,6 +1,7 @@
 var template = require( 'views/main.soy' );
 var employeeCollection = require( 'models/employeecollection' );
 var Utils = require( 'app/utils' );
+var Editor = require( 'controllers/editor' );
 var _instance;
 
 var Search = function( searchThreshold ) {
@@ -58,18 +59,34 @@ Search.prototype.clearAutocompleteList = function() {
 		this._autocompleteList.removeChild( this._autocompleteList.firstChild );
 	}
 };
+
 Search.prototype.hideAutocompleteList = function() {
-	this._autocompleteList.classList.remove( 'open' )
+	this._autocompleteList.classList.remove( 'open' );
 };
+
 Search.prototype.typeHandler = function( evt ) {
 	if ( evt.target.value.length > 0 ) {
 		console.log( 'key up yo: ' + evt.which );
-		// search._autocompleteList.appendChild( search.getMatchedItems() );
+
+		var allEntities = search.getMatchedItems();
+		var _currentFloorEntities = [];
+		var _otherFloorEntities = {};
+		var currentFloorIndex = Editor().floorViewer.currentFloorIndex;
+
+		$.each( allEntities, function( i, entity ) {
+			if ( entity.floorIndex === currentFloorIndex ) {
+				_currentFloorEntities.push( entity );
+			} else {
+				_otherFloorEntities[ entity.floorIndex ] = _otherFloorEntities[ entity.floorIndex ] || [];
+				_otherFloorEntities[ entity.floorIndex ].push( entity );
+			}
+		} );
+
 		var frag = soy.renderAsFragment( template.AutocompleteList, {
-			entities: search.getMatchedItems()
+			currentFloorEntities: _currentFloorEntities,
+			otherFloorEntities: _otherFloorEntities
 		} );
 		$( search._autocompleteList ).empty().append( frag );
-
 	} else {
 		search.hideAutocompleteList();
 	}

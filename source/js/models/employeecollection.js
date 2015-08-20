@@ -31,10 +31,10 @@ EmployeeCollection.prototype.getAll = function() {
 }
 
 
-EmployeeCollection.prototype.getByName = function( firstName, lastName ) {
+EmployeeCollection.prototype.getByName = function( fullName ) {
 
 	var employee = $.grep( this._employees, function( employee ) {
-		return ( employee.firstName === firstName && employee.lastName === lastName );
+		return ( employee.fullName === fullName );
 	} )[ 0 ];
 
 	return employee;

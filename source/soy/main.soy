@@ -9,9 +9,10 @@
 
 		<div id="toolbar">
 			<div class="inner">
-				<div class="wk-logo"></div>
-				<div id="search">
 
+				<div class="wk-logo"></div>
+
+				<div id="search">
 					<div class="input-group">
 						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
 						<div class="input-group-btn">
@@ -24,10 +25,19 @@
 							</ul>
 						</div>
 					</div>
-
-					<div id="autocomplete-list" class="input-group-btn"></div>
-
+					<div id="autocomplete-list"></div>
 				</div>
+				<div class="other-buttons">
+					<div class="admin-buttons">
+						<div class="edit-buttons">
+							<button type="button" class="btn btn-default btn-add-seat">Add Seat</button>
+							<button type="button" class="btn btn-default btn-remove-seat">Remove Seat</button>
+						</div>
+						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
+					</div>
+					<button type="button" class="btn btn-primary btn-login">Log In</button>
+				</div>
+
 			</div>
 		</div>
 
@@ -42,14 +52,17 @@
 
 
 /**
- * Seat Editor
+ * Editor
  * @param floor6Employees All employees on floor 6
  * @param floor7Employees All employees on floor 7
  * @param floor8Employees All employees on floor 8
+ * @param floor6Seats All seats on floor 6
+ * @param floor7Seats All seats on floor 7
+ * @param floor8Seats All seats on floor 8
  * @param unassignedEmployees All employees who are not yet seated
  */
-{template .SeatEditor}
-<div id="seat-editor">
+{template .Editor}
+<div id="editor">
 	<div class="editing-region">
 
 		<div class="floor-pane">
@@ -57,33 +70,54 @@
 
 				<div class="floor-container">
 					<div class="floor" data-id="6">
+						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor6Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
+							{/call}
+							{/foreach}
+
+							{foreach $seatId in keys($floor6Seats)}
+							{call .SeatPin}
+								{param seat: $floor6Seats[$seatId] /}
 							{/call}
 							{/foreach}
 						</div>
 					</div>
 
 					<div class="floor" data-id="7">
+						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor7Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
+							{/call}
+							{/foreach}
+
+							{foreach $seatId in keys($floor7Seats)}
+							{call .SeatPin}
+								{param seat: $floor7Seats[$seatId] /}
 							{/call}
 							{/foreach}
 						</div>
 					</div>
 
 					<div class="floor" data-id="8">
+						<div class="tiles"></div>
 						<div class="inner">
 							{foreach $employee in $floor8Employees}
-							{call .EmployeeIcon}
+							{call .EmployeePin}
 								{param employee: $employee /}
 								{param showInfo: true /}
+							{/call}
+							{/foreach}
+
+							{foreach $seatId in keys($floor8Seats)}
+							{call .SeatPin}
+								{param seat: $floor8Seats[$seatId] /}
 							{/call}
 							{/foreach}
 						</div>
@@ -111,23 +145,25 @@
 			</div>
 
 			<div class="entity-dragger-viewport"></div>
-
-			<div class="split-handle"></div>
 		</div>
 
 		<div class="waitlist-pane">
-			<div class="inner">
-				<h3>Not Assigned</h3>
-				<div class="waitlist-container">
-					<div class="waitlist">
-					{call .WaitlistEmployees}
-					{param employees: $unassignedEmployees /}
-					{/call}
-					</div>
-					<div class="info-container">
+			<div class="inner-container">
+				<div class="inner">
+					<h3>Not Assigned</h3>
+					<div class="waitlist-container">
+						<div class="waitlist">
+						{call .WaitlistEmployees}
+						{param employees: $unassignedEmployees /}
+						{/call}
+						</div>
+						<div class="info-container">
+						</div>
 					</div>
 				</div>
 			</div>
+
+			<div class="split-handle"></div>
 		</div>
 
 	</div>
@@ -141,7 +177,7 @@
  */
 {template .WaitlistEmployees}
 {foreach $employee in $employees}
-{call .EmployeeIcon}
+{call .EmployeePin}
 	{param employee: $employee /}
 {/call}
 {/foreach}
@@ -189,15 +225,15 @@
 
 
 /**
- * Employee Icon
- * An icon on the floor plan to represent employee
+ * Employee pin
+ * A floor pin representing an employee
  * @param employee The employee model.
  * @param? showInfo The ability to show info panel.
  */
-{template .EmployeeIcon}
-<div class="employee-icon entity-icon" data-first="{ $employee.firstName }" data-last="{ $employee.lastName }" data-clickable="true">
-	<div class="icon">
-		<span class="initials">{ $employee.initials }</span>
+{template .EmployeePin}
+<div class="employee-pin entity-pin" data-id="{ $employee.fullName }">
+	<div class="icon" data-clickable="true">
+		{ $employee.initials }
 	</div>
 	{if $showInfo == true}
 	<div class="info">
@@ -209,13 +245,61 @@
 {/template}
 
 /**
+ * Seat pin
+ * A floor pin representing a seat
+ * @param seat The seat model.
+ */
+{template .SeatPin}
+<div class="seat-pin" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
+	<div class="icon" data-clickable="true"></div>
+</div>
+{/template}
+
+
+/**
+ * Tiles
+ * The tile map structure for a floorplan image.
+ * @param cols The number of columns.
+ * @param rows The number of rows.
+ * @param tileSize The tile size percentage string
+ */
+{template .Tiles}
+<div class="inner">
+{for $y in range($rows)}
+	<div class="tile-row">
+		{for $x in range($cols)}
+		<div class="tile" style="width:{ $tileSize }; padding-bottom:{ $tileSize };" data-x="{ $x }" data-y="{ $y }"></div>
+		{/for}
+	</div>
+{/for}
+</div>
+{/template}
+
+
+/**
  * Autocomplete list 
- * @param entities The entities model
+ * @param currentFloorEntities The entities array within the current floor.
+ * @param otherFloorEntities The object keyed by the floor index, containing the floor's entites.
  */
 {template .AutocompleteList}
-	<ul class="dropdown-menu dropdown-menu-left">
-	{foreach $entity in $entities}
-		<li><a>{$entity.fullName}<span class="floor">{$entity.floor}</span><span class="department">{$entity.department}</span></a></li>
-	{/foreach}
-	</ul>
+<ul class="dropdown-menu dropdown-menu-left">
+
+{if length($currentFloorEntities) > 0}
+<li><h6>This Floor</h6></li>
+{foreach $entity in $currentFloorEntities}
+	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
+{/foreach}
+{/if}
+
+{foreach $floorIndex in keys($otherFloorEntities)}
+{let $entitiesOnfloor: $otherFloorEntities[$floorIndex] /}
+{if length($entitiesOnfloor) > 0}
+<li><h6>{$floorIndex}th Floor</h6></li>
+{foreach $entity in $entitiesOnfloor}
+	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
+{/foreach}
+{/if}
+{/foreach}
+
+</ul>
 {/template}
