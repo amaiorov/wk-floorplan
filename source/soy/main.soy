@@ -285,9 +285,9 @@
 <ul class="dropdown-menu dropdown-menu-left">
 
 {if length($currentFloorEntities) > 0}
-<li><h6>This Floor</h6></li>
+<li class="current-floor"><h6>This Floor</h6></li>
 {foreach $entity in $currentFloorEntities}
-	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
+	<li class="current-floor"><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
 {/foreach}
 {/if}
 
