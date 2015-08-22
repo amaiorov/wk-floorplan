@@ -68,28 +68,89 @@ html{
 #autocomplete-list {
 	width: 100%;
 
-	a{
-		cursor: default;
+	strong {
+		font-weight: 900;
+		text-decoration: underline;
 	}
-	h6{
-		margin: 15px 0 10px 0;
+	h6 {
+		margin: 5px 0 0px 0;
 		text-indent: 20px;
 		line-height: 2.5;
 		border-bottom: 1px dashed lightgray;
 	}
-	li:first-child{
-		h6{
-			margin-top: 0;
+	li {
+		&.current-floor {
+			background: rgba(153, 204, 255, 0.1);
+			border-left: 3px solid #9cf;
+			// border-right: 3px solid #9cf;
 		}
-	}
-	li:last-child{
-		margin-bottom: 10px;
+		&.last-in-group {
+			padding-bottom: 5px;
+			+ li + li {
+				padding-top: 5px;
+			}
+		}
+		&:first-child {
+			+ li {
+				padding-top: 5px;
+			}
+			h6 {
+				margin-top: 0;
+			}
+		}
+		a {
+			padding-bottom: 5px;
+			padding-top: 5px;
+		}
 	}
 	.name {
 		float: left;
+		font-family: $font_light;
+		max-width: 50%;
+		overflow: hidden;
+		position: relative;
+		text-overflow: ellipsis;
+
+		&:before{
+			@extend .icon;
+			margin-right: 10px;
+		}
+
+		&.employee,
+		&.freelance,
+		&.intern {
+			@extend .icon-person;
+		}
+
+		&.room{
+			@extend .icon-room;
+		}
+
+		&.printer{
+			@extend .icon-printer;
+		}
+		&.freelance:after,
+		&.intern:after {
+			content: 'f';
+			color: #286090;
+			font-weight: 900;
+			text-transform: uppercase;
+			position: absolute;
+			top: -4px;
+			left: 12px;
+			font-size: 12px;
+			font-family: $font_medium;
+		}
+		&.intern:after {
+			content: 'i';
+			color: #f00;
+		}
 	}
 	.department {
 		float: right;
+		max-width: 50%;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.dropdown-menu{
 		width: 100%;

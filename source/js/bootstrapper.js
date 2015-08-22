@@ -13,7 +13,7 @@ var Bootstrapper = function() {
 	var frag = soy.renderAsFragment( template.Home );
 	$( document.body ).append( frag );
 
-	var search = Search();
+	var search = Search( 2 );
 }
 
 Bootstrapper.prototype.load = function( opt_ssUrl ) {

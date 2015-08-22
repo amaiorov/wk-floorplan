@@ -6,10 +6,13 @@ var _instance;
 
 var Search = function( searchThreshold ) {
 	// alert( 'search yo!' );
+	this._searchMode = '';
 	this._threshold = searchThreshold;
 	this._employees = employeeCollection._employees;
 	this._searchField = document.getElementById( 'search-query' );
 	this._autocompleteList = document.getElementById( 'autocomplete-list' );
+	this._searchModeButton = document.getElementById( 'search-mode' );
+	this._searchModeList = this._searchModeButton.nextSibling;
 	// debugger;
 	this._submit = document.getElementById( 'search-submit' );
 
@@ -22,29 +25,40 @@ var Search = function( searchThreshold ) {
 	this._searchField.addEventListener( 'blur', function( evt ) {
 		search.hideAutocompleteList();
 	} );
+	this._searchModeButton.addEventListener( 'blur', function( evt ) {
+		search.hideAutocompleteList();
+	} );
 };
 
 Search.prototype.getMatchedItems = function() {
 	var matchedList = document.createElement( 'ul' ),
-		item,
 		matchedItems = [],
 		query = this.getQuery();
 	matchedList.classList.add( 'dropdown-menu', 'dropdown-menu-left' );
-	// this.clearAutocompleteList();
 	this._autocompleteList.classList.add( 'open' )
+
+	// loop through entities and find matching objects
 	for ( var i = 0; i < this._employees.length; i++ ) {
-		if ( this._employees[ i ].fullName.toLowerCase().indexOf( query ) > -1 ) {
-			// matchedList = matchedList || newNode;
-			matchedItems.push( this._employees[ i ] );
-			item = document.createElement( 'li' ).appendChild( document.createElement( 'a' ) );
-			item.innerHTML = this._employees[ i ].fullName.replace( new RegExp( query, 'gi' ), '<strong>' + query + '</strong>' );
-			item = item.parentNode;
-			matchedList.appendChild( item );
-			// this._autocompleteList.appendChild( item );
+		var item = {},
+			fullNameIndex = this._employees[ i ].fullName.toLowerCase().indexOf( query ),
+			departmentIndex = this._employees[ i ].department.toLowerCase().indexOf( query );
+		if ( fullNameIndex > -1 || departmentIndex > -1 ) {
+
+			// create tmp object to store matched entity
+			for ( var prop in this._employees[ i ] ) {
+				item[ prop ] = this._employees[ i ][ prop ];
+			}
+
+			// mark found text in name and department
+			item.fullName = item.fullName.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
+			item.department = item.department.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
+			matchedItems.push( item );
 		}
 	}
-	if ( matchedList.children.length === 0 ) {
-		matchedList.innerHTML = '<li><a>No matches found</a></li>';
+	if ( matchedItems.length === 0 ) {
+		matchedItems.push( {
+			'floorIndex': -1
+		} );
 	}
 	// return matchedList;
 	return matchedItems;
@@ -65,14 +79,13 @@ Search.prototype.hideAutocompleteList = function() {
 };
 
 Search.prototype.typeHandler = function( evt ) {
-	if ( evt.target.value.length > 0 ) {
-		console.log( 'key up yo: ' + evt.which );
-
+	if ( evt.target.value.length >= 2 ) {
 		var allEntities = search.getMatchedItems();
-		var _currentFloorEntities = [];
-		var _otherFloorEntities = {};
-		var currentFloorIndex = Editor().floorViewer.currentFloorIndex;
+		_currentFloorEntities = [],
+			_otherFloorEntities = {},
+			currentFloorIndex = Editor().floorViewer.currentFloorIndex;
 
+		// loop through entities and push to appropariate floor array
 		$.each( allEntities, function( i, entity ) {
 			if ( entity.floorIndex === currentFloorIndex ) {
 				_currentFloorEntities.push( entity );
@@ -82,6 +95,7 @@ Search.prototype.typeHandler = function( evt ) {
 			}
 		} );
 
+		// append list to soy view
 		var frag = soy.renderAsFragment( template.AutocompleteList, {
 			currentFloorEntities: _currentFloorEntities,
 			otherFloorEntities: _otherFloorEntities

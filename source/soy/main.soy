@@ -16,7 +16,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-submit">Everything <span class="caret"></span></button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-mode">Everything <span class="caret"></span></button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
@@ -284,22 +284,36 @@
 {template .AutocompleteList}
 <ul class="dropdown-menu dropdown-menu-left">
 
-{if length($currentFloorEntities) > 0}
-<li class="current-floor"><h6>This Floor</h6></li>
-{foreach $entity in $currentFloorEntities}
-	<li class="current-floor"><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
-{/foreach}
-{/if}
+{if length(keys($otherFloorEntities)) == 1 and keys($otherFloorEntities) == -1}
+	<li><h6><a>No matches found</a></h6></li>
+{else}
+	{if length($currentFloorEntities) > 0}
+	<li class="current-floor"><h6>This Floor</h6></li>
+	{foreach $entity in $currentFloorEntities}
+		<li class="current-floor {if isLast($entity)}last-in-group{/if}">
+			<a class="clearfix">
+				<span class="name {$entity.type}" title="{$entity.type}">{$entity.fullName}</span>
+				<span class="department">{$entity.department}</span>
+			</a>
+		</li>
+	{/foreach}
+	{/if}
 
-{foreach $floorIndex in keys($otherFloorEntities)}
-{let $entitiesOnfloor: $otherFloorEntities[$floorIndex] /}
-{if length($entitiesOnfloor) > 0}
-<li><h6>{$floorIndex}th Floor</h6></li>
-{foreach $entity in $entitiesOnfloor}
-	<li><a class="clearfix"><span class="name">{$entity.fullName}</span><span class="department">{$entity.department}</span></a></li>
-{/foreach}
+	{foreach $floorIndex in keys($otherFloorEntities)}
+	{let $entitiesOnfloor: $otherFloorEntities[$floorIndex] /}
+	{if length($entitiesOnfloor) > 0}
+	<li><h6>{$floorIndex}th Floor</h6></li>
+	{foreach $entity in $entitiesOnfloor}
+		<li {if isLast($entity)}class="last-in-group"{/if}>
+			<a class="clearfix">
+				<span class="name {$entity.type}" title="{$entity.type}">{$entity.fullName}</span>
+				<span class="department">{$entity.department}</span>
+			</a>
+		</li>
+	{/foreach}
+	{/if}
+	{/foreach}
 {/if}
-{/foreach}
 
 </ul>
 {/template}
