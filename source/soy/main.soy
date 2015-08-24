@@ -291,9 +291,9 @@
 	<li class="current-floor"><h6>This Floor</h6></li>
 	{foreach $entity in $currentFloorEntities}
 		<li class="current-floor {if isLast($entity)}last-in-group{/if}">
-			<a class="clearfix">
-				<span class="name {$entity.type}" title="{$entity.type}">{$entity.fullName}</span>
-				<span class="department">{$entity.department}</span>
+			<a class="entity clearfix" data-id="{$entity.fullName}">
+				<span class="name {$entity.type}" title="{$entity.type}">{$entity.formattedFullName}</span>
+				<span class="department">{$entity.formattedDepartment}</span>
 			</a>
 		</li>
 	{/foreach}
@@ -305,9 +305,9 @@
 	<li><h6>{$floorIndex}th Floor</h6></li>
 	{foreach $entity in $entitiesOnfloor}
 		<li {if isLast($entity)}class="last-in-group"{/if}>
-			<a class="clearfix">
-				<span class="name {$entity.type}" title="{$entity.type}">{$entity.fullName}</span>
-				<span class="department">{$entity.department}</span>
+			<a class="entity clearfix" data-id="{$entity.fullName}">
+				<span class="name {$entity.type}" title="{$entity.type}">{$entity.formattedFullName}</span>
+				<span class="department">{$entity.formattedDepartment}</span>
 			</a>
 		</li>
 	{/foreach}

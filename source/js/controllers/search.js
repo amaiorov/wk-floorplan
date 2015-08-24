@@ -16,18 +16,48 @@ var Search = function( searchThreshold ) {
 	// debugger;
 	this._submit = document.getElementById( 'search-submit' );
 
+	this._autocompleteListShown = false;
+
+	var self = this;
+
+	$( this._autocompleteList ).on( 'click', '.entity', function( evt ) {
+		var id = evt.currentTarget.getAttribute( 'data-id' );
+		var entityModel = employeeCollection.getByName( id );
+
+		$.event.trigger( {
+			type: 'searchcomplete',
+			entity: entityModel
+		} );
+
+		self.hideAutocompleteList();
+	} );
+
 	this._searchField.addEventListener( 'keyup', function( evt ) {
-		search.typeHandler( evt );
+		self.typeHandler( evt );
 	} );
+
 	this._searchField.addEventListener( 'focus', function( evt ) {
-		search.typeHandler( evt );
+		self.typeHandler( evt );
 	} );
-	this._searchField.addEventListener( 'blur', function( evt ) {
-		search.hideAutocompleteList();
+
+	var search = $( '#search' )[ 0 ];
+	$( document.body ).on( 'click', function( evt ) {
+		if ( !self._autocompleteListShown ) {
+			return;
+		}
+
+		if ( !$.contains( search, evt.target ) ) {
+			self.hideAutocompleteList();
+		}
 	} );
-	this._searchModeButton.addEventListener( 'blur', function( evt ) {
-		search.hideAutocompleteList();
-	} );
+
+	/*
+		this._searchField.addEventListener( 'blur', function( evt ) {
+			self.hideAutocompleteList();
+		} );
+		this._searchModeButton.addEventListener( 'blur', function( evt ) {
+			self.hideAutocompleteList();
+		} );*/
 };
 
 Search.prototype.getMatchedItems = function() {
@@ -35,7 +65,9 @@ Search.prototype.getMatchedItems = function() {
 		matchedItems = [],
 		query = this.getQuery();
 	matchedList.classList.add( 'dropdown-menu', 'dropdown-menu-left' );
-	this._autocompleteList.classList.add( 'open' )
+	this._autocompleteList.classList.add( 'open' );
+
+	this._autocompleteListShown = true;
 
 	// loop through entities and find matching objects
 	for ( var i = 0; i < this._employees.length; i++ ) {
@@ -50,8 +82,8 @@ Search.prototype.getMatchedItems = function() {
 			}
 
 			// mark found text in name and department
-			item.fullName = item.fullName.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
-			item.department = item.department.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
+			item.formattedFullName = item.fullName.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
+			item.formattedDepartment = item.department.replace( new RegExp( query, 'gi' ), '<strong>$&</strong>' );
 			matchedItems.push( item );
 		}
 	}
@@ -76,11 +108,12 @@ Search.prototype.clearAutocompleteList = function() {
 
 Search.prototype.hideAutocompleteList = function() {
 	this._autocompleteList.classList.remove( 'open' );
+	this._autocompleteListShown = false;
 };
 
 Search.prototype.typeHandler = function( evt ) {
 	if ( evt.target.value.length >= 2 ) {
-		var allEntities = search.getMatchedItems();
+		var allEntities = this.getMatchedItems();
 		_currentFloorEntities = [],
 			_otherFloorEntities = {},
 			currentFloorIndex = Editor().floorViewer.currentFloorIndex;
@@ -100,9 +133,9 @@ Search.prototype.typeHandler = function( evt ) {
 			currentFloorEntities: _currentFloorEntities,
 			otherFloorEntities: _otherFloorEntities
 		} );
-		$( search._autocompleteList ).empty().append( frag );
+		$( this._autocompleteList ).empty().append( frag );
 	} else {
-		search.hideAutocompleteList();
+		this.hideAutocompleteList();
 	}
 };
 module.exports = Utils.createSingleton( _instance, Search, 'search' );

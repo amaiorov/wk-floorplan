@@ -85,6 +85,9 @@ FloorViewer.prototype.init = function() {
 
 	$( window ).on( 'resize', this._$resize ).resize();
 
+	var $onSearchComplete = $.proxy( this.onSearchComplete, this );
+	$( window ).on( 'searchcomplete', $onSearchComplete );
+
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': ( this._editingRegionWidth - this._floorWidth ) / 2,
 		'y': ( this._editingRegionHeight - this._floorHeight ) / 2,
@@ -115,6 +118,12 @@ FloorViewer.prototype.getFloorSize = function() {
 		width: this._floorWidth,
 		height: this._floorHeight
 	}
+}
+
+
+FloorViewer.prototype.focusOnPin = function( entityModel ) {
+
+	this.toggleFloor( entityModel.floorIndex );
 }
 
 
@@ -304,6 +313,12 @@ FloorViewer.prototype.onZoomUpdate = function() {
 FloorViewer.prototype.onZoomComplete = function() {
 
 	this.currentFloor.updateTiles( zoom );
+}
+
+
+FloorViewer.prototype.onSearchComplete = function( e ) {
+
+	this.focusOnPin( e.entity );
 }
 
 
