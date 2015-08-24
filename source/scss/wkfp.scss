@@ -16,40 +16,12 @@ html{
 }
 
 #toolbar{
-	width: 100%;
-	height: 90px;
-	padding: 0 40px;
-	@include user-select(none);
-
-	>.inner{
-		width: 100%;
-		height: 100%;
-		max-width: 1920px;
-		margin: 0 auto;
-		@include flexbox((
-			display: flex,
-			align-items: flex-end,
-			justify-content: space-between
-		));
-	}
-
-	.wk-logo{
-		@include retina-icon("wk-logo");
-	}
-
-	.other-buttons{
-
-		.btn{
-			margin-left: 5px;
-		}
-
-		.admin-buttons, .edit-buttons, .btn-login{
-			@include inline-block(top);
-		}
-	}
+	@import "toolbar";
 }
 
 #editor-container{
+	position: relative;
+	z-index: 0;
 	width: 100%;
 	height: calc(100% - 90px);
 	padding: 40px;
@@ -58,6 +30,20 @@ html{
 
 #editor{
 	@import "editor";
+}
+
+#sheet-container{
+	display: none;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 1;
+	width: 100%;
+	height: calc(100% - 40px);
+	@include box-sizing(borde-box);
+	overflow: auto;
+	background: white;
+	font-size: 13px;
 }
 
 #search {

@@ -1,4 +1,6 @@
 &{
+	position: relative;
+	z-index: 0;
 	width: 100%;
 	height: 100%;
 	@include user-select(none);
@@ -351,14 +353,14 @@
 			@extend %entity-icon;
 			position: relative;
 			@include inline-block(top);
-			margin: 10px;
+			margin: 0 10px;
 			font-size: 40px;
 			line-height: 1.2;
 		}
 
 		.content{
 			@include inline-block(top);
-			margin: 10px;
+			margin: 0 10px;
 
 			p{
 				line-height: 1.6;

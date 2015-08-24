@@ -28,7 +28,7 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl ) {
 
 	sheetrock( {
 		url: ssUrl,
-		target: $( '#chart' ).get( 0 ),
+		target: $( '#sheet' ).get( 0 ),
 		callback: function( error, options, response ) {
 			var rows = response[ 'rows' ];
 			rows.shift();

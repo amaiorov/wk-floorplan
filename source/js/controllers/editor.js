@@ -51,6 +51,7 @@ var Editor = function() {
 	this._$onEntityDragEnd = $.proxy( this.onEntityDragEnd, this );
 	this._$onClickAddSeat = $.proxy( this.onClickAddSeat, this );
 	this._$onClickRemoveSeat = $.proxy( this.onClickRemoveSeat, this );
+	this._$onClickSheet = $.proxy( this.onClickSheet, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
 
@@ -73,6 +74,14 @@ var Editor = function() {
 	// controls
 	this._$addSeatButton = $( '#toolbar .btn-add-seat' );
 	this._$removeSeatButton = $( '#toolbar .btn-remove-seat' );
+
+	this._$sheetCheckbox = $( '#toolbar .checkbox-sheet' ).checkbox( {
+		buttonStyle: 'btn-sheet',
+		checkedClass: 'checked',
+		uncheckedClass: 'unchecked',
+		checked: false,
+		enabled: true
+	} ).change( this._$onClickSheet );
 
 	this._$modeToggler = $( '#mode-toggler' ).bootstrapToggle();
 	this._$modeToggler.change( this._$changeMode );
@@ -171,6 +180,19 @@ Editor.prototype.onClickRemoveSeat = function( e ) {
 };
 
 
+Editor.prototype.onClickSheet = function( e ) {
+
+	if ( e.target.checked ) {
+
+		$( '#sheet-container' ).show();
+
+	} else {
+
+		$( '#sheet-container' ).hide();
+	}
+};
+
+
 Editor.prototype.changeMode = function() {
 
 	var isEditMode = this._$modeToggler.prop( 'checked' );
@@ -184,6 +206,7 @@ Editor.prototype.changeMode = function() {
 		this._$removeSeatButton.on( 'click', this._$onClickRemoveSeat );
 
 		$( '#toolbar .edit-buttons .btn' ).removeClass( 'disabled' );
+		this._$sheetCheckbox.checkbox( 'setEnabled', true );
 
 	} else {
 
@@ -194,6 +217,7 @@ Editor.prototype.changeMode = function() {
 		this._$removeSeatButton.off( 'click', this._$onClickRemoveSeat );
 
 		$( '#toolbar .edit-buttons .btn' ).addClass( 'disabled' );
+		this._$sheetCheckbox.checkbox( 'setEnabled', false );
 	}
 
 	this.$element.toggleClass( 'preview', !isEditMode );

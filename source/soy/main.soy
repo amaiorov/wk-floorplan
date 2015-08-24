@@ -32,6 +32,7 @@
 						<div class="edit-buttons">
 							<button type="button" class="btn btn-default btn-add-seat">Add Seat</button>
 							<button type="button" class="btn btn-default btn-remove-seat">Remove Seat</button>
+							<input type="checkbox" class="checkbox checkbox-sheet">
 						</div>
 						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
 					</div>
@@ -42,11 +43,12 @@
 		</div>
 
 		<div id="editor-container">
+			<div id="sheet-container">
+				<table id="sheet" class="table table-condensed table-striped"></table>
+			</div>
 		</div>
 
 	</div>
-	
-	<table id="chart" class="table table-condensed table-striped"></table>
 </div>
 {/template}
 
