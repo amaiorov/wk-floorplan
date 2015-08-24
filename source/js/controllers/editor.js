@@ -108,7 +108,7 @@ Editor.prototype.onSplitEnd = function( e ) {
 }
 
 
-Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
+Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 
 	var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
 	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
@@ -129,7 +129,7 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 		} else {
 
-			$entityIcon.show();
+			$entityPin.show();
 		}
 
 	} else if ( isEntity ) {
@@ -140,16 +140,16 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityIcon, entityModel ) {
 
 		if ( outOfViewport && entityModel.isAssigned ) {
 
-			this.floorViewer.currentFloor.removeEntityIcon( entityModel );
+			this.floorViewer.currentFloor.removeEntityPin( entityModel );
 
 		} else {
 
-			$entityIcon.show();
+			$entityPin.show();
 		}
 
 		if ( !outOfViewport && !entityModel.isAssigned ) {
 
-			this.floorViewer.currentFloor.addEntityIcon( entityModel );
+			this.floorViewer.currentFloor.addEntityPin( entityModel );
 			this.floorViewer.updateIconSize();
 		}
 	}

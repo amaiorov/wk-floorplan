@@ -121,9 +121,43 @@ FloorViewer.prototype.getFloorSize = function() {
 }
 
 
-FloorViewer.prototype.focusOnPin = function( entityModel ) {
+FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 
 	this.toggleFloor( entityModel.floorIndex );
+
+	var pin = this.currentFloor.getEntityPin( entityModel.fullName );
+	var pinPosition = pin.$element.position();
+	var floorXAfterCentered = ( this._viewportMetrics.width - pinPosition.left * 2 ) / 2;
+	var floorYAfterCentered = ( this._viewportMetrics.height - pinPosition.top * 2 ) / 2;
+
+	TweenMax.set( this._$floorContainer.get( 0 ), {
+		'x': floorXAfterCentered,
+		'y': floorYAfterCentered
+	} );
+
+	this._draggable.update( true );
+
+	if ( opt_zoom ) {
+
+		var pinOffset = pin.$element.offset();
+		var pinHalfWidth = pin.$element.width() / 2;
+		var pinHalfHeight = pin.$element.height() / 2;
+		var elementOffset = this.$element.offset();
+		this._viewportZoomX = pinOffset.left + pinHalfWidth - elementOffset.left;
+		this._viewportZoomY = pinOffset.top + pinHalfHeight - elementOffset.top;
+
+		var floorPosition = this.getFloorPosition();
+		var floorX = floorPosition.x;
+		var floorY = floorPosition.y;
+
+		this._floorZoomFractionX = ( this._viewportZoomX - floorX ) / this._floorWidth;
+		this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
+
+		this.zoom( opt_zoom );
+	}
+
+	this.currentFloor.highlightEntityPin( pin.$element );
+	this.currentFloor.updateTiles( zoom );
 }
 
 
@@ -234,6 +268,7 @@ FloorViewer.prototype.toggleFloor = function( floorId ) {
 
 	var self = this;
 	var zoom = this._zoomTweener.target.zoom;
+	var $floorButtons = this._$floorButtons;
 
 	$.each( this._floors, function( id, floor ) {
 
@@ -250,6 +285,9 @@ FloorViewer.prototype.toggleFloor = function( floorId ) {
 			floor.hide();
 		}
 	} );
+
+	$floorButtons.removeClass( 'active' );
+	$floorButtons.filter( '[data-id="' + floorId + '"]' ).addClass( 'active' );
 }
 
 

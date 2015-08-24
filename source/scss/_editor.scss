@@ -37,9 +37,8 @@
 			position: absolute;
 			z-index: 1;
 
-			.icon{
+			>.icon{
 				@include scale(.3);
-				@include transition(transform .3s);
 			}
 
 			&[data-size="min"] .icon{
@@ -326,7 +325,7 @@
 		font-size: 13px;
 		@include border-radius(100%);
 		@include box-shadow(0px 1px 2px 0px rgba(black,0.3));
-		@include transition(background .4s $easeOutCubic);
+		@include transition(background .25s ease-out, transform .3s);
 		@include backfaceHidden;
 	}
 
@@ -334,60 +333,63 @@
 		position: absolute;
 		z-index: 1;
 		display: inline-block;
+		min-width: 250px;
 		left: 20px;
-		top: 5px;
-		background: black;
-		color: white;
-		padding: 10px 20px;
+		top: -4px;
 		font-size: 14px;
 		white-space: nowrap;
 		@include box-sizing(border-box);
 		@include box-shadow(2px 4px 10px 0px rgba(black,0.1));
-		@include translate(-50%, -100%);
+		@include translate(-50%, -90%);
 		@include backfaceHidden();
 		visibility: hidden;
 		opacity: 0;
-		@include transition( top .2s $easeOutCubic, visibility .2s, opacity .2s $easeOutCubic );
+		@include transition( visibility .25s, opacity .25s ease-out, transform .25s ease-out );
 
-		>p{
-			line-height: 1.4;
+		.photo{
+			@extend .icon;
+			@extend %entity-icon;
+			position: relative;
+			@include inline-block(top);
+			margin: 10px;
+			font-size: 40px;
+			line-height: 1.2;
 		}
 
-		&:after{
-			content: "";
-			position: absolute;
-			top: 100%;
-			left: 50%;
-			margin-left: -10px;
-			display: block;
-			width: 0;
-			height: 0;
-			border-style: solid;
-			border-width: 10px 10px 0 10px;
-			border-color: #000000 transparent transparent transparent;
+		.content{
+			@include inline-block(top);
+			margin: 10px;
+
+			p{
+				line-height: 1.6;
+			}
 		}
 	}
 
-	&:hover, &.dragging, &.active{
-		z-index: 1;
-
+	&:hover{
 		>.icon{
 			background: darken(#99CCFF, 8);
+		}
+	}
+
+	&.active{
+		z-index: 10 !important;
+
+		>.icon{
+			background: $color_blue !important;
 		}
 
 		>.info{
 			visibility: visible;
 			opacity: 1;
-			top: -5px;
+			@include translate(-50%, -100%);
 			@include transition-delay(.2s);
 		}
 	}
 
-	&.active{
-		z-index: 1 !important;
-
+	&.dragging{
 		>.icon{
-			background: black !important;
+			background: $color_blue !important;
 		}
 	}
 

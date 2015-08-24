@@ -111,39 +111,10 @@ html{
 		position: relative;
 		text-overflow: ellipsis;
 
-		&:before{
-			@extend .icon;
+		>.icon{
+			@extend %entity-icon;
+			position: relative;
 			margin-right: 10px;
-		}
-
-		&.employee,
-		&.freelance,
-		&.intern {
-			@extend .icon-person;
-		}
-
-		&.room{
-			@extend .icon-room;
-		}
-
-		&.printer{
-			@extend .icon-printer;
-		}
-		&.freelance:after,
-		&.intern:after {
-			content: 'f';
-			color: #286090;
-			font-weight: 900;
-			text-transform: uppercase;
-			position: absolute;
-			top: -4px;
-			left: 12px;
-			font-size: 12px;
-			font-family: $font_medium;
-		}
-		&.intern:after {
-			content: 'i';
-			color: #f00;
 		}
 	}
 	.department {

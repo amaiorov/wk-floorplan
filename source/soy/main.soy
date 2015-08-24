@@ -236,9 +236,19 @@
 		{ $employee.initials }
 	</div>
 	{if $showInfo == true}
-	<div class="info">
-		<p>{ $employee.firstName } { $employee.lastName }</p>
-		{if $employee.extension }<p><b>Extension</b> <span class="number">{ $employee.extension }</span></p>{/if}
+	<div class="info panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">{ $employee.firstName } { $employee.lastName }</h3>
+		</div>
+		<div class="panel-body">
+			<div class="photo {$employee.type}"></div>
+			<div class="content">
+				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}
+				{if $employee.extension }<p>Extension <span class="number">{ $employee.extension }</span></p>{/if}
+				{if $employee.workEmail }<p><span>{ $employee.workEmail }</span></p>{/if}
+				{if $employee.cellPhone }<p><span class="number">{ $employee.cellPhone }</span></p>{/if}
+			</div>
+		</div>
 	</div>
 	{/if}
 </div>
@@ -292,7 +302,10 @@
 	{foreach $entity in $currentFloorEntities}
 		<li class="current-floor {if isLast($entity)}last-in-group{/if}">
 			<a class="entity clearfix" data-id="{$entity.fullName}">
-				<span class="name {$entity.type}" title="{$entity.type}">{$entity.formattedFullName}</span>
+				<span class="name" title="{$entity.type}">
+					<div class="icon {$entity.type}"></div>
+					{$entity.formattedFullName}
+				</span>
 				<span class="department">{$entity.formattedDepartment}</span>
 			</a>
 		</li>
@@ -306,7 +319,10 @@
 	{foreach $entity in $entitiesOnfloor}
 		<li {if isLast($entity)}class="last-in-group"{/if}>
 			<a class="entity clearfix" data-id="{$entity.fullName}">
-				<span class="name {$entity.type}" title="{$entity.type}">{$entity.formattedFullName}</span>
+				<span class="name" title="{$entity.type}">
+					<div class="icon {$entity.type}"></div>
+					{$entity.formattedFullName}
+				</span>
 				<span class="department">{$entity.formattedDepartment}</span>
 			</a>
 		</li>

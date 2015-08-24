@@ -15,6 +15,8 @@ $easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 $easeOutSine: cubic-bezier(0.39, 0.575, 0.565, 1);
 $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
 
+$color_blue: #337ab7;
+
 // -- Global Mixins --
 @mixin absoluteTopLeft() {
   position: absolute;
@@ -78,6 +80,7 @@ body{
 
 h1,h2,h3,h4,h5,h6,b{
   font-family: $font_medium;
+  @include font-smoothing;
 }
 
 .number{
@@ -89,4 +92,37 @@ h1,h2,h3,h4,h5,h6,b{
 .btn.focus,.btn:active.focus,.btn.active.focus {
     outline: none;
     box-shadow:none;
+}
+
+%entity-icon{
+  &.employee,
+  &.freelance,
+  &.intern {
+    @extend .icon-person;
+  }
+
+  &.room{
+    @extend .icon-room;
+  }
+
+  &.printer{
+    @extend .icon-printer;
+  }
+  &.freelance:after,
+  &.intern:after {
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    font-size: .5em;
+    font-family: $font_medium;
+  }
+  &.freelance:after {
+    content: 'f';
+    color: #286090;
+  }
+  &.intern:after {
+    content: 'i';
+    color: #f00;
+  }
 }

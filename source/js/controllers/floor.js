@@ -44,6 +44,9 @@ var Floor = function( element, viewportMetrics ) {
 
 	}, this ) );
 
+	// listen for mouse events on pins
+	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
+
 	// listen for seat models change
 	this._$onObserved = $.proxy( this.onObserved, this );
 	this._observer = new ObjectObserver( this.model.seats );
@@ -57,6 +60,12 @@ Floor.prototype.getIndex = function() {
 };
 
 
+Floor.prototype.getEntityPin = function( id ) {
+
+	return this._entities[ id ];
+};
+
+
 Floor.prototype.show = function() {
 
 	this.$element.show();
@@ -66,10 +75,11 @@ Floor.prototype.show = function() {
 Floor.prototype.hide = function() {
 
 	this.$element.hide();
+	this.highlightEntityPin( null );
 };
 
 
-Floor.prototype.addEntityIcon = function( model ) {
+Floor.prototype.addEntityPin = function( model ) {
 
 	var icon = soy.renderAsFragment( template.EmployeePin, {
 		employee: model,
@@ -88,7 +98,7 @@ Floor.prototype.addEntityIcon = function( model ) {
 };
 
 
-Floor.prototype.removeEntityIcon = function( model ) {
+Floor.prototype.removeEntityPin = function( model ) {
 
 	var entity = this._entities[ model.fullName ];
 	entity.dispose();
@@ -118,6 +128,23 @@ Floor.prototype.addSeatPin = function( floorPosition, floorSize ) {
 Floor.prototype.removeSeatPin = function( model ) {
 
 	this.model.removeSeat( model );
+};
+
+
+Floor.prototype.highlightEntityPin = function( pinEl ) {
+
+	var $pinEl = $( pinEl );
+	var shouldActivate;
+
+	if ( !$pinEl.hasClass( 'active' ) ) {
+		shouldActivate = true;
+	}
+
+	this.$element.find( '.entity-pin' ).removeClass( 'active' );
+
+	if ( shouldActivate ) {
+		$pinEl.addClass( 'active' );
+	}
 };
 
 
@@ -245,6 +272,12 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 
 		console.log( 'Seat "' + key + '" removed. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
+};
+
+
+Floor.prototype.onClickEntityPin = function( e ) {
+
+	this.highlightEntityPin( e.currentTarget );
 };
 
 
