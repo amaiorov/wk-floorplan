@@ -262,7 +262,7 @@
  * @param seat The seat model.
  */
 {template .SeatPin}
-<div class="seat-pin" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
+<div class="seat-pin {if $seat.entity }seated{/if}" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
 	<div class="icon" data-clickable="true"></div>
 </div>
 {/template}

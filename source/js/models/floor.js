@@ -47,8 +47,6 @@ Floor.prototype.removeSeat = function( seatModel ) {
 	this.usedSeatIndexes.splice( this.usedSeatIndexes.indexOf( seatModel.seatIndex ), 1 );
 
 	delete this.seats[ seatModel.id ];
-
-	return seatModel;
 }
 
 

@@ -84,13 +84,6 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 					this.seat = seat;
 					this.floorIndex = this.seat.floorIndex;
 					this.seatByPosition( this.seat.x, this.seat.y );
-
-				} else {
-
-					seat = undefined;
-					this.x = undefined;
-					this.y = undefined;
-					this.floorIndex = undefined;
 				}
 
 				this.isAssigned = this.updateAssignedState();

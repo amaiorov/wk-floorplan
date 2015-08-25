@@ -14,4 +14,19 @@ var EmployeePin = function( element, opt_model ) {
 inherits( EmployeePin, Pin );
 
 
+EmployeePin.prototype.handleModelChange = function( key, value ) {
+
+	Pin.prototype.handleModelChange.call( this, key, value );
+
+	if ( key === 'isAssigned' ) {
+
+		var isAssigned = value;
+
+		if ( !isAssigned ) {
+			this.dispose();
+		}
+	}
+};
+
+
 module.exports = EmployeePin;

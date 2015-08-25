@@ -4,7 +4,7 @@ var employeeCollection = require( 'models/employeecollection' );
 var Floor = require( 'models/floor' );
 
 
-var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
+var EntityDragger = function( $element, $entityContainer, _onDragStartCallback, _onDragMoveCallback, _onDragEndCallback ) {
 
 	this._$element = $element.hide();
 	this._$entityContainer = $entityContainer;
@@ -22,6 +22,8 @@ var EntityDragger = function( $element, $entityContainer, _onDragEndCallback ) {
 	this._$onDragMove = $.proxy( this.onDragMove, this );
 	this._$onDragEnd = $.proxy( this.onDragEnd, this );
 
+	this._onDragStartCallback = _onDragStartCallback;
+	this._onDragMoveCallback = _onDragMoveCallback;
 	this._onDragEndCallback = _onDragEndCallback;
 }
 
@@ -103,8 +105,6 @@ EntityDragger.prototype.onDragMove = function( e ) {
 		$( 'html' ).attr( 'data-cursor', 'dragging' );
 	}
 
-	this._hasDragged = true;
-
 	var elementOffset = this._$element.offset();
 	var dragX = e.pageX - elementOffset.left - this._iconOffsetX;
 	var dragY = e.pageY - elementOffset.top - this._iconOffsetY;
@@ -113,6 +113,14 @@ EntityDragger.prototype.onDragMove = function( e ) {
 		'left': dragX + 'px',
 		'top': dragY + 'px'
 	} ).show();
+
+	if ( !this._hasDragged ) {
+
+		this._onDragStartCallback( dragX, dragY, this._$actualEntityIcon, this._entityModel );
+		this._hasDragged = true;
+	}
+
+	this._onDragMoveCallback( dragX, dragY, this._$actualEntityIcon, this._entityModel );
 };
 
 

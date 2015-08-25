@@ -412,11 +412,10 @@
 		z-index: 0;
 		width: 40px;
 		height: 40px;
-		background: rgba(#FFFFCC, .8);
-		border: 1px solid #FFCC00;
+		border: 2px solid #FFCC00;
 		@include border-radius(100%);
 		@include box-sizing(border-box);
-		@include transition(background .4s $easeOutCubic);
+		@include transition(background .4s $easeOutCubic, transform .25s $easeOutCubic);
 		@include backfaceHidden;
 
 		&:after{
@@ -440,6 +439,17 @@
 
 			&:after{
 				background-color: #FF6600;
+			}
+		}
+	}
+
+	&.seated{
+		>.icon{
+			@include scale(1.4);
+			border: 2px solid #FF6600;
+
+			&:after{
+				content: none;
 			}
 		}
 	}

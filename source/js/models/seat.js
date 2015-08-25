@@ -24,7 +24,10 @@ var Seat = function( seatIndex, floorIndex, opt_x, opt_y ) {
 
 Seat.prototype.dispose = function() {
 
-	this.entity = null;
+	if ( this.entity ) {
+		this.entity.seat = null;
+		this.entity = null;
+	}
 
 	this._observer.close( this._$onObserved );
 	this._observer = null;
@@ -39,7 +42,21 @@ Seat.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 		switch ( key ) {
 			case 'entity':
 				var entity = value;
-				entity.seat = this;
+				if ( entity ) {
+					entity.seat = this;
+				}
+				break;
+
+			case 'x':
+				if ( this.entity && value ) {
+					this.entity.x = value;
+				}
+				break;
+
+			case 'y':
+				if ( this.entity && value ) {
+					this.entity.y = value;
+				}
 				break;
 
 			default:
@@ -55,7 +72,7 @@ Seat.generateId = function( seatIndex, floorIndex ) {
 }
 
 
-Seat.RADIUS = 15;
+Seat.RADIUS = 20;
 
 
 module.exports = Seat;

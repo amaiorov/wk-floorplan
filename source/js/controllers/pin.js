@@ -41,23 +41,28 @@ Pin.prototype.setY = function( y ) {
 };
 
 
+Pin.prototype.handleModelChange = function( key, value ) {
+
+	switch ( key ) {
+		case 'x':
+			this.setX( value );
+			break;
+
+		case 'y':
+			this.setY( value );
+			break;
+
+		default:
+			break;
+	}
+};
+
+
 Pin.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 
 	for ( var key in changed ) {
 		var value = changed[ key ];
-
-		switch ( key ) {
-			case 'x':
-				this.setX( value );
-				break;
-
-			case 'y':
-				this.setY( value );
-				break;
-
-			default:
-				break;
-		}
+		this.handleModelChange( key, value );
 	}
 }
 
