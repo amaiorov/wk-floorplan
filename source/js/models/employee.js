@@ -7,6 +7,7 @@ var Employee = function( props ) {
 	this.extension = props[ 'Ext.' ];
 	this.floorIndex = props[ 'Floor' ];
 	this.department = props[ 'Department' ];
+	this.departmentCSSClass = props[ 'Department2' ].toLowerCase().split( ' ' ).join( '-' );
 	this.mailbox = props[ 'Desk#/Mailbox#' ];
 	this.deskDrawerKey = props[ 'DeskDrawerKey#' ];
 	this.workEmail = props[ 'WorkEmail' ];

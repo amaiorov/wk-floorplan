@@ -13,6 +13,7 @@ var Search = function( searchThreshold ) {
 	this._autocompleteList = document.getElementById( 'autocomplete-list' );
 	this._searchModeButton = document.getElementById( 'search-mode' );
 	this._searchModeList = this._searchModeButton.nextSibling;
+	this._autocompleteSelectedNode = null;
 	// debugger;
 	this._submit = document.getElementById( 'search-submit' );
 
@@ -134,8 +135,53 @@ Search.prototype.typeHandler = function( evt ) {
 			otherFloorEntities: _otherFloorEntities
 		} );
 		$( this._autocompleteList ).empty().append( frag );
+
+		if ( evt.which === 38 || evt.which === 40 ) {
+			this.keyboardNav( evt.which );
+		}
+
+		// if ( !this._autocompleteListShown ) {
+		// $( '#autocomplete-button' ).trigger( 'click' );
+		// }
+
+		// $( window ).trigger( 'show.bs.dropdown' );
 	} else {
 		this.hideAutocompleteList();
 	}
 };
+
+Search.prototype.keyboardNav = function( direction ) {
+	var list = this._autocompleteList.querySelectorAll( 'a' );
+	// keyboard up (38) or down (40)
+	if ( direction === 38 ) {
+		if ( !this._autocompleteSelectedNode ) {
+			this._autocompleteSelectedNode = list[ list.length ].getAttribute( 'data-id' );
+			this._autocompleteSelectedNode.classList.add( 'hover' );
+		} else {
+			this._autocompleteSelectedNode.classList.remove( 'hover' );
+			for ( var i in list ) {
+				if ( list[ i ].getAttribute( 'data-id' ) === this._autocompleteSelectedNode ) {
+					this._autocompleteSelectedNode = list[ i - 1 ].getAttribute( 'data-id' );
+					break;
+				}
+			}
+			this._autocompleteSelectedNode.classList.add( 'hover' );
+		}
+	} else if ( direction === 40 ) {
+		if ( !this._autocompleteSelectedNode ) {
+			this._autocompleteSelectedNode = list[ 0 ].getAttribute( 'data-id' );
+			this._autocompleteSelectedNode.classList.add( 'hover' );
+		} else {
+			this._autocompleteSelectedNode.classList.remove( 'hover' );
+			for ( var i in list ) {
+				if ( list[ i ].getAttribute( 'data-id' ) === this._autocompleteSelectedNode ) {
+					this._autocompleteSelectedNode = list[ i + 1 ].getAttribute( 'data-id' );
+					break;
+				}
+			}
+			this._autocompleteSelectedNode.classList.add( 'hover' );
+		}
+	}
+};
+
 module.exports = Utils.createSingleton( _instance, Search, 'search' );

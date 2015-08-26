@@ -320,7 +320,7 @@
 		z-index: 0;
 		width: 40px;
 		height: 40px;
-		background: #99CCFF;
+		background: #ccc;
 		text-align: center;
 		color: white;
 		line-height: 40px;
@@ -366,6 +366,58 @@
 				line-height: 1.6;
 			}
 		}
+	}
+
+	&.account-services .icon {
+		background-color: #FF58CE;
+	}
+
+	&.business-services .icon {
+		background-color: #58FFB1;
+	}
+
+	&.creative .icon {
+		background-color: #FFA658;
+	}
+
+	&.creative-services .icon {
+		background-color: #F6CC90;
+	}
+
+	&.digital .icon {
+		background-color: #6158FF;
+	}
+
+	&.executive .icon {
+		background-color: #F61A1A;
+	}
+
+	&.it .icon {
+		background-color: #EEFF58;
+	}
+
+	&.joint .icon {
+		background-color: #1AF637;
+	}
+
+	&.media-buying .icon {
+		background-color: #716CBF;
+	}
+
+	&.media-planning .icon {
+		background-color: #9C97EE;
+	}
+
+	&.production .icon {
+		background-color: #E86D6D;
+	}
+
+	&.project-management .icon {
+		background-color: #C32997;
+	}
+
+	&.technology .icon {
+		background-color: #2953C3;
 	}
 
 	&:hover{
