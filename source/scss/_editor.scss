@@ -374,61 +374,39 @@
 		}
 	}
 
-	&.account-services .icon {
-		background-color: #FF58CE;
-	}
+	$departments:
+		account-services #FF58CE,
+		business-services #58FFB1,
+		creative #FFA658,
+		creative-services #F6CC90,
+		digital #6158FF,
+		executive #F61A1A,
+		it #EEFF58,
+		joint #1AF637,
+		media-buying #716CBF,
+		media-planning #9C97EE,
+		production #E86D6D,
+		project-management #C32997,
+		technology #2953C3;
 
-	&.business-services .icon {
-		background-color: #58FFB1;
-	}
+	@each $department in $departments {
+		$class: nth($department, 1);
+		$color: nth($department, 2);
 
-	&.creative .icon {
-		background-color: #FFA658;
-	}
+		&:hover, &.active, &.dragging{
+			&.#{$class} .icon{
+				background: darken($color, 12) !important;
+			}
+		}
 
-	&.creative-services .icon {
-		background-color: #F6CC90;
-	}
-
-	&.digital .icon {
-		background-color: #6158FF;
-	}
-
-	&.executive .icon {
-		background-color: #F61A1A;
-	}
-
-	&.it .icon {
-		background-color: #EEFF58;
-	}
-
-	&.joint .icon {
-		background-color: #1AF637;
-	}
-
-	&.media-buying .icon {
-		background-color: #716CBF;
-	}
-
-	&.media-planning .icon {
-		background-color: #9C97EE;
-	}
-
-	&.production .icon {
-		background-color: #E86D6D;
-	}
-
-	&.project-management .icon {
-		background-color: #C32997;
-	}
-
-	&.technology .icon {
-		background-color: #2953C3;
+		&.#{$class} .icon{
+			background: $color;
+		}
 	}
 
 	&:hover{
 		>.icon{
-			background: darken(#99CCFF, 8);
+			background: darken(#ccc, 12);
 		}
 	}
 
@@ -436,7 +414,7 @@
 		z-index: 10 !important;
 
 		>.icon{
-			background: $color_blue !important;
+			background: darken(#ccc, 12) !important;
 		}
 
 		>.info{
@@ -449,7 +427,7 @@
 
 	&.dragging{
 		>.icon{
-			background: $color_blue !important;
+			background: darken(#ccc, 12) !important;
 		}
 	}
 
@@ -501,6 +479,10 @@
 		}
 	}
 
+	&:not(.dragging) {
+		@include grab-cursor;
+	}
+	
 	&.seated{
 		>.icon{
 			@include scale(1.5);
