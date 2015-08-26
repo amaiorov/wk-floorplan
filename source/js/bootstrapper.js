@@ -40,6 +40,19 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl ) {
 			} );
 
 			Editor();
+
+			TweenMax.fromTo( $( '#main-container' ).get( 0 ), 1, {
+				'opacity': 0
+			}, {
+				'delay': 1.5,
+				'opacity': 1
+			} );
+
+			TweenMax.to( $( '#preloader' ).get( 0 ), .5, {
+				'delay': 1,
+				'opacity': 0,
+				'display': 'none'
+			} );
 		}
 	} );
 }
