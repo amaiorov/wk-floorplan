@@ -18,4 +18,15 @@ SeatPin.prototype.dispose = function() {
 };
 
 
+SeatPin.prototype.handleModelChange = function( key, value ) {
+
+	Pin.prototype.handleModelChange.call( this, key, value );
+
+	if ( key === 'entity' ) {
+		var hasEntity = value ? true : false;
+		this.$element.toggleClass( 'seated', hasEntity );
+	}
+};
+
+
 module.exports = SeatPin;

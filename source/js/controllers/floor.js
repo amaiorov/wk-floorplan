@@ -100,9 +100,12 @@ Floor.prototype.addEntityPin = function( model ) {
 
 Floor.prototype.removeEntityPin = function( model ) {
 
-	var entity = this._entities[ model.fullName ];
-	entity.dispose();
+	model.seat = null;
+	model.x = null;
+	model.y = null;
+	model.floorIndex = null;
 
+	var entity = this._entities[ model.fullName ];
 	delete this._entities[ model.fullName ];
 };
 

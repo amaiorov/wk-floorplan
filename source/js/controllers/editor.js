@@ -48,6 +48,8 @@ var Editor = function() {
 	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
+	this._$onEntityDragStart = $.proxy( this.onEntityDragStart, this );
+	this._$onEntityDragMove = $.proxy( this.onEntityDragMove, this );
 	this._$onEntityDragEnd = $.proxy( this.onEntityDragEnd, this );
 	this._$onClickAddSeat = $.proxy( this.onClickAddSeat, this );
 	this._$onClickRemoveSeat = $.proxy( this.onClickRemoveSeat, this );
@@ -69,7 +71,11 @@ var Editor = function() {
 	this._entityDragger = new EntityDragger(
 		this.$element.find( '.entity-dragger-viewport' ),
 		this.$element,
+		this._$onEntityDragStart,
+		this._$onEntityDragMove,
 		this._$onEntityDragEnd );
+
+	this._quadTree = null;
 
 	// controls
 	this._$addSeatButton = $( '#toolbar .btn-add-seat' );
@@ -117,6 +123,105 @@ Editor.prototype.onSplitEnd = function( e ) {
 }
 
 
+Editor.prototype.onEntityDragStart = function( x, y, $entityPin, entityModel ) {
+
+	if ( this._quadTree ) {
+		this._quadTree.clear();
+		this._quadTree = null;
+	}
+
+	if ( !$entityPin.hasClass( 'entity-pin' ) ) {
+		return;
+	}
+
+	// calculate all seats' absolute position for collision detection
+	var viewportMetrics = this.floorViewer.updateViewportMetrics();
+
+	var tree = this._quadTree = new QuadTree( {
+		x: 0,
+		y: 0,
+		width: viewportMetrics.width,
+		height: viewportMetrics.height
+	}, true, 10, 20 );
+
+	var $seatPins = this.floorViewer.currentFloor.$element.find( '.seat-pin' );
+
+	var inViewportPins = $.grep( $seatPins, function( pin ) {
+
+		var pinOffset = $( pin ).offset();
+
+		if ( pinOffset.left < viewportMetrics.x || pinOffset.left > viewportMetrics.x + viewportMetrics.width || pinOffset.top < viewportMetrics.y || pinOffset.top > viewportMetrics.y + viewportMetrics.height ) {
+
+			return false;
+
+		} else {
+
+			var seatModel = FloorModel.getSeatById( pin.getAttribute( 'data-id' ) );
+
+			var collisionPin = {
+				x: pinOffset.left - viewportMetrics.x + SeatModel.RADIUS,
+				y: pinOffset.top - viewportMetrics.y + SeatModel.RADIUS,
+				el: pin,
+				model: seatModel
+			};
+
+			tree.insert( collisionPin );
+
+			return true;
+		}
+	} );
+};
+
+
+Editor.prototype.onEntityDragMove = function( x, y, $entityPin, entityModel ) {
+
+	var isSeat = ( entityModel instanceof SeatModel );
+
+	if ( isSeat ) {
+
+		var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
+		var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
+		var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
+
+		entityModel.x = entityX;
+		entityModel.y = entityY;
+	}
+
+	if ( !this._quadTree ) {
+		return;
+	}
+
+	var seats = this._quadTree.retrieve( {
+		x: x,
+		y: y
+	} );
+
+	this._collidingSeat = $.grep( seats, function( seat ) {
+
+		$( seat.el ).toggleClass( 'active', false );
+
+		var dx = x - seat.x;
+		var dy = y - seat.y;
+		var drad = SeatModel.RADIUS + SeatModel.RADIUS;
+
+		var isColliding = ( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) ) < Math.pow( drad, 2 );
+
+		if ( !isColliding && entityModel === seat.model.entity ) {
+			entityModel.seat = null;
+			seat.model.entity = null;
+		}
+
+		return isColliding;
+	} )[ 0 ];
+
+	if ( this._collidingSeat ) {
+		$( this._collidingSeat.el ).toggleClass( 'active', true );
+	}
+
+	entityModel.seat = null;
+};
+
+
 Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 
 	var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
@@ -160,6 +265,17 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 
 			this.floorViewer.currentFloor.addEntityPin( entityModel );
 			this.floorViewer.updateIconSize();
+		}
+
+		if ( this._collidingSeat ) {
+
+			var currentSeatEntity = this._collidingSeat.model.entity;
+
+			if ( currentSeatEntity ) {
+				this.floorViewer.currentFloor.removeEntityPin( currentSeatEntity );
+			}
+
+			entityModel.seat = this._collidingSeat.model;
 		}
 	}
 };
