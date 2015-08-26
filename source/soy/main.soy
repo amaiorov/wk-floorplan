@@ -233,7 +233,7 @@
  * @param? showInfo The ability to show info panel.
  */
 {template .EmployeePin}
-<div class="employee-pin entity-pin" data-id="{ $employee.fullName }">
+<div class="employee-pin entity-pin { $employee.departmentCSSClass }" data-id="{ $employee.fullName }">
 	<div class="icon" data-clickable="true">
 		{ $employee.initials }
 	</div>
