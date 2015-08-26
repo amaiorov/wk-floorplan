@@ -1,4 +1,5 @@
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
@@ -46,6 +47,7 @@ var Floor = function( element, viewportMetrics ) {
 
 	// listen for mouse events on pins
 	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
+	this.$element.on( 'click', '.seat-pin', $.proxy( this.onClickSeatPin, this ) );
 
 	// listen for seat models change
 	this._$onObserved = $.proxy( this.onObserved, this );
@@ -76,6 +78,7 @@ Floor.prototype.hide = function() {
 
 	this.$element.hide();
 	this.highlightEntityPin( null );
+	this.highlightSeatPin( null );
 };
 
 
@@ -137,16 +140,31 @@ Floor.prototype.removeSeatPin = function( model ) {
 Floor.prototype.highlightEntityPin = function( pinEl ) {
 
 	var $pinEl = $( pinEl );
-	var shouldActivate;
-
-	if ( !$pinEl.hasClass( 'active' ) ) {
-		shouldActivate = true;
-	}
+	var shouldActivate = !$pinEl.hasClass( 'active' );
 
 	this.$element.find( '.entity-pin' ).removeClass( 'active' );
 
 	if ( shouldActivate ) {
 		$pinEl.addClass( 'active' );
+	}
+};
+
+
+Floor.prototype.highlightSeatPin = function( pinEl ) {
+
+	var $pinEl = $( pinEl );
+	var shouldActivate = !$pinEl.hasClass( 'active' );
+
+	this.$element.find( '.seat-pin' ).removeClass( 'active' );
+
+	if ( shouldActivate ) {
+		$pinEl.addClass( 'active' );
+
+		pubSub.seatSelected.dispatch( $pinEl.attr( 'data-id' ) );
+
+	} else {
+
+		pubSub.seatSelected.dispatch( null );
 	}
 };
 
@@ -263,6 +281,8 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 		var seat = new SeatPin( el, seatModel );
 		this._seats[ key ] = seat;
 
+		this.highlightSeatPin( el );
+
 		console.log( 'Seat "' + key + '" added. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
 
@@ -281,6 +301,12 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 Floor.prototype.onClickEntityPin = function( e ) {
 
 	this.highlightEntityPin( e.currentTarget );
+};
+
+
+Floor.prototype.onClickSeatPin = function( e ) {
+
+	this.highlightSeatPin( e.currentTarget );
 };
 
 

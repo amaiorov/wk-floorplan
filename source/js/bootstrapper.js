@@ -5,6 +5,7 @@ var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
+var Utils = require( 'app/utils' );
 
 var _instance;
 
@@ -43,7 +44,4 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl ) {
 	} );
 }
 
-module.exports = ( function() {
-	_instance = _instance || new Bootstrapper( arguments );
-	return _instance;
-} )();
+module.exports = Utils.createSingletonNow( _instance, Bootstrapper );

@@ -1,4 +1,5 @@
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
 var Floor = require( 'controllers/floor' );
@@ -86,7 +87,7 @@ FloorViewer.prototype.init = function() {
 	$( window ).on( 'resize', this._$resize ).resize();
 
 	var $onSearchComplete = $.proxy( this.onSearchComplete, this );
-	$( window ).on( 'searchcomplete', $onSearchComplete );
+	pubSub.searchCompleted.add( $onSearchComplete );
 
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': ( this._editingRegionWidth - this._floorWidth ) / 2,
@@ -354,9 +355,9 @@ FloorViewer.prototype.onZoomComplete = function() {
 }
 
 
-FloorViewer.prototype.onSearchComplete = function( e ) {
+FloorViewer.prototype.onSearchComplete = function( entityModel ) {
 
-	this.focusOnPin( e.entity );
+	this.focusOnPin( entityModel );
 }
 
 

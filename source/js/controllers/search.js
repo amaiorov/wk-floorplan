@@ -1,8 +1,11 @@
 var template = require( 'views/main.soy' );
 var employeeCollection = require( 'models/employeecollection' );
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var Editor = require( 'controllers/editor' );
+
 var _instance;
+
 
 var Search = function( searchThreshold ) {
 	// alert( 'search yo!' );
@@ -21,15 +24,13 @@ var Search = function( searchThreshold ) {
 	var self = this;
 
 	$( this._autocompleteList ).on( 'click', '.entity', function( evt ) {
+
+		self.hideAutocompleteList();
+
 		var id = evt.currentTarget.getAttribute( 'data-id' );
 		var entityModel = employeeCollection.getByName( id );
 
-		$.event.trigger( {
-			type: 'searchcomplete',
-			entity: entityModel
-		} );
-
-		self.hideAutocompleteList();
+		pubSub.searchCompleted.dispatch( entityModel );
 	} );
 
 	this._searchField.addEventListener( 'keyup', function( evt ) {

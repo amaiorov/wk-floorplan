@@ -1,4 +1,5 @@
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var template = require( 'views/main.soy' );
 var Waitlist = require( 'controllers/waitlist' );
 var EntityDragger = require( 'controllers/entitydragger' );
@@ -44,8 +45,8 @@ var Editor = function() {
 	this._$waitlistPane = this.$element.find( '.waitlist-pane' );
 
 	// scoped methods
-	this._$onSplitUpdate = $.proxy( this.onSplitUpdate, this );
-	this._$onSplitEnd = $.proxy( this.onSplitEnd, this );
+	this._$onSplitUpdated = $.proxy( this.onSplitUpdated, this );
+	this._$onSplitEnded = $.proxy( this.onSplitEnded, this );
 	this._$onClickWaitlist = $.proxy( this.onClickWaitlist, this );
 	this._$onClickWaitlistIcon = $.proxy( this.onClickWaitlistIcon, this );
 	this._$onEntityDragStart = $.proxy( this.onEntityDragStart, this );
@@ -54,13 +55,9 @@ var Editor = function() {
 	this._$onClickAddSeat = $.proxy( this.onClickAddSeat, this );
 	this._$onClickRemoveSeat = $.proxy( this.onClickRemoveSeat, this );
 	this._$onClickSheet = $.proxy( this.onClickSheet, this );
+	this._$onSeatSelected = $.proxy( this.onSeatSelected, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
-
-	// add events
-	$( window ).on( 'resize', this._$resize ).resize();
-	$( window ).on( 'editorsplitupdate', this._$onSplitUpdate );
-	$( window ).on( 'editorsplitend', this._$onSplitEnd );
 
 	// create editor components
 	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );
@@ -92,7 +89,16 @@ var Editor = function() {
 	this._$modeToggler = $( '#mode-toggler' ).bootstrapToggle();
 	this._$modeToggler.change( this._$changeMode );
 
+	// add events
+	$( window ).on( 'resize', this._$resize ).resize();
+
+	pubSub.editorSplitUpdated.add( this._$onSplitUpdated );
+	pubSub.editorSplitEnded.add( this._$onSplitEnded );
+	pubSub.seatSelected.add( this._$onSeatSelected );
+
+	//
 	this._$changeMode();
+	this._$onSeatSelected( null );
 }
 
 
@@ -110,14 +116,14 @@ Editor.prototype.resize = function() {
 }
 
 
-Editor.prototype.onSplitUpdate = function( e ) {
+Editor.prototype.onSplitUpdated = function( fraction ) {
 
-	this._$floorPane.css( 'width', e.fraction * 100 + '%' );
-	this._$waitlistPane.css( 'width', ( 1 - e.fraction ) * 100 + '%' );
+	this._$floorPane.css( 'width', fraction * 100 + '%' );
+	this._$waitlistPane.css( 'width', ( 1 - fraction ) * 100 + '%' );
 }
 
 
-Editor.prototype.onSplitEnd = function( e ) {
+Editor.prototype.onSplitEnded = function() {
 
 	this.floorViewer.updateViewportMetrics();
 }
@@ -281,7 +287,6 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 };
 
 
-
 Editor.prototype.onClickAddSeat = function( e ) {
 
 	this.floorViewer.currentFloor.addSeatPin(
@@ -293,6 +298,11 @@ Editor.prototype.onClickAddSeat = function( e ) {
 
 Editor.prototype.onClickRemoveSeat = function( e ) {
 
+	var seatModel = FloorModel.getSeatById( this._selectedSeatId );
+
+	this.floorViewer.currentFloor.removeSeatPin( seatModel );
+
+	this.onSeatSelected( null );
 };
 
 
@@ -309,6 +319,15 @@ Editor.prototype.onClickSheet = function( e ) {
 };
 
 
+Editor.prototype.onSeatSelected = function( seatId ) {
+
+	this._selectedSeatId = seatId;
+
+	var shouldDisable = !Utils.isDefAndNotNull( seatId );
+	this._$removeSeatButton.prop( 'disabled', shouldDisable );
+};
+
+
 Editor.prototype.changeMode = function() {
 
 	var isEditMode = this._$modeToggler.prop( 'checked' );
@@ -321,7 +340,8 @@ Editor.prototype.changeMode = function() {
 		this._$addSeatButton.on( 'click', this._$onClickAddSeat );
 		this._$removeSeatButton.on( 'click', this._$onClickRemoveSeat );
 
-		$( '#toolbar .edit-buttons .btn' ).removeClass( 'disabled' );
+		this._$addSeatButton.prop( 'disabled', false );
+		this._$removeSeatButton.prop( 'disabled', true );
 		this._$sheetCheckbox.checkbox( 'setEnabled', true );
 
 	} else {
@@ -332,7 +352,8 @@ Editor.prototype.changeMode = function() {
 		this._$addSeatButton.off( 'click', this._$onClickAddSeat );
 		this._$removeSeatButton.off( 'click', this._$onClickRemoveSeat );
 
-		$( '#toolbar .edit-buttons .btn' ).addClass( 'disabled' );
+		this._$addSeatButton.prop( 'disabled', true );
+		this._$removeSeatButton.prop( 'disabled', true );
 		this._$sheetCheckbox.checkbox( 'setEnabled', false );
 	}
 

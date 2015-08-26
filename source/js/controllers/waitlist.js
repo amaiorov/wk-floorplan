@@ -1,6 +1,7 @@
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var employeeCollection = require( 'models/employeecollection' );
 var PathObserver = require( 'libs/observe' ).PathObserver;
 
@@ -83,18 +84,13 @@ Waitlist.prototype.reset = function() {
 
 Waitlist.prototype.triggerSplitUpdate = function( e ) {
 
-	$.event.trigger( {
-		type: 'editorsplitupdate',
-		fraction: this._dragFracX
-	} );
+	pubSub.editorSplitUpdated.dispatch( this._dragFracX );
 }
 
 
 Waitlist.prototype.triggerSplitEnd = function( e ) {
 
-	$.event.trigger( {
-		type: 'editorsplitend'
-	} );
+	pubSub.editorSplitEnded.dispatch();
 }
 
 
