@@ -308,6 +308,8 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 
 		console.log( 'Seat "' + key + '" removed. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
+
+	pubSub.edited.dispatch();
 };
 
 

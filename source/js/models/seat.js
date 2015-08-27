@@ -1,4 +1,5 @@
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+var pubSub = require( 'app/pubsub' );
 
 var _instances = {};
 
@@ -63,6 +64,8 @@ Seat.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
 				break;
 		}
 	}
+
+	pubSub.edited.dispatch();
 }
 
 

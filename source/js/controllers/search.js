@@ -169,7 +169,8 @@ Search.prototype.typeHandler = function( evt ) {
 		// append list to soy view
 		var frag = soy.renderAsFragment( template.AutocompleteList, {
 			currentFloorEntities: _currentFloorEntities,
-			otherFloorEntities: _otherFloorEntities
+			otherFloorEntities: _otherFloorEntities,
+			category: this._category
 		} );
 		$( this._autocompleteList ).empty().append( frag );
 

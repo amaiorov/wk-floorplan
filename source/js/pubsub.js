@@ -10,6 +10,7 @@ var PubSub = function() {
 	this.editorSplitUpdated = new Signal();
 	this.editorSplitEnded = new Signal();
 	this.searchCompleted = new Signal();
+	this.edited = new Signal();
 };
 
 

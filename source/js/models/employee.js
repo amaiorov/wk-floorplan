@@ -1,4 +1,5 @@
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
+var pubSub = require( 'app/pubsub' );
 
 var Employee = function( props ) {
 
@@ -99,6 +100,8 @@ Employee.prototype.onObserved = function( added, removed, changed, getOldValueFn
 				break;
 		}
 	}
+
+	pubSub.edited.dispatch();
 }
 
 

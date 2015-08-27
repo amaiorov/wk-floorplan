@@ -94,7 +94,6 @@ var Editor = function() {
 
 	pubSub.editorSplitUpdated.add( this._$onSplitUpdated );
 	pubSub.editorSplitEnded.add( this._$onSplitEnded );
-	pubSub.seatSelected.add( this._$onSeatSelected );
 
 	//
 	this._$changeMode();
@@ -349,6 +348,8 @@ Editor.prototype.changeMode = function() {
 		this._$removeSeatButton.prop( 'disabled', true );
 		this._$sheetCheckbox.checkbox( 'setEnabled', true );
 
+		pubSub.seatSelected.add( this._$onSeatSelected );
+
 	} else {
 
 		this._entityDragger.deactivate();
@@ -360,6 +361,8 @@ Editor.prototype.changeMode = function() {
 		this._$addSeatButton.prop( 'disabled', true );
 		this._$removeSeatButton.prop( 'disabled', true );
 		this._$sheetCheckbox.checkbox( 'setEnabled', false );
+
+		pubSub.seatSelected.remove( this._$onSeatSelected );
 	}
 
 	this.$element.toggleClass( 'preview', !isEditMode );
