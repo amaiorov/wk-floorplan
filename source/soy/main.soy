@@ -16,8 +16,11 @@
 				<div id="search">
 					<div class="input-group">
 						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
-						<div class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-mode">Everything <span class="caret"></span></button>
+						<div class="dropdown input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-mode">
+								<span class="text">Everything</span>
+								<span class="caret"></span>
+							</button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
@@ -254,9 +257,9 @@
 			<div class="photo {$employee.type}"></div>
 			<div class="content">
 				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}
-				{if $employee.extension }<p>Extension <span class="number">{ $employee.extension }</span></p>{/if}
+				{if $employee.extension }<p>x. <span class="number">{ $employee.extension }</span></p>{/if}
+				{if $employee.cellPhone }<p>m. <span class="number">{ $employee.cellPhone }</span></p>{/if}
 				{if $employee.workEmail }<p><span>{ $employee.workEmail }</span></p>{/if}
-				{if $employee.cellPhone }<p><span class="number">{ $employee.cellPhone }</span></p>{/if}
 			</div>
 		</div>
 	</div>

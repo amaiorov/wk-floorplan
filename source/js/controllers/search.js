@@ -8,19 +8,20 @@ var _instance;
 
 
 var Search = function( searchThreshold ) {
-	// alert( 'search yo!' );
-	this._searchMode = '';
+
 	this._threshold = searchThreshold;
-	this._employees = employeeCollection._employees;
+	this._employees = employeeCollection.getAll();
 	this._searchField = document.getElementById( 'search-query' );
 	this._autocompleteList = document.getElementById( 'autocomplete-list' );
-	this._searchModeButton = document.getElementById( 'search-mode' );
-	this._searchModeList = this._searchModeButton.nextSibling;
 	this._autocompleteSelectedNode = null;
-	// debugger;
+
+	this._$dropdown = $( '#search .dropdown' );
+
 	this._submit = document.getElementById( 'search-submit' );
 
 	this._autocompleteListShown = false;
+
+	this._category = this._$dropdown.find( 'li a' )[ 0 ].getAttribute( 'data-value' );
 
 	var self = this;
 
@@ -32,6 +33,8 @@ var Search = function( searchThreshold ) {
 		var entityModel = employeeCollection.getByName( id );
 
 		pubSub.searchCompleted.dispatch( entityModel );
+
+		self._searchField.value = entityModel.fullName;
 	} );
 
 	this._searchField.addEventListener( 'keyup', function( evt ) {
@@ -40,6 +43,18 @@ var Search = function( searchThreshold ) {
 
 	this._searchField.addEventListener( 'focus', function( evt ) {
 		self.typeHandler( evt );
+	} );
+
+	this._$dropdown.on( 'show.bs.dropdown', function() {
+		self.hideAutocompleteList();
+	} );
+
+	this._$dropdown.find( 'li a' ).click( function( e ) {
+		var $target = $( e.target );
+		var text = $target.text();
+		$( '#search .dropdown .text' ).text( text );
+
+		self._category = $target.attr( 'data-value' );
 	} );
 
 	var search = $( '#search' )[ 0 ];
@@ -52,14 +67,6 @@ var Search = function( searchThreshold ) {
 			self.hideAutocompleteList();
 		}
 	} );
-
-	/*
-		this._searchField.addEventListener( 'blur', function( evt ) {
-			self.hideAutocompleteList();
-		} );
-		this._searchModeButton.addEventListener( 'blur', function( evt ) {
-			self.hideAutocompleteList();
-		} );*/
 };
 
 Search.prototype.getMatchedItems = function() {
@@ -73,14 +80,42 @@ Search.prototype.getMatchedItems = function() {
 
 	// loop through entities and find matching objects
 	for ( var i = 0; i < this._employees.length; i++ ) {
+
+		var employee = this._employees[ i ];
+
+		// skip this entity if not belongs to the current category
+		switch ( this._category ) {
+			case 'people':
+				if ( employee.type !== 'employee' && employee.type !== 'freelance' && employee.type !== 'intern' ) {
+					continue;
+				}
+				break;
+
+			case 'rooms':
+				if ( employee.type !== 'room' ) {
+					continue;
+				}
+				break;
+
+			case 'printers':
+				if ( employee.type !== 'printer' ) {
+					continue;
+				}
+				break;
+
+			default:
+				break;
+		}
+
 		var item = {},
-			fullNameIndex = this._employees[ i ].fullName.toLowerCase().indexOf( query ),
-			departmentIndex = this._employees[ i ].department.toLowerCase().indexOf( query );
+			fullNameIndex = employee.fullName.toLowerCase().indexOf( query.toLowerCase() ),
+			departmentIndex = employee.department.toLowerCase().indexOf( query.toLowerCase() );
+
 		if ( fullNameIndex > -1 || departmentIndex > -1 ) {
 
 			// create tmp object to store matched entity
-			for ( var prop in this._employees[ i ] ) {
-				item[ prop ] = this._employees[ i ][ prop ];
+			for ( var prop in employee ) {
+				item[ prop ] = employee[ prop ];
 			}
 
 			// mark found text in name and department
@@ -89,12 +124,13 @@ Search.prototype.getMatchedItems = function() {
 			matchedItems.push( item );
 		}
 	}
+
 	if ( matchedItems.length === 0 ) {
 		matchedItems.push( {
 			'floorIndex': -1
 		} );
 	}
-	// return matchedList;
+
 	return matchedItems;
 };
 
@@ -141,12 +177,8 @@ Search.prototype.typeHandler = function( evt ) {
 			this.keyboardNav( evt.which );
 		}
 
-		// if ( !this._autocompleteListShown ) {
-		// $( '#autocomplete-button' ).trigger( 'click' );
-		// }
-
-		// $( window ).trigger( 'show.bs.dropdown' );
 	} else {
+
 		this.hideAutocompleteList();
 	}
 };

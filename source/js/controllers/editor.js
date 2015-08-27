@@ -185,9 +185,10 @@ Editor.prototype.onEntityDragMove = function( x, y, $entityPin, entityModel ) {
 
 	if ( isSeat ) {
 
-		var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
-		var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
-		var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
+		var allowInvalidPositions = true;
+		var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y, allowInvalidPositions );
+		var entityX = entityPositionInFloor.x;
+		var entityY = entityPositionInFloor.y;
 
 		entityModel.x = entityX;
 		entityModel.y = entityY;
@@ -246,6 +247,10 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 		if ( outOfViewport ) {
 
 			this.floorViewer.currentFloor.removeSeatPin( entityModel );
+
+			if ( entityModel.entity ) {
+				this.floorViewer.currentFloor.removeEntityPin( entityModel.entity );
+			}
 
 		} else {
 

@@ -229,7 +229,7 @@ FloorViewer.prototype.updateViewportMetrics = function() {
 }
 
 
-FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
+FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY, allowInvalidPositions ) {
 
 	var floorPosition = this.getFloorPosition();
 	var floorX = floorPosition.x;
@@ -238,7 +238,7 @@ FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoor
 	var fractionX = ( viewerCoordX - floorX ) / this._floorWidth;
 	var fractionY = ( viewerCoordY - floorY ) / this._floorHeight;
 
-	if ( fractionX < 0 || fractionX > 1 || fractionY < 0 || fractionY > 1 ) {
+	if ( !allowInvalidPositions && ( fractionX < 0 || fractionX > 1 || fractionY < 0 || fractionY > 1 ) ) {
 		return {
 			x: null,
 			y: null

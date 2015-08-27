@@ -3,6 +3,7 @@ var pubSub = require( 'app/pubsub' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
+var employeeCollection = require( 'models/employeecollection' );
 var EmployeePin = require( 'controllers/employeepin' );
 var SeatPin = require( 'controllers/seatpin' );
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
@@ -146,6 +147,18 @@ Floor.prototype.highlightEntityPin = function( pinEl ) {
 
 	if ( shouldActivate ) {
 		$pinEl.addClass( 'active' );
+	}
+
+	// highlight the entity's seat pin if seated
+	if ( pinEl ) {
+
+		var entityModel = employeeCollection.getByName( $pinEl.attr( 'data-id' ) );
+
+		if ( entityModel.seat ) {
+
+			var seatId = entityModel.seat.id;
+			this.highlightSeatPin( this._seats[ seatId ].$element.get( 0 ) );
+		}
 	}
 };
 
@@ -307,6 +320,7 @@ Floor.prototype.onClickEntityPin = function( e ) {
 Floor.prototype.onClickSeatPin = function( e ) {
 
 	this.highlightSeatPin( e.currentTarget );
+	this.highlightEntityPin( null );
 };
 
 

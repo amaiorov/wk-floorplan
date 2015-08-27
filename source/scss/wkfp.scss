@@ -71,6 +71,10 @@ html{
 	position: relative;
 	width: 30%;
 	max-width: 500px;
+
+	.text{
+		margin-right: 5px;
+	}
 }
 
 #autocomplete-list {
