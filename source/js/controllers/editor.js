@@ -56,6 +56,7 @@ var Editor = function() {
 	this._$onClickRemoveSeat = $.proxy( this.onClickRemoveSeat, this );
 	this._$onClickSheet = $.proxy( this.onClickSheet, this );
 	this._$onSeatSelected = $.proxy( this.onSeatSelected, this );
+	this._$onModeChanged = $.proxy( this.onModeChanged, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
 
@@ -94,6 +95,7 @@ var Editor = function() {
 
 	pubSub.editorSplitUpdated.add( this._$onSplitUpdated );
 	pubSub.editorSplitEnded.add( this._$onSplitEnded );
+	pubSub.modeChanged.add( this._$onModeChanged );
 
 	//
 	this._$changeMode();
@@ -112,6 +114,49 @@ Editor.prototype.resize = function() {
 	this._metrics.editingRegionLeft = editingRegionPosition.left;
 
 	return this._metrics;
+}
+
+
+Editor.prototype.changeMode = function() {
+
+	var isEditMode = this._$modeToggler.prop( 'checked' );
+
+	pubSub.modeChanged.dispatch( isEditMode );
+};
+
+
+Editor.prototype.onModeChanged = function( isEditMode ) {
+
+	if ( isEditMode ) {
+
+		this._entityDragger.activate();
+		this._waitlist.activate();
+
+		this._$addSeatButton.on( 'click', this._$onClickAddSeat );
+		this._$removeSeatButton.on( 'click', this._$onClickRemoveSeat );
+
+		this._$addSeatButton.prop( 'disabled', false );
+		this._$removeSeatButton.prop( 'disabled', true );
+		this._$sheetCheckbox.checkbox( 'setEnabled', true );
+
+		pubSub.seatSelected.add( this._$onSeatSelected );
+
+	} else {
+
+		this._entityDragger.deactivate();
+		this._waitlist.deactivate();
+
+		this._$addSeatButton.off( 'click', this._$onClickAddSeat );
+		this._$removeSeatButton.off( 'click', this._$onClickRemoveSeat );
+
+		this._$addSeatButton.prop( 'disabled', true );
+		this._$removeSeatButton.prop( 'disabled', true );
+		this._$sheetCheckbox.checkbox( 'setEnabled', false );
+
+		pubSub.seatSelected.remove( this._$onSeatSelected );
+	}
+
+	this.$element.toggleClass( 'preview', !isEditMode );
 }
 
 
@@ -329,43 +374,6 @@ Editor.prototype.onSeatSelected = function( seatId ) {
 
 	var shouldDisable = !Utils.isDefAndNotNull( seatId );
 	this._$removeSeatButton.prop( 'disabled', shouldDisable );
-};
-
-
-Editor.prototype.changeMode = function() {
-
-	var isEditMode = this._$modeToggler.prop( 'checked' );
-
-	if ( isEditMode ) {
-
-		this._entityDragger.activate();
-		this._waitlist.activate();
-
-		this._$addSeatButton.on( 'click', this._$onClickAddSeat );
-		this._$removeSeatButton.on( 'click', this._$onClickRemoveSeat );
-
-		this._$addSeatButton.prop( 'disabled', false );
-		this._$removeSeatButton.prop( 'disabled', true );
-		this._$sheetCheckbox.checkbox( 'setEnabled', true );
-
-		pubSub.seatSelected.add( this._$onSeatSelected );
-
-	} else {
-
-		this._entityDragger.deactivate();
-		this._waitlist.deactivate();
-
-		this._$addSeatButton.off( 'click', this._$onClickAddSeat );
-		this._$removeSeatButton.off( 'click', this._$onClickRemoveSeat );
-
-		this._$addSeatButton.prop( 'disabled', true );
-		this._$removeSeatButton.prop( 'disabled', true );
-		this._$sheetCheckbox.checkbox( 'setEnabled', false );
-
-		pubSub.seatSelected.remove( this._$onSeatSelected );
-	}
-
-	this.$element.toggleClass( 'preview', !isEditMode );
 };
 
 
