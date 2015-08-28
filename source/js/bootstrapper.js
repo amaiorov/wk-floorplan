@@ -5,6 +5,7 @@ var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
+var FileWriter = require( 'controllers/filewriter' );
 
 var _instance;
 
@@ -14,6 +15,7 @@ var Bootstrapper = function() {
 	$( document.body ).append( frag );
 
 	var search = Search( 2 );
+	var filewriter = FileWriter();
 }
 
 Bootstrapper.prototype.load = function( opt_ssUrl ) {

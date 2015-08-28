@@ -28,6 +28,36 @@
 	height: 100%;
 	white-space: normal;
 
+	.legend {
+		background-color: rgba(255, 255, 255, 0.8);
+		border: 1px solid lightgray;
+		border-left: none;
+		border-bottom: none;
+		bottom: 0;
+		font-size: 12px;
+		left: 0;
+		width: 40%;
+		position: absolute;
+		z-index: 1;
+		.department {
+			float: left;
+			overflow: hidden;
+			padding: 10px 10px 10px 30px;
+			position: relative;
+			text-overflow: ellipsis;
+			width: 33%;
+			&:before {
+				background: #f00;
+				content: '';
+				display: block;
+				height: 10px;
+				left: 10px;
+				position: absolute;
+				top: 10px;
+				width: 10px;
+			}
+		}
+	}
 	>.floor-viewport{
 		position: relative;
 		width: 100%;

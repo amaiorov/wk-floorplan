@@ -2,6 +2,7 @@ var template = require( 'views/main.soy' );
 var employeeCollection = require( 'models/employeecollection' );
 var Utils = require( 'app/utils' );
 var Editor = require( 'controllers/editor' );
+var fileWriter = require( 'controllers/filewriter' );
 var _instance;
 
 var Search = function( searchThreshold ) {

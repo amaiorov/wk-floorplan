@@ -63,4 +63,20 @@ EmployeeCollection.prototype.getUnassigned = function() {
 }
 
 
+EmployeeCollection.prototype.createJson = function() {
+
+	var result = {};
+
+	var employees = $.each( this._employees, function( i, employee ) {
+		result[ employee.fullName ] = {
+			'seat': employee.seat ? employee.seat.id : null,
+			'x': employee.x,
+			'y': employee.y
+		}
+	} );
+
+	return result;
+}
+
+
 module.exports = Utils.createSingletonNow( _instance, EmployeeCollection, 'employeeCollection' );

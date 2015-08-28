@@ -3,7 +3,6 @@ var SeatModel = require( 'models/seat' );
 
 var _instances = {};
 
-
 var Floor = function( floorIndex ) {
 
 	this.index = floorIndex;
@@ -18,6 +17,7 @@ var Floor = function( floorIndex ) {
 
 	this.seats = {};
 	this.generateSeats( 150 );
+	Floor.floors.push( this );
 }
 
 
@@ -101,6 +101,25 @@ Floor.getSeatById = function( id ) {
 
 	return seat;
 }
+
+Floor.createJson = function() {
+
+	var result = {};
+
+	for ( var i = 0; i < Floor.floors.length; i++ ) {
+
+		var seats = $.each( Floor.floors[ i ].seats, function( i, seat ) {
+			result[ seat.id ] = {
+				'x': seat.x,
+				'y': seat.y
+			}
+		} );
+	}
+
+	return result;
+}
+
+Floor.floors = [];
 
 
 module.exports = Floor;
