@@ -13,19 +13,19 @@
 	// echo $_POST['json'];
 
 	$action = $_POST['action'];
-
+	$file = $_POST['path'] . $_POST['filename'];
 
 	switch ($action) {
 		case 'saveDefaultJson':
-			echo 'save default json';
-
-			$file = $_POST['path'] . $_POST['filename'];
+		case 'saveCustomJson':
 			file_put_contents($file, $_POST['json']);
-
 			break;
-		
+		case 'loadDefaultJson':
+		case 'loadCustomJson':
+			header('Content-Type: application/json');
+			echo json_encode(file_get_contents($file));
+			break;
 		default:
-			echo 'do something else';
-			break;
+			echo 'do something else, aka FAIL';
 	}
 ?>

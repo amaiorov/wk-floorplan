@@ -11,30 +11,50 @@ var FileWriter = function() {
 	var self = this;
 };
 
-FileWriter.prototype.postToService = function( action ) {
+FileWriter.prototype.postToService = function( action, customFilename ) {
+	var postData = {};
 	switch ( action ) {
 		case 'saveDefaultJson':
-			var floorplanData = {
+			postData = {
+				'json': JSON.stringify( {
 					'entities': employeeCollection.createJson(),
 					'seats': Floor.createJson()
-				}
-				// var entityData = employeeCollection.createJson();
-				// var floorData = Floor.createJson();
-				// console.log( ( entityData ) );
-				// console.log( ( floorData ) );
-			data = {
-				'json': JSON.stringify( floorplanData ),
+				} ),
 				'action': action,
 				'path': this._jsonPath,
 				'filename': this._defaultFile
 			};
-
+			break;
+		case 'loadDefaultJson':
+			postData = {
+				'action': action,
+				'path': this._jsonPath,
+				'filename': this._defaultFile
+			};
+			break;
+		case 'saveCustomJson':
+			postData = {
+				'json': JSON.stringify( {
+					'entities': employeeCollection.createJson(),
+					'seats': Floor.createJson()
+				} ),
+				'action': action,
+				'path': this._jsonPath,
+				'filename': customFilename + '.json'
+			};
+			break;
+		case 'loadCustomJson':
+			postData = {
+				'action': action,
+				'path': this._jsonPath,
+				'filename': customFilename + '.json'
+			};
 			break;
 		default:
 	}
-	$.post( this._serviceURL, data, function( d ) {
+
+	return $.post( this._serviceURL, postData, function( data ) {
 		// console.log( 'success' );
-		// console.log( d );
 	} );
 };
 
