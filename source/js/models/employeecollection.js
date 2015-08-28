@@ -62,7 +62,6 @@ EmployeeCollection.prototype.getUnassigned = function() {
 	return employees;
 }
 
-
 EmployeeCollection.prototype.createJson = function() {
 
 	var result = {};
@@ -77,6 +76,5 @@ EmployeeCollection.prototype.createJson = function() {
 
 	return result;
 }
-
 
 module.exports = Utils.createSingletonNow( _instance, EmployeeCollection, 'employeeCollection' );

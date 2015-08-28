@@ -1,4 +1,5 @@
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
 var Floor = require( 'controllers/floor' );
@@ -86,7 +87,7 @@ FloorViewer.prototype.init = function() {
 	$( window ).on( 'resize', this._$resize ).resize();
 
 	var $onSearchComplete = $.proxy( this.onSearchComplete, this );
-	$( window ).on( 'searchcomplete', $onSearchComplete );
+	pubSub.searchCompleted.add( $onSearchComplete );
 
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': ( this._editingRegionWidth - this._floorWidth ) / 2,
@@ -228,7 +229,7 @@ FloorViewer.prototype.updateViewportMetrics = function() {
 }
 
 
-FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY ) {
+FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY, allowInvalidPositions ) {
 
 	var floorPosition = this.getFloorPosition();
 	var floorX = floorPosition.x;
@@ -237,7 +238,7 @@ FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoor
 	var fractionX = ( viewerCoordX - floorX ) / this._floorWidth;
 	var fractionY = ( viewerCoordY - floorY ) / this._floorHeight;
 
-	if ( fractionX < 0 || fractionX > 1 || fractionY < 0 || fractionY > 1 ) {
+	if ( !allowInvalidPositions && ( fractionX < 0 || fractionX > 1 || fractionY < 0 || fractionY > 1 ) ) {
 		return {
 			x: null,
 			y: null
@@ -354,9 +355,9 @@ FloorViewer.prototype.onZoomComplete = function() {
 }
 
 
-FloorViewer.prototype.onSearchComplete = function( e ) {
+FloorViewer.prototype.onSearchComplete = function( entityModel ) {
 
-	this.focusOnPin( e.entity );
+	this.focusOnPin( entityModel );
 }
 
 

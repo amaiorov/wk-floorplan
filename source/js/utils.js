@@ -1,6 +1,11 @@
 var Utils = {};
 
 
+Utils.isDefAndNotNull = function( val ) {
+	return val != null;
+};
+
+
 Utils.lerp = function( a, b, x ) {
 	return a + x * ( b - a );
 };

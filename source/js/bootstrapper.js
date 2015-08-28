@@ -6,7 +6,7 @@ var employeeCollection = require( 'models/employeecollection' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
 var FileWriter = require( 'controllers/filewriter' );
-
+var Utils = require( 'app/utils' );
 var _instance;
 
 var Bootstrapper = function() {
@@ -41,11 +41,25 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl ) {
 			} );
 
 			Editor();
+
+			TweenMax.fromTo( $( '#main-container' ).get( 0 ), 1, {
+				'opacity': 0
+			}, {
+				'delay': 1.5,
+				'opacity': 1
+			} );
+
+			TweenMax.to( $( '#preloader' ).get( 0 ), .5, {
+				'delay': 1,
+				'opacity': 0,
+				'display': 'none'
+			} );
 		}
 	} );
 }
 
-module.exports = ( function() {
-	_instance = _instance || new Bootstrapper( arguments );
-	return _instance;
-} )();
+module.exports = Utils.createSingletonNow( _instance, Bootstrapper );
+
+
+//Google Sign-In Client ID
+//309069805210-dplnn975m84n2mjg0moqemcf8i8m2u6d.apps.googleusercontent.com

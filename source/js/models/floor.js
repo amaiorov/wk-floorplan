@@ -27,6 +27,20 @@ Floor.prototype.getSeatsTotal = function() {
 }
 
 
+Floor.prototype.getVacantSeats = function() {
+
+	var vacantSeats = [];
+
+	$.each( this.seats, function( seatId, seat ) {
+		if ( !seat.entity ) {
+			vacantSeats.push( seat );
+		}
+	} );
+
+	return vacantSeats;
+}
+
+
 Floor.prototype.addSeat = function( x, y ) {
 
 	var seatIndex = this.freeSeatIndexes.shift();
@@ -62,20 +76,6 @@ Floor.prototype.generateSeats = function( opt_amount ) {
 	}
 
 	return this.seats;
-}
-
-
-Floor.prototype.getVacantSeats = function() {
-
-	var vacantSeats = [];
-
-	$.each( this.seats, function( seatId, seat ) {
-		if ( !seat.entity ) {
-			vacantSeats.push( seat );
-		}
-	} );
-
-	return vacantSeats;
 }
 
 

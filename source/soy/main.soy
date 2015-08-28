@@ -1,5 +1,6 @@
 {namespace template autoescape="false"}
 
+
 /**
  * Home Page
  */
@@ -15,8 +16,11 @@
 				<div id="search">
 					<div class="input-group">
 						<input type="text" class="form-control" aria-label="" placeholder="Search for..." id="search-query">
-						<div class="input-group-btn">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-mode">Everything <span class="caret"></span></button>
+						<div class="dropdown input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="search-mode">
+								<span class="text">Everything</span>
+								<span class="caret"></span>
+							</button>
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
@@ -30,11 +34,15 @@
 				<div class="other-buttons">
 					<div class="admin-buttons">
 						<div class="edit-buttons">
-							<button type="button" class="btn btn-default btn-add-seat">Add Seat</button>
-							<button type="button" class="btn btn-default btn-remove-seat">Remove Seat</button>
+							<button type="button" class="btn btn-default btn-add-seat">
+								<span class="icon icon-add-seat"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-remove-seat">
+								<span class="icon icon-remove-seat"></span>
+							</button>
 							<input type="checkbox" class="checkbox checkbox-sheet">
 						</div>
-						<input id="mode-toggler" type="checkbox" checked data-on="Edit" data-off="Preview">
+						<input id="mode-toggler" type="checkbox" data-on="Edit" data-off="Preview">
 					</div>
 					<button type="button" class="btn btn-primary btn-login">Log In</button>
 				</div>
@@ -48,6 +56,9 @@
 			</div>
 		</div>
 
+	</div>
+
+	<div id="preloader">
 	</div>
 </div>
 {/template}
@@ -252,9 +263,9 @@
 			<div class="photo {$employee.type}"></div>
 			<div class="content">
 				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}
-				{if $employee.extension }<p>Extension <span class="number">{ $employee.extension }</span></p>{/if}
-				{if $employee.workEmail }<p><span>{ $employee.workEmail }</span></p>{/if}
+				{if $employee.extension }<p>Ext. <span class="number">{ $employee.extension }</span></p>{/if}
 				{if $employee.cellPhone }<p><span class="number">{ $employee.cellPhone }</span></p>{/if}
+				{if $employee.workEmail }<p><span>{ $employee.workEmail }</span></p>{/if}
 			</div>
 		</div>
 	</div>
@@ -298,12 +309,19 @@
  * Autocomplete list 
  * @param currentFloorEntities The entities array within the current floor.
  * @param otherFloorEntities The object keyed by the floor index, containing the floor's entites.
+ * @param category The current search category.
  */
 {template .AutocompleteList}
 <ul class="dropdown-menu dropdown-menu-left">
 
 {if length(keys($otherFloorEntities)) == 1 and keys($otherFloorEntities) == -1}
-	<li><h6><a>No matches found</a></h6></li>
+	<li>
+		{if $category == 'all'}
+		<h6>No matches found.</h6>
+		{else}
+		<h6>No matches found. Try a different category?</h6>
+		{/if}
+	</li>
 {else}
 	{if length($currentFloorEntities) > 0}
 	<li class="current-floor"><h6>This Floor</h6></li>

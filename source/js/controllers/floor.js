@@ -1,7 +1,9 @@
 var Utils = require( 'app/utils' );
+var pubSub = require( 'app/pubsub' );
 var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
+var employeeCollection = require( 'models/employeecollection' );
 var EmployeePin = require( 'controllers/employeepin' );
 var SeatPin = require( 'controllers/seatpin' );
 var ObjectObserver = require( 'libs/observe' ).ObjectObserver;
@@ -46,6 +48,7 @@ var Floor = function( element, viewportMetrics ) {
 
 	// listen for mouse events on pins
 	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
+	this.$element.on( 'click', '.seat-pin', $.proxy( this.onClickSeatPin, this ) );
 
 	// listen for seat models change
 	this._$onObserved = $.proxy( this.onObserved, this );
@@ -76,6 +79,7 @@ Floor.prototype.hide = function() {
 
 	this.$element.hide();
 	this.highlightEntityPin( null );
+	this.highlightSeatPin( null );
 };
 
 
@@ -137,16 +141,43 @@ Floor.prototype.removeSeatPin = function( model ) {
 Floor.prototype.highlightEntityPin = function( pinEl ) {
 
 	var $pinEl = $( pinEl );
-	var shouldActivate;
-
-	if ( !$pinEl.hasClass( 'active' ) ) {
-		shouldActivate = true;
-	}
+	var shouldActivate = !$pinEl.hasClass( 'active' );
 
 	this.$element.find( '.entity-pin' ).removeClass( 'active' );
 
 	if ( shouldActivate ) {
 		$pinEl.addClass( 'active' );
+	}
+
+	// highlight the entity's seat pin if seated
+	if ( pinEl ) {
+
+		var entityModel = employeeCollection.getByName( $pinEl.attr( 'data-id' ) );
+
+		if ( entityModel.seat ) {
+
+			var seatId = entityModel.seat.id;
+			this.highlightSeatPin( this._seats[ seatId ].$element.get( 0 ) );
+		}
+	}
+};
+
+
+Floor.prototype.highlightSeatPin = function( pinEl ) {
+
+	var $pinEl = $( pinEl );
+	var shouldActivate = !$pinEl.hasClass( 'active' );
+
+	this.$element.find( '.seat-pin' ).removeClass( 'active' );
+
+	if ( shouldActivate ) {
+		$pinEl.addClass( 'active' );
+
+		pubSub.seatSelected.dispatch( $pinEl.attr( 'data-id' ) );
+
+	} else {
+
+		pubSub.seatSelected.dispatch( null );
 	}
 };
 
@@ -263,6 +294,8 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 		var seat = new SeatPin( el, seatModel );
 		this._seats[ key ] = seat;
 
+		this.highlightSeatPin( el );
+
 		console.log( 'Seat "' + key + '" added. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
 
@@ -275,12 +308,21 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 
 		console.log( 'Seat "' + key + '" removed. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
+
+	pubSub.edited.dispatch();
 };
 
 
 Floor.prototype.onClickEntityPin = function( e ) {
 
 	this.highlightEntityPin( e.currentTarget );
+};
+
+
+Floor.prototype.onClickSeatPin = function( e ) {
+
+	this.highlightSeatPin( e.currentTarget );
+	this.highlightEntityPin( null );
 };
 
 

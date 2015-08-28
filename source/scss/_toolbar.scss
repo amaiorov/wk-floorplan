@@ -30,6 +30,30 @@
 	.admin-buttons, .edit-buttons, .btn-login{
 		@include inline-block(top);
 	}
+
+	>div, >button{
+		@include inline-block(middle !important);
+	}
+
+	>button{
+		margin-left: 20px !important;
+	}
+}
+
+.admin-buttons >div{
+	@include inline-block(middle !important);
+}
+
+.edit-buttons{
+	margin-right: 10px;
+}
+
+.btn-add-seat, .btn-remove-seat{
+
+	font-size: 30px;
+	width: 50px !important;
+	padding: 0 !important;
+    border: none !important;
 }
 
 .btn-sheet{
@@ -37,7 +61,7 @@
 
 	.checked, .unchecked{
 		@extend .icon-sheet;
-		font-size: 24px;
+		font-size: 30px;
 	}
 
 	.checked{
