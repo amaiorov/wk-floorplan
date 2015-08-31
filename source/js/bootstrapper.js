@@ -106,6 +106,8 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 		} );
 	}
 
+	Platform.performMicrotaskCheckpoint();
+
 	//
 	TweenMax.fromTo( $( '#main-container' ).get( 0 ), 1, {
 		'opacity': 0

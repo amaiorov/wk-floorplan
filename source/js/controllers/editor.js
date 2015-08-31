@@ -333,6 +333,8 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 			entityModel.seat = this._collidingSeat.model;
 		}
 	}
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 
