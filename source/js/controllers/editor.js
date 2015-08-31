@@ -23,6 +23,11 @@ var Editor = function() {
 	var floor8Employees = employeeCollection.getByFloor( 8 );
 	var unassignedEmployees = employeeCollection.getUnassigned();
 
+	// create legend
+	var departmentBucketList = Utils.arrayUnique( employeeCollection._departmentBucketList );
+	// var departmentBucketListCSS = departmentBucketList
+	console.log( employeeCollection._departmentBucketList );
+
 	var element = soy.renderAsFragment( template.Editor, {
 		floor6Employees: floor6Employees,
 		floor7Employees: floor7Employees,
@@ -30,7 +35,8 @@ var Editor = function() {
 		floor6Seats: floor6Seats,
 		floor7Seats: floor7Seats,
 		floor8Seats: floor8Seats,
-		unassignedEmployees: unassignedEmployees
+		unassignedEmployees: unassignedEmployees,
+		departmentBucketList: departmentBucketList
 	} );
 
 	this.$element = $( element );
@@ -59,10 +65,6 @@ var Editor = function() {
 	this._$onModeChanged = $.proxy( this.onModeChanged, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
-
-	// create legend
-	console.log( 'generate legend' );
-	console.log( $.unique( employeeCollection._departmentBucketList ) );
 
 	// create editor components
 	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );

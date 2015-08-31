@@ -13,7 +13,7 @@ var EmployeeCollection = function() {
 EmployeeCollection.prototype.add = function( employee ) {
 
 	this._employees.push( employee );
-	this._departmentBucketList.push( employee.departmentCSSClass );
+	this._departmentBucketList.push( employee.departmentBucket );
 }
 
 

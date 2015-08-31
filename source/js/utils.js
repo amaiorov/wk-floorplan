@@ -60,5 +60,15 @@ Utils.createSingletonNow = function( _instance, _constructor, _opt_window_instan
 	return Utils.createSingleton( _instance, _constructor, _opt_window_instance_name )();
 };
 
+Utils.arrayUnique = function( arr ) {
+	var uniq = [];
+	while ( arr.length ) {
+		var tmp = arr.pop();
+		if ( arr.indexOf( tmp ) === -1 ) {
+			uniq.push( tmp );
+		}
+	}
+	return arr = uniq.reverse();
+}
 
 module.exports = Utils;

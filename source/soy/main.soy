@@ -63,7 +63,6 @@
 </div>
 {/template}
 
-
 /**
  * Editor
  * @param floor6Employees All employees on floor 6
@@ -73,6 +72,7 @@
  * @param floor7Seats All seats on floor 7
  * @param floor8Seats All seats on floor 8
  * @param unassignedEmployees All employees who are not yet seated
+ * @param departmentBucketList All departments buckets
  */
 {template .Editor}
 <div id="editor">
@@ -80,11 +80,9 @@
 
 		<div class="floor-pane">
 
-			<div class="legend" style="">
-				<div class="department technology">Technology</div>
-				<div class="department creative">Creative</div>
-			</div>
-			
+			{call .Legend}
+				{param departmentBucketList: $departmentBucketList /}
+			{/call}
 			<div class="floor-viewport">
 
 				<div class="floor-container">
@@ -303,6 +301,20 @@
 		{/for}
 	</div>
 {/for}
+</div>
+{/template}
+
+
+/**
+ * Legend
+ * @param departmentBucketList All departments buckets
+ */
+{template .Legend}
+<div class="legend">
+
+{foreach $department in $departmentBucketList}
+	<div class="department {$department}">{$department}</div>
+{/foreach}
 </div>
 {/template}
 
