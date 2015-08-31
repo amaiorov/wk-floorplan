@@ -56,7 +56,7 @@ EntityDragger.prototype.dispose = function() {
 
 EntityDragger.prototype.onDragStart = function( e ) {
 
-	if ( e.button > 0 || !$( e.target ).hasClass( 'icon' ) ) return;
+	if ( e.button > 0 || !$( e.target ).hasClass( 'circle' ) ) return;
 
 	$( document ).on( 'mousemove', this._$onDragMove );
 	$( document ).on( 'mouseup', this._$onDragEnd );

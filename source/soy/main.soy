@@ -253,7 +253,7 @@
 <div class="employee-pin entity-pin { $employee.departmentCSSClass }"
 	style="left:{ $employee.x }; top:{ $employee.y }"
 	data-id="{ $employee.fullName }">
-	<div class="icon" data-clickable="true">
+	<div class="circle" data-clickable="true">
 		{ $employee.initials }
 	</div>
 	{if $showInfo == true}
@@ -282,7 +282,7 @@
  */
 {template .SeatPin}
 <div class="seat-pin {if $seat.entity }seated{/if}" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
-	<div class="icon" data-clickable="true"></div>
+	<div class="circle" data-clickable="true"></div>
 </div>
 {/template}
 

@@ -69,16 +69,16 @@
 			position: absolute;
 			z-index: 1;
 
-			>.icon{
+			>.circle{
 				@include scale(.3);
 			}
 
-			&[data-size="min"] .icon{
+			&[data-size="min"] .circle{
 				@include scale(.3);
 				font-size: 0;
 			}
 
-			&[data-size="max"] .icon{
+			&[data-size="max"] .circle{
 				@include scale(1);
 			}
 		}
@@ -86,13 +86,13 @@
 		.seat-pin{
 			z-index: 0;
 
-			.icon{
+			.circle{
 				margin: 13px;
 				width: 14px;
 				height: 14px;
 			}
 
-			&[data-size="min"] .icon{
+			&[data-size="min"] .circle{
 				margin: 13px;
 				width: 14px;
 				height: 14px;
@@ -103,7 +103,7 @@
 				}
 			}
 
-			&[data-size="max"] .icon{
+			&[data-size="max"] .circle{
 				margin: 0;
 				width: 40px;
 				height: 40px;
@@ -352,7 +352,7 @@
 	@include translate(-50%, -50%);
 	@include user-select(none);
 
-	>.icon{
+	>.circle{
 		position: relative;
 		z-index: 0;
 		width: 40px;
@@ -425,18 +425,18 @@
 		$color: nth($department, 2);
 
 		&:hover, &.active, &.dragging{
-			&.#{$class} .icon{
+			&.#{$class} .circle{
 				background: darken($color, 12) !important;
 			}
 		}
 
-		&.#{$class} .icon{
+		&.#{$class} .circle{
 			background: $color;
 		}
 	}
 
 	&:hover{
-		>.icon{
+		>.circle{
 			background: darken(#ccc, 12);
 		}
 	}
@@ -444,7 +444,7 @@
 	&.active{
 		z-index: 10 !important;
 
-		>.icon{
+		>.circle{
 			background: darken(#ccc, 12) !important;
 		}
 
@@ -457,7 +457,7 @@
 	}
 
 	&.dragging{
-		>.icon{
+		>.circle{
 			background: darken(#ccc, 12) !important;
 		}
 	}
@@ -474,7 +474,7 @@
 	@include translate(-50%, -50%);
 	@include user-select(none);
 
-	>.icon{
+	>.circle{
 		position: relative;
 		z-index: 0;
 		width: 40px;
@@ -501,7 +501,7 @@
 
 	&.dragging, &.active{
 
-		>.icon{
+		>.circle{
 			border: 2px solid #FF6600;
 
 			&:after{
@@ -515,7 +515,7 @@
 	}
 	
 	&.seated{
-		>.icon{
+		>.circle{
 			@include scale(1.5);
 			border: 3px solid #FF6600;
 
