@@ -95,6 +95,8 @@ Floor.prototype.addEntityPin = function( model ) {
 
 	var entity = new EmployeePin( icon, model );
 	this._entities[ model.fullName ] = entity;
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -107,6 +109,8 @@ Floor.prototype.removeEntityPin = function( model ) {
 
 	var entity = this._entities[ model.fullName ];
 	delete this._entities[ model.fullName ];
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -125,12 +129,16 @@ Floor.prototype.addSeatPin = function( floorPosition, floorSize ) {
 	var percY = y / floorSize.height * 100 + '%';
 
 	this.model.addSeat( percX, percY );
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 
 Floor.prototype.removeSeatPin = function( model ) {
 
 	this.model.removeSeat( model );
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 

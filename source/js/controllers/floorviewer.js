@@ -82,7 +82,7 @@ FloorViewer.prototype.init = function() {
 	this._$floorButtons.on( 'click', $onClickFloorButton );
 
 	var $onMouseWheel = $.proxy( this.onMouseWheel, this );
-	this.$element.on( 'mousewheel', $onMouseWheel );
+	this.$element.on( 'mousewheel wheel', $onMouseWheel );
 
 	$( window ).on( 'resize', this._$resize ).resize();
 
@@ -405,8 +405,8 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 	var floorX = floorPosition.x;
 	var floorY = floorPosition.y;
 
-	this._viewportZoomX = e.clientX - ( this._elementOffset.left - this._windowScrollLeft );
-	this._viewportZoomY = e.clientY - ( this._elementOffset.top - this._windowScrollTop );
+	this._viewportZoomX = e.originalEvent.clientX - ( this._elementOffset.left - this._windowScrollLeft );
+	this._viewportZoomY = e.originalEvent.clientY - ( this._elementOffset.top - this._windowScrollTop );
 
 	this._floorZoomFractionX = ( this._viewportZoomX - floorX ) / this._floorWidth;
 	this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
@@ -417,7 +417,7 @@ FloorViewer.prototype.onMouseWheel = function( e ) {
 	var scrollTop = scroller.scrollTop;
 	var scrollHeight = scroller.scrollHeight - this._$mousewheelScroller.height();
 
-	var delta = e.originalEvent.wheelDelta || -e.originalEvent.detail;
+	var delta = e.originalEvent.wheelDelta || -e.originalEvent.detail || -e.originalEvent.deltaY;
 
 	var hitTop = ( scrollTop === 0 && delta > 0 );
 	var hitBottom = ( scrollHeight - scrollTop === 0 && delta < 0 );
