@@ -16,7 +16,7 @@ var Floor = function( floorIndex ) {
 	}
 
 	this.seats = {};
-	this.generateSeats( 150 );
+
 	Floor.floors.push( this );
 }
 
@@ -41,7 +41,7 @@ Floor.prototype.getVacantSeats = function() {
 }
 
 
-Floor.prototype.addSeat = function( x, y ) {
+Floor.prototype.addSeat = function( x, y, opt_floorIndex, opt_seatIndex ) {
 
 	var seatIndex = this.freeSeatIndexes.shift();
 	this.usedSeatIndexes.push( seatIndex );
@@ -102,6 +102,17 @@ Floor.getSeatById = function( id ) {
 	return seat;
 }
 
+
+Floor.registerSeat = function( id, x, y ) {
+
+	var floorIndex = id.charAt( 1 );
+	var seatIndex = id.substring( 3, id.length );
+
+	var floor = Floor.getByIndex( floorIndex );
+	floor.addSeat( x, y, floorIndex, seatIndex );
+}
+
+
 Floor.createJson = function() {
 
 	var result = {};
@@ -118,6 +129,7 @@ Floor.createJson = function() {
 
 	return result;
 }
+
 
 Floor.floors = [];
 

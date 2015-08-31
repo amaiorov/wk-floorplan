@@ -6,7 +6,7 @@ var td = require( 'throttle-debounce' );
 
 var _instance;
 
-var FileWriter = function() {
+var FileHandler = function() {
 
 	this._jsonPath = './json/';
 	this._defaultFile = 'default.json';
@@ -18,7 +18,7 @@ var FileWriter = function() {
 };
 
 
-FileWriter.prototype.postToService = function( action, customFilename ) {
+FileHandler.prototype.postToService = function( action, customFilename, opt_callback ) {
 
 	var postData = {};
 
@@ -63,18 +63,23 @@ FileWriter.prototype.postToService = function( action, customFilename ) {
 	}
 
 	return $.post( this._serviceURL, postData, function( data ) {
-		console.log( 'save success!' );
+
+		if ( opt_callback ) {
+			opt_callback( data );
+		}
+
+		console.log( action + ' success!' );
 	} );
 };
 
 
-FileWriter.prototype.onEdited = function() {
+FileHandler.prototype.onEdited = function() {
 
 	this.postToService( 'saveDefaultJson' );
 }
 
 
-FileWriter.prototype.onModeChanged = function( isEditMode ) {
+FileHandler.prototype.onModeChanged = function( isEditMode ) {
 
 	if ( isEditMode ) {
 
@@ -87,4 +92,4 @@ FileWriter.prototype.onModeChanged = function( isEditMode ) {
 }
 
 
-module.exports = Utils.createSingleton( _instance, FileWriter, 'filewriter' );
+module.exports = Utils.createSingleton( _instance, FileHandler, 'filehandler' );

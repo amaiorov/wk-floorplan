@@ -6,7 +6,6 @@ var Employee = function( props ) {
 	this.firstName = props[ 'First' ];
 	this.lastName = props[ 'Last' ];
 	this.extension = props[ 'Ext.' ];
-	this.floorIndex = props[ 'Floor' ];
 	this.department = props[ 'Department' ];
 	this.departmentCSSClass = props[ 'Department2' ].toLowerCase().split( ' ' ).join( '-' );
 	this.mailbox = props[ 'Desk#/Mailbox#' ];
@@ -16,9 +15,10 @@ var Employee = function( props ) {
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
 	this.type = this.getType( props );
-	this.seat = props[ 'Seat' ];
-	this.x = props[ 'X' ];
-	this.y = props[ 'Y' ];
+	this.seat = null;
+	this.x = null;
+	this.y = null;
+	this.floorIndex = props[ 'Floor' ] || null;
 	this.isAssigned = this.updateAssignedState();
 
 	this._$onObserved = $.proxy( this.onObserved, this );
@@ -47,7 +47,7 @@ Employee.prototype.getType = function( props ) {
 
 Employee.prototype.updateAssignedState = function() {
 
-	return ( typeof this.x === 'string' && typeof this.y === 'string' && $.isNumeric( this.floorIndex ) );
+	return ( typeof this.x === 'string' && typeof this.y === 'string' );
 }
 
 

@@ -25,7 +25,6 @@ var Floor = function( element, viewportMetrics ) {
 	// create entities
 	var seats = this._seats = {};
 	var entities = this._entities = {};
-	var vacantSeats = this.model.getVacantSeats();
 
 	$.each( this.$element.find( '.seat-pin' ), $.proxy( function( i, el ) {
 
@@ -40,9 +39,6 @@ var Floor = function( element, viewportMetrics ) {
 		var entityId = el.getAttribute( 'data-id' );
 		var entity = new EmployeePin( el );
 		entities[ entityId ] = entity;
-
-		var seat = vacantSeats.shift();
-		entity.model.seat = seat;
 
 	}, this ) );
 

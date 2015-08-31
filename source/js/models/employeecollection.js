@@ -70,7 +70,8 @@ EmployeeCollection.prototype.createJson = function() {
 		result[ employee.fullName ] = {
 			'seat': employee.seat ? employee.seat.id : null,
 			'x': employee.x,
-			'y': employee.y
+			'y': employee.y,
+			'floorIndex': employee.floorIndex
 		}
 	} );
 

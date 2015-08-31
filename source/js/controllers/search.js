@@ -3,13 +3,12 @@ var employeeCollection = require( 'models/employeecollection' );
 var Utils = require( 'app/utils' );
 var pubSub = require( 'app/pubsub' );
 var Editor = require( 'controllers/editor' );
-var fileWriter = require( 'controllers/filewriter' );
 var _instance;
 
 
-var Search = function( searchThreshold ) {
+var Search = function() {
 
-	this._threshold = searchThreshold;
+	this._threshold = 2;
 	this._employees = employeeCollection.getAll();
 	this._searchField = document.getElementById( 'search-query' );
 	this._autocompleteList = document.getElementById( 'autocomplete-list' );
@@ -160,7 +159,7 @@ Search.prototype.typeHandler = function( evt ) {
 		$.each( allEntities, function( i, entity ) {
 			if ( entity.floorIndex === currentFloorIndex ) {
 				_currentFloorEntities.push( entity );
-			} else {
+			} else if ( entity.floorIndex ) {
 				_otherFloorEntities[ entity.floorIndex ] = _otherFloorEntities[ entity.floorIndex ] || [];
 				_otherFloorEntities[ entity.floorIndex ].push( entity );
 			}
