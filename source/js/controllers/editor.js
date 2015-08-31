@@ -238,38 +238,39 @@ Editor.prototype.onEntityDragMove = function( x, y, $entityPin, entityModel ) {
 		entityModel.y = entityY;
 	}
 
-	if ( !this._quadTree ) {
-		return;
-	}
+	if ( this._quadTree ) {
 
-	var seats = this._quadTree.retrieve( {
-		x: x,
-		y: y
-	} );
+		var seats = this._quadTree.retrieve( {
+			x: x,
+			y: y
+		} );
 
-	this._collidingSeat = $.grep( seats, function( seat ) {
+		this._collidingSeat = $.grep( seats, function( seat ) {
 
-		$( seat.el ).toggleClass( 'active', false );
+			$( seat.el ).toggleClass( 'active', false );
 
-		var dx = x - seat.x;
-		var dy = y - seat.y;
-		var drad = SeatModel.RADIUS + SeatModel.RADIUS;
+			var dx = x - seat.x;
+			var dy = y - seat.y;
+			var drad = SeatModel.RADIUS + SeatModel.RADIUS;
 
-		var isColliding = ( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) ) < Math.pow( drad, 2 );
+			var isColliding = ( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) ) < Math.pow( drad, 2 );
 
-		if ( !isColliding && entityModel === seat.model.entity ) {
-			entityModel.seat = null;
-			seat.model.entity = null;
+			if ( !isColliding && entityModel === seat.model.entity ) {
+				entityModel.seat = null;
+				seat.model.entity = null;
+			}
+
+			return isColliding;
+		} )[ 0 ];
+
+		if ( this._collidingSeat ) {
+			$( this._collidingSeat.el ).toggleClass( 'active', true );
 		}
 
-		return isColliding;
-	} )[ 0 ];
-
-	if ( this._collidingSeat ) {
-		$( this._collidingSeat.el ).toggleClass( 'active', true );
+		entityModel.seat = null;
 	}
 
-	entityModel.seat = null;
+	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -344,6 +345,8 @@ Editor.prototype.onClickAddSeat = function( e ) {
 		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
 
 	this.floorViewer.updateIconSize();
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -354,6 +357,8 @@ Editor.prototype.onClickRemoveSeat = function( e ) {
 	this.floorViewer.currentFloor.removeSeatPin( seatModel );
 
 	this.onSeatSelected( null );
+
+	Platform.performMicrotaskCheckpoint();
 };
 
 

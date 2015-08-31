@@ -95,8 +95,6 @@ Floor.prototype.addEntityPin = function( model ) {
 
 	var entity = new EmployeePin( icon, model );
 	this._entities[ model.fullName ] = entity;
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -109,8 +107,6 @@ Floor.prototype.removeEntityPin = function( model ) {
 
 	var entity = this._entities[ model.fullName ];
 	delete this._entities[ model.fullName ];
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
