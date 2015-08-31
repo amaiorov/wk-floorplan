@@ -16,6 +16,9 @@ var EntityDragger = function( $element, $entityContainer, _onDragStartCallback, 
 	this._iconOffsetX = 0;
 	this._iconOffsetY = 0;
 
+	this._startX = 0;
+	this._startY = 0;
+
 	this._hasDragged = false;
 
 	this._$onDragStart = $.proxy( this.onDragStart, this );
@@ -58,6 +61,9 @@ EntityDragger.prototype.onDragStart = function( e ) {
 
 	if ( e.button > 0 || !$( e.target ).hasClass( 'circle' ) ) return;
 
+	this._startX = e.clientX;
+	this._startY = e.clientY;
+
 	$( document ).on( 'mousemove', this._$onDragMove );
 	$( document ).on( 'mouseup', this._$onDragEnd );
 
@@ -72,6 +78,17 @@ EntityDragger.prototype.onDragStart = function( e ) {
 
 
 EntityDragger.prototype.onDragMove = function( e ) {
+
+	if ( this._startX && this._startY ) {
+		if ( e.clientX === this._startX && e.clientY === this._startY ) {
+
+			return;
+
+		} else {
+
+			this._startX = this._startY = null;
+		}
+	}
 
 	if ( !this._hasDragged ) {
 
