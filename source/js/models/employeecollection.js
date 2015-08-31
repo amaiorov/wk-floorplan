@@ -6,12 +6,14 @@ var _instance;
 var EmployeeCollection = function() {
 
 	this._employees = [];
+	this._departmentBucketList = [];
 }
 
 
 EmployeeCollection.prototype.add = function( employee ) {
 
 	this._employees.push( employee );
+	this._departmentBucketList.push( employee.departmentCSSClass );
 }
 
 

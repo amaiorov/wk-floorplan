@@ -60,6 +60,10 @@ var Editor = function() {
 	this._$changeMode = $.proxy( this.changeMode, this );
 	this._$resize = $.proxy( this.resize, this );
 
+	// create legend
+	console.log( 'generate legend' );
+	console.log( $.unique( employeeCollection._departmentBucketList ) );
+
 	// create editor components
 	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );
 
