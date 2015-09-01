@@ -46,16 +46,26 @@
 			position: relative;
 			text-overflow: ellipsis;
 			width: 33%;
+			white-space: nowrap;
 			&:before {
-				background: #f00;
+				background: #ccc;
+				border-radius: 100%;
 				content: '';
 				display: block;
-				height: 10px;
+				height: 12px;
 				left: 10px;
 				position: absolute;
 				top: 10px;
-				width: 10px;
+				width: 12px;
 			}
+			@each $department in $departments {
+				$class: nth($department, 1);
+				$color: nth($department, 2);
+				&.#{$class}:before {
+					background: $color !important;
+				}
+			}
+
 		}
 	}
 	>.floor-viewport{
@@ -405,20 +415,6 @@
 		}
 	}
 
-	$departments:
-		account-services #FF58CE,
-		business-services #58FFB1,
-		creative #FFA658,
-		creative-services #F6CC90,
-		digital #6158FF,
-		executive #F61A1A,
-		it #EEFF58,
-		joint #1AF637,
-		media-buying #716CBF,
-		media-planning #9C97EE,
-		production #E86D6D,
-		project-management #C32997,
-		technology #2953C3;
 
 	@each $department in $departments {
 		$class: nth($department, 1);

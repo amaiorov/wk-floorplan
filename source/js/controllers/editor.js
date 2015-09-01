@@ -24,7 +24,10 @@ var Editor = function() {
 	var unassignedEmployees = employeeCollection.getUnassigned();
 
 	// create legend
-	var departmentBucketList = Utils.arrayUnique( employeeCollection._departmentBucketList );
+	var departmentBucketList = Utils.arrayUnique( employeeCollection._departmentBucketList ).sort();
+	var departmentBucketListCSS = Utils.arrayTransformDupe( departmentBucketList, function( el ) {
+		return el.toLowerCase().split( ' ' ).join( '-' );
+	} ).sort();
 	// var departmentBucketListCSS = departmentBucketList
 	console.log( employeeCollection._departmentBucketList );
 
@@ -36,7 +39,8 @@ var Editor = function() {
 		floor7Seats: floor7Seats,
 		floor8Seats: floor8Seats,
 		unassignedEmployees: unassignedEmployees,
-		departmentBucketList: departmentBucketList
+		departmentBucketList: departmentBucketList,
+		departmentBucketListCSS: departmentBucketListCSS
 	} );
 
 	this.$element = $( element );
