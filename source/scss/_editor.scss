@@ -273,7 +273,7 @@
 			min-width: 250px;
 			height: 100%;
 			white-space: normal;
-			padding: 30px 20px 0 20px;
+			padding: 30px 10px 0 20px;
 			@include box-sizing(border-box);
 
 			>h3{
@@ -289,7 +289,7 @@
 			>.waitlist-container{
 				position: relative;
 				width: 100%;
-				height: calc(100% - 40px);
+				height: calc(100% - 50px);
 				overflow: hidden;
 
 				>.waitlist{
@@ -313,8 +313,7 @@
 					height: 300px;
 					border-top: 1px dashed lightgray;
 					@include translateY(100%);
-					opacity: 0;
-					@include transition(transform .3s $easeOutCubic, opacity .3s $easeOutCubic);
+					@include transition(transform .3s ease-in-out);
 					@include user-select(text);
 
 					h6{
@@ -340,11 +339,10 @@
 
 				&.show-info{
 					>.waitlist{
-						height: calc(100% - 300px);
+						height: calc(100% - 310px);
 					}
 
 					>.info-container{
-						opacity: 1;
 						@include translateY(0);
 					}
 				}

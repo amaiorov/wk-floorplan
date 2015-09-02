@@ -104,6 +104,14 @@ FloorViewer.prototype.init = function() {
 }
 
 
+FloorViewer.prototype.reset = function() {
+
+	$.each( this._floors, function( key, floor ) {
+		floor.reset();
+	} );
+}
+
+
 FloorViewer.prototype.getFloorPosition = function() {
 
 	return {

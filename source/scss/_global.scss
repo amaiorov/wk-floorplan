@@ -98,6 +98,40 @@ h1,h2,h3,h4,h5,h6,b{
   @include font-smoothing;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border: none;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c2c2c2;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #9f9f9f;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .number{
   font-family: $font_condensed;
   letter-spacing: 0.05em;

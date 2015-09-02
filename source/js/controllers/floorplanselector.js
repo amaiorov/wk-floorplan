@@ -1,6 +1,7 @@
 var Utils = require( 'app/utils' );
 var pubSub = require( 'app/pubsub' );
 var template = require( 'views/main.soy' );
+var FileHandler = require( 'controllers/filehandler' );
 
 var _instance;
 
@@ -15,9 +16,7 @@ var FloorPlanSelector = function() {
 
 	pubSub.modeChanged.add( $.proxy( this.onModeChanged, this ) );
 
-	this.currentFileName = 'default.json';
-
-	this.update( this.currentFileName );
+	this.update( 'default.json' );
 }
 
 
@@ -36,7 +35,7 @@ FloorPlanSelector.prototype.update = function( fileName ) {
 	var frag = soy.renderAsFragment( template.FloorPlanDropdown, tempData );
 	this.$el.empty().append( frag );
 
-	this.currentFileName = fileName;
+	pubSub.fileChanged.dispatch( fileName );
 };
 
 
@@ -51,9 +50,10 @@ FloorPlanSelector.prototype.onClickItem = function( e ) {
 	} else {
 
 		var fileName = $target.attr( 'data-file-name' );
-		this.currentFileName = fileName;
-
 		this.update( fileName );
+
+		var fileHandler = FileHandler();
+		fileHandler.postToService( 'loadCustomJson', fileName, $.proxy( this.onJsonLoad, this ) );
 	}
 };
 
@@ -70,14 +70,19 @@ FloorPlanSelector.prototype.onConfirmModal = function( e ) {
 	var $modal = $( '#new-floorplan-modal' ).modal( 'hide' );
 	var floorPlanName = $modal.find( 'input' ).val() || $.now();
 	var fileName = floorPlanName.replace( /\s+/g, '-' ).toLowerCase() + '.json';
-
-	this.update( fileName );
 };
 
 
 FloorPlanSelector.prototype.onModeChanged = function( isEditMode ) {
 
 	this.$el.toggleClass( 'admin', isEditMode );
+};
+
+
+FloorPlanSelector.prototype.onJsonLoad = function( data ) {
+
+	var json = JSON.parse( data );
+	pubSub.jsonLoaded.dispatch( json );
 };
 
 

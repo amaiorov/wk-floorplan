@@ -79,6 +79,22 @@ Floor.prototype.hide = function() {
 };
 
 
+Floor.prototype.reset = function() {
+
+	// remove all entity pins
+	for ( var key in this._entities ) {
+		var entity = this._entities[ key ].model;
+		this.removeEntityPin( entity );
+	}
+
+	// remove all seat pins
+	for ( var key in this._seats ) {
+		var seat = this._seats[ key ].model;
+		this.removeSeatPin( seat );
+	}
+};
+
+
 Floor.prototype.addEntityPin = function( model ) {
 
 	var icon = soy.renderAsFragment( template.EmployeePin, {

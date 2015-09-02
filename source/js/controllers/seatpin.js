@@ -11,10 +11,9 @@ inherits( SeatPin, Pin );
 
 SeatPin.prototype.dispose = function() {
 
-	Pin.prototype.dispose.call( this );
-
 	this.model.dispose();
-	this.model = null;
+
+	Pin.prototype.dispose.call( this );
 };
 
 

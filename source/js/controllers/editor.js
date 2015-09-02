@@ -29,8 +29,6 @@ var Editor = function() {
 	var departmentBucketListCSS = Utils.arrayTransformDupe( departmentBucketList, function( el ) {
 		return el.toLowerCase().split( ' ' ).join( '-' );
 	} ).sort();
-	// var departmentBucketListCSS = departmentBucketList
-	console.log( employeeCollection._departmentBucketList );
 
 	var element = soy.renderAsFragment( template.Editor, {
 		floor6Employees: floor6Employees,
@@ -69,6 +67,7 @@ var Editor = function() {
 	this._$onSeatSelected = $.proxy( this.onSeatSelected, this );
 	this._$onModeChanged = $.proxy( this.onModeChanged, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
+	this._$reset = $.proxy( this.reset, this );
 	this._$resize = $.proxy( this.resize, this );
 
 	// create editor components
@@ -109,10 +108,46 @@ var Editor = function() {
 	pubSub.editorSplitUpdated.add( this._$onSplitUpdated );
 	pubSub.editorSplitEnded.add( this._$onSplitEnded );
 	pubSub.modeChanged.add( this._$onModeChanged );
+	pubSub.jsonLoaded.add( this._$reset );
 
 	//
 	this._$changeMode();
 	this._$onSeatSelected( null );
+}
+
+
+Editor.prototype.reset = function( opt_json ) {
+
+	this.floorViewer.reset();
+
+	/*
+	var json = opt_json;
+
+	if ( json ) {
+
+		$.each( json[ 'seats' ], function( id, seat ) {
+			FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
+		} );
+
+		var entities = employeeCollection.getAll();
+
+		$.each( entities, function( i, entity ) {
+			var entityData = json[ 'entities' ][ entity.fullName ];
+			entity.x = entityData[ 'x' ];
+			entity.y = entityData[ 'y' ];
+			entity.floorIndex = entityData[ 'floorIndex' ];
+
+			var seatId = entityData[ 'seat' ];
+
+			if ( seatId ) {
+				var seat = FloorModel.getSeatById( seatId );
+				entity.seat = seat;
+			}
+		} );
+	}
+	*/
+
+	Platform.performMicrotaskCheckpoint();
 }
 
 
@@ -358,8 +393,6 @@ Editor.prototype.onClickAddSeat = function( e ) {
 		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
 
 	this.floorViewer.updateIconSize();
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -370,8 +403,6 @@ Editor.prototype.onClickRemoveSeat = function( e ) {
 	this.floorViewer.currentFloor.removeSeatPin( seatModel );
 
 	this.onSeatSelected( null );
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -397,4 +428,4 @@ Editor.prototype.onSeatSelected = function( seatId ) {
 };
 
 
-module.exports = Utils.createSingleton( _instance, Editor );
+module.exports = Utils.createSingleton( _instance, Editor, 'editor' );

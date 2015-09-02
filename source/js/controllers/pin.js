@@ -22,6 +22,8 @@ Pin.prototype.dispose = function() {
 
 	this.$element.remove();
 	this.$element = null;
+
+	this.model = null;
 };
 
 
