@@ -95,7 +95,6 @@
 </div>
 {/template}
 
-
 /**
  * Editor
  * @param floor6Employees All employees on floor 6
@@ -105,6 +104,8 @@
  * @param floor7Seats All seats on floor 7
  * @param floor8Seats All seats on floor 8
  * @param unassignedEmployees All employees who are not yet seated
+ * @param departmentBucketList All departments buckets
+ * @param departmentBucketListCSS All departments buckets in CSS class format
  */
 {template .Editor}
 <div id="editor">
@@ -112,11 +113,10 @@
 
 		<div class="floor-pane">
 
-			<div class="legend" style="">
-				<div class="department technology">Technology</div>
-				<div class="department creative">Creative</div>
-			</div>
-			
+			{call .Legend}
+				{param departmentBucketList: $departmentBucketList /}
+				{param departmentBucketListCSS: $departmentBucketListCSS /}
+			{/call}
 			<div class="floor-viewport">
 
 				<div class="floor-container">
@@ -363,6 +363,20 @@
 		{/for}
 	</div>
 {/for}
+</div>
+{/template}
+
+
+/**
+ * Legend
+ * @param departmentBucketList All departments buckets
+ * @param departmentBucketListCSS CSS class names for above
+ */
+{template .Legend}
+<div class="legend">
+{foreach $department in $departmentBucketList}
+	<div class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</div>
+{/foreach}
 </div>
 {/template}
 

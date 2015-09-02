@@ -7,8 +7,8 @@
 @import "icons";
 
 // --- Global vars ---
-$min_width: 640px;
-$min_height: 480px;
+$min_width: 800px;
+$min_height: 600px;
 
 $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 $easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -16,6 +16,21 @@ $easeOutSine: cubic-bezier(0.39, 0.575, 0.565, 1);
 $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
 
 $color_blue: #337ab7;
+
+$departments:
+  account-services #FF58CE,
+  business-services #58FFB1,
+  creative #FFA658,
+  creative-services #F6CC90,
+  digital #6158FF,
+  executive #F61A1A,
+  it #EEFF58,
+  joint #1AF637,
+  media-buying #716CBF,
+  media-planning #9C97EE,
+  production #E86D6D,
+  project-management #C32997,
+  tech #2953C3;
 
 // -- Global Mixins --
 @mixin absoluteTopLeft() {

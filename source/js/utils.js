@@ -61,4 +61,25 @@ Utils.createSingletonNow = function( _instance, _constructor, _opt_window_instan
 };
 
 
+Utils.arrayUnique = function( arr ) {
+	var uniq = [];
+	while ( arr.length ) {
+		var tmp = arr.pop();
+		if ( arr.indexOf( tmp ) === -1 ) {
+			uniq.push( tmp );
+		}
+	}
+	return arr = uniq.reverse();
+};
+
+
+Utils.arrayTransformDupe = function( arr, fn ) {
+	var newArray = [];
+	for ( var i = 0; i < arr.length; i++ ) {
+		newArray.push( fn( arr[ i ] ) );
+	}
+	return newArray
+}
+
+
 module.exports = Utils;
