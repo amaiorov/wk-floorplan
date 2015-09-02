@@ -1,15 +1,16 @@
-var employeeCollection = require( 'models/employeecollection' );
 var pubSub = require( 'app/pubsub' );
 var Utils = require( 'app/utils' );
+var employeeCollection = require( 'models/employeecollection' );
 var Floor = require( 'models/floor' );
+var FloorPlanSelector = require( 'controllers/floorplanselector' );
 var td = require( 'throttle-debounce' );
 
 var _instance;
 
 var FileHandler = function() {
 
+	this.defaultFile = 'default.json';
 	this._jsonPath = './json/';
-	this._defaultFile = 'default.json';
 	this._serviceURL = './service.php';
 
 	this._$debounceEdited = td.debounce( 1000, $.proxy( this.onEdited, this ) );
@@ -31,14 +32,14 @@ FileHandler.prototype.postToService = function( action, customFilename, opt_call
 				} ),
 				'action': action,
 				'path': this._jsonPath,
-				'filename': this._defaultFile
+				'filename': this.defaultFile
 			};
 			break;
 		case 'loadDefaultJson':
 			postData = {
 				'action': action,
 				'path': this._jsonPath,
-				'filename': this._defaultFile
+				'filename': this.defaultFile
 			};
 			break;
 		case 'saveCustomJson':
@@ -49,14 +50,14 @@ FileHandler.prototype.postToService = function( action, customFilename, opt_call
 				} ),
 				'action': action,
 				'path': this._jsonPath,
-				'filename': customFilename + '.json'
+				'filename': customFilename
 			};
 			break;
 		case 'loadCustomJson':
 			postData = {
 				'action': action,
 				'path': this._jsonPath,
-				'filename': customFilename + '.json'
+				'filename': customFilename
 			};
 			break;
 		default:
@@ -75,7 +76,10 @@ FileHandler.prototype.postToService = function( action, customFilename, opt_call
 
 FileHandler.prototype.onEdited = function() {
 
-	this.postToService( 'saveDefaultJson' );
+	var floorPlanSelector = FloorPlanSelector();
+	var fileName = floorPlanSelector.currentFileName || this.defaultFile;
+
+	this.postToService( 'saveCustomJson', fileName );
 }
 
 

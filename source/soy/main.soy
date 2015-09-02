@@ -1,5 +1,31 @@
 {namespace template autoescape="false"}
 
+/**
+ * Main
+ */
+{template .Main}
+	{call .Home}{/call}
+
+	<div class="modal fade" id="new-floorplan-modal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Pick a name for the new floor plan</h4>
+	      </div>
+	      <div class="modal-body">
+			<form>
+				<input type="text" class="form-control">
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary">Confirm</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{/template}
+
 
 /**
  * Home Page
@@ -31,8 +57,11 @@
 					</div>
 					<div id="autocomplete-list"></div>
 				</div>
+
 				<div class="other-buttons">
+
 					<div class="admin-buttons">
+
 						<div class="edit-buttons">
 							<button type="button" class="btn btn-default btn-add-seat">
 								<span class="icon icon-add-seat"></span>
@@ -42,9 +71,13 @@
 							</button>
 							<input type="checkbox" class="checkbox checkbox-sheet">
 						</div>
+
 						<input id="mode-toggler" type="checkbox" data-on="Edit" data-off="Preview">
+
 					</div>
-					<button type="button" class="btn btn-primary btn-login">Log In</button>
+
+					<div id="floorplan-selector"></div>
+
 				</div>
 
 			</div>
@@ -55,7 +88,6 @@
 				<table id="sheet" class="table table-condensed table-striped"></table>
 			</div>
 		</div>
-
 	</div>
 
 	<div id="preloader">
@@ -191,6 +223,33 @@
 
 
 /**
+ * Floor Plan Dropdown
+ * The floor plan dropdown.
+ * @param currentName The current floor plan name.
+ * @param files The floor plan files.
+ */
+{template .FloorPlanDropdown}
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="text">{ $currentName }</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
+  	{foreach $name in keys($files)}
+  	<li><a data-file-name="{ $files[$name] }">{ $name }</a></li>
+  	{/foreach}
+    <li>
+    	<a class="new" data-toggle="modal" data-target="#new-floorplan-modal">
+    		<span class="icon icon-plus"></span>
+    		New Floor Plan
+    	</a>
+    </li>
+  </ul>
+</div>
+{/template}
+
+
+/**
  * The unassigned employees on waitlist
  * @param employees The unassigned employees' models
  */
@@ -274,6 +333,7 @@
 	{/if}
 </div>
 {/template}
+
 
 /**
  * Seat pin

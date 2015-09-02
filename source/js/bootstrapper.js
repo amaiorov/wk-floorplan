@@ -12,7 +12,7 @@ var _instance;
 
 var Bootstrapper = function() {
 
-	var frag = soy.renderAsFragment( template.Home );
+	var frag = soy.renderAsFragment( template.Main );
 	$( document.body ).append( frag );
 
 	var search = Search();
