@@ -2,6 +2,7 @@ var Utils = require( 'app/utils' );
 var pubSub = require( 'app/pubsub' );
 var template = require( 'views/main.soy' );
 var Waitlist = require( 'controllers/waitlist' );
+var FloorPlanSelector = require( 'controllers/floorplanselector' );
 var EntityDragger = require( 'controllers/entitydragger' );
 var FloorViewer = require( 'controllers/floorviewer' );
 var FloorModel = require( 'models/floor' );
@@ -69,6 +70,8 @@ var Editor = function() {
 	this._$resize = $.proxy( this.resize, this );
 
 	// create editor components
+	this.floorPlanSelector = FloorPlanSelector();
+
 	this._waitlist = new Waitlist( this._$waitlistPane, this._metrics );
 
 	var $floorViewport = this.$element.find( '.floor-viewport' );
