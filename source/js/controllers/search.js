@@ -8,7 +8,7 @@ var _instance;
 
 var Search = function() {
 
-	this._threshold = 2;
+	this._threshold = 1;
 	this._employees = employeeCollection.getAll();
 	this._searchField = document.getElementById( 'search-query' );
 	this._autocompleteList = document.getElementById( 'autocomplete-list' );
@@ -102,6 +102,10 @@ Search.prototype.getMatchedItems = function() {
 				}
 				break;
 
+				// case 'departments':
+				// console.log( 'dept search' );
+				// break;
+
 			default:
 				break;
 		}
@@ -110,7 +114,8 @@ Search.prototype.getMatchedItems = function() {
 			fullNameIndex = employee.fullName.toLowerCase().indexOf( query.toLowerCase() ),
 			departmentIndex = employee.department.toLowerCase().indexOf( query.toLowerCase() );
 
-		if ( fullNameIndex > -1 || departmentIndex > -1 ) {
+		// match in department for departemns search or in full name and deaprtment for others
+		if ( ( this._category !== 'departments' && fullNameIndex > -1 || departmentIndex > -1 ) || this._category === 'departments' && departmentIndex > -1 ) {
 
 			// create tmp object to store matched entity
 			for ( var prop in employee ) {
@@ -149,7 +154,7 @@ Search.prototype.hideAutocompleteList = function() {
 };
 
 Search.prototype.typeHandler = function( evt ) {
-	if ( evt.target.value.length >= 2 ) {
+	if ( evt.target.value.length >= this._threshold ) {
 		var allEntities = this.getMatchedItems();
 		_currentFloorEntities = [],
 			_otherFloorEntities = {},
@@ -175,10 +180,12 @@ Search.prototype.typeHandler = function( evt ) {
 
 		if ( evt.which === 38 || evt.which === 40 ) {
 			this.keyboardNav( evt.which );
+		} else if ( evt.which === 27 ) {
+			this.hideAutocompleteList();
+
 		}
 
 	} else {
-
 		this.hideAutocompleteList();
 	}
 };

@@ -23,13 +23,11 @@ var Editor = function() {
 	var floor8Employees = employeeCollection.getByFloor( 8 );
 	var unassignedEmployees = employeeCollection.getUnassigned();
 
-	// create legend
+	// create arrays for department buckets
 	var departmentBucketList = Utils.arrayUnique( employeeCollection._departmentBucketList ).sort();
 	var departmentBucketListCSS = Utils.arrayTransformDupe( departmentBucketList, function( el ) {
 		return el.toLowerCase().split( ' ' ).join( '-' );
 	} ).sort();
-	// var departmentBucketListCSS = departmentBucketList
-	console.log( employeeCollection._departmentBucketList );
 
 	var element = soy.renderAsFragment( template.Editor, {
 		floor6Employees: floor6Employees,

@@ -18,19 +18,19 @@ $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
 $color_blue: #337ab7;
 
 $departments:
-  account-services #FF58CE,
-  business-services #58FFB1,
-  creative #FFA658,
-  creative-services #F6CC90,
-  digital #6158FF,
-  executive #F61A1A,
+  account-services #3e606f,
+  business-services #91aa9d,
+  creative #666444,
+  creative-services #aba76f,
+  digital #5cbdab,
+  executive #ffdc00,
   it #EEFF58,
-  joint #1AF637,
-  media-buying #716CBF,
-  media-planning #9C97EE,
+  joint #f2ece4,
+  media-buying #590303,
+  media-planning #b80000,
   production #E86D6D,
-  project-management #C32997,
-  tech #2953C3;
+  project-management #d1dbbd,
+  tech #8ad8b3;
 
 // -- Global Mixins --
 @mixin absoluteTopLeft() {

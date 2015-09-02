@@ -24,6 +24,7 @@
 							<ul class="dropdown-menu dropdown-menu-right">
 								<li><a href="#" data-value="all">Everything</a></li>
 								<li><a href="#" data-value="people">People</a></li>
+								<li><a href="#" data-value="departments">Departments</a></li>
 								<li><a href="#" data-value="rooms">Rooms</a></li>
 								<li><a href="#" data-value="printers">Printers</a></li>
 							</ul>
@@ -313,11 +314,11 @@
  * @param departmentBucketListCSS CSS class names for above
  */
 {template .Legend}
-<div class="legend">
+<ul class="legend">
 {foreach $department in $departmentBucketList}
-	<div class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</div>
+	<li class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</li>
 {/foreach}
-</div>
+</ul>
 {/template}
 
 
