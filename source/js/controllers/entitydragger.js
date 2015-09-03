@@ -49,9 +49,9 @@ EntityDragger.prototype.dispose = function() {
 
 	this.deactivate();
 
+	this._entityModel = null;
 	this._$element = null;
 	this._$entityContainer = null;
-	this._entityModel = null;
 	this._$actualEntityIcon = null;
 	this._$draggerEntityIcon = null;
 };

@@ -9,16 +9,25 @@ var Pin = function( element, model ) {
 	// assign model
 	this.model = model;
 
-	this._$onObserved = $.proxy( this.onObserved, this );
+	this._isDisposed = false;
 
 	this._observer = new ObjectObserver( this.model );
-	this._observer.open( this._$onObserved );
+	this._observer.open( $.proxy( this.onObserved, this ) );
 }
 
 
 Pin.prototype.dispose = function() {
 
-	this._observer.close( this._$onObserved );
+	if ( this._isDisposed ) {
+
+		return;
+
+	} else {
+
+		this._isDisposed = true;
+	}
+
+	this._observer.close();
 
 	this.$element.remove();
 	this.$element = null;
@@ -61,6 +70,10 @@ Pin.prototype.handleModelChange = function( key, value ) {
 
 
 Pin.prototype.onObserved = function( added, removed, changed, getOldValueFn ) {
+
+	if ( this._isDisposed ) {
+		return;
+	}
 
 	for ( var key in changed ) {
 		var value = changed[ key ];

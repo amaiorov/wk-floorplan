@@ -41,15 +41,10 @@ FloorPlanSelector.prototype.update = function( fileName ) {
 
 FloorPlanSelector.prototype.onClickItem = function( e ) {
 
-	var $target = $( e.currentTarget );
+	var fileName = $( e.currentTarget ).attr( 'data-file-name' );
 
-	if ( $target.hasClass( 'new' ) ) {
+	if ( fileName ) {
 
-		console.log( $target );
-
-	} else {
-
-		var fileName = $target.attr( 'data-file-name' );
 		this.update( fileName );
 
 		var fileHandler = FileHandler();
@@ -70,6 +65,9 @@ FloorPlanSelector.prototype.onConfirmModal = function( e ) {
 	var $modal = $( '#new-floorplan-modal' ).modal( 'hide' );
 	var floorPlanName = $modal.find( 'input' ).val() || $.now();
 	var fileName = floorPlanName.replace( /\s+/g, '-' ).toLowerCase() + '.json';
+
+	pubSub.fileChanged.dispatch( fileName );
+	pubSub.fileCreated.dispatch();
 };
 
 

@@ -14,9 +14,17 @@ var EmployeePin = function( element, opt_model ) {
 inherits( EmployeePin, Pin );
 
 
-EmployeePin.prototype.handleModelChange = function( key, value ) {
+EmployeePin.prototype.dispose = function() {
 
-	Pin.prototype.handleModelChange.call( this, key, value );
+	if ( this.model ) {
+		console.log( 'Entity Pin "' + this.model.fullName + '" disposed.' );
+	}
+
+	Pin.prototype.dispose.call( this );
+};
+
+
+EmployeePin.prototype.handleModelChange = function( key, value ) {
 
 	if ( key === 'isAssigned' ) {
 
@@ -24,8 +32,11 @@ EmployeePin.prototype.handleModelChange = function( key, value ) {
 
 		if ( !isAssigned ) {
 			this.dispose();
+			return;
 		}
 	}
+
+	Pin.prototype.handleModelChange.call( this, key, value );
 };
 
 

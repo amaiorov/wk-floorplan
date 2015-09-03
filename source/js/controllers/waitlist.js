@@ -123,7 +123,7 @@ Waitlist.prototype.onClickWaitlistIcon = function( e ) {
 Waitlist.prototype.onEmployeeStateChanged = function( newValue, oldValue ) {
 
 	this.element = soy.renderAsFragment( template.WaitlistEmployees, {
-		employees: employeeCollection.getUnassigned()
+		entities: employeeCollection.getUnassigned()
 	} );
 
 	this._$waitlist.empty().append( this.element );

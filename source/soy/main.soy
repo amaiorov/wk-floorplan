@@ -117,6 +117,7 @@
 				{param departmentBucketList: $departmentBucketList /}
 				{param departmentBucketListCSS: $departmentBucketListCSS /}
 			{/call}
+
 			<div class="floor-viewport">
 
 				<div class="floor-container">
@@ -181,7 +182,7 @@
 					<div class="waitlist-container">
 						<div class="waitlist">
 						{call .WaitlistEmployees}
-						{param employees: $unassignedEmployees /}
+						{param entities: $unassignedEmployees /}
 						{/call}
 						</div>
 						<div class="info-container">
@@ -247,13 +248,13 @@
 
 
 /**
- * The unassigned employees on waitlist
- * @param employees The unassigned employees' models
+ * The unassigned entities on waitlist
+ * @param entities The unassigned entities' models
  */
 {template .WaitlistEmployees}
-{foreach $employee in $employees}
+{foreach $entity in $entities}
 {call .EmployeePin}
-	{param employee: $employee /}
+	{param employee: $entity /}
 {/call}
 {/foreach}
 {/template}

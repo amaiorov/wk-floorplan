@@ -11,7 +11,10 @@ inherits( SeatPin, Pin );
 
 SeatPin.prototype.dispose = function() {
 
-	this.model.dispose();
+	if ( this.model ) {
+		this.model.dispose();
+		console.log( 'Seat "' + this.model.id + '" disposed.' );
+	}
 
 	Pin.prototype.dispose.call( this );
 };
@@ -19,12 +22,17 @@ SeatPin.prototype.dispose = function() {
 
 SeatPin.prototype.handleModelChange = function( key, value ) {
 
-	Pin.prototype.handleModelChange.call( this, key, value );
-
 	if ( key === 'entity' ) {
 		var hasEntity = value ? true : false;
 		this.$element.toggleClass( 'seated', hasEntity );
 	}
+
+	if ( ( key === 'x' || key === 'y' ) && !value ) {
+		this.dispose();
+		return;
+	}
+
+	Pin.prototype.handleModelChange.call( this, key, value );
 };
 
 

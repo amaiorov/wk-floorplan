@@ -43,7 +43,18 @@ Floor.prototype.getVacantSeats = function() {
 
 Floor.prototype.addSeat = function( x, y, opt_floorIndex, opt_seatIndex ) {
 
-	var seatIndex = this.freeSeatIndexes.shift();
+	var seatIndex;
+
+	if ( opt_seatIndex ) {
+
+		seatIndex = opt_seatIndex;
+		this.freeSeatIndexes.splice( this.freeSeatIndexes.indexOf( seatIndex ), 1 );
+
+	} else {
+
+		seatIndex = this.freeSeatIndexes.shift();
+	}
+
 	this.usedSeatIndexes.push( seatIndex );
 
 	var floorIndex = this.index;
@@ -56,6 +67,8 @@ Floor.prototype.addSeat = function( x, y, opt_floorIndex, opt_seatIndex ) {
 
 
 Floor.prototype.removeSeat = function( seatModel ) {
+
+	seatModel.x = seatModel.y = null;
 
 	this.freeSeatIndexes.push( seatModel.seatIndex );
 	this.usedSeatIndexes.splice( this.usedSeatIndexes.indexOf( seatModel.seatIndex ), 1 );

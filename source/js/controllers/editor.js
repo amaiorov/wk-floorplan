@@ -109,6 +109,7 @@ var Editor = function() {
 	pubSub.editorSplitEnded.add( this._$onSplitEnded );
 	pubSub.modeChanged.add( this._$onModeChanged );
 	pubSub.jsonLoaded.add( this._$reset );
+	pubSub.fileCreated.add( this._$reset );
 
 	//
 	this._$changeMode();
@@ -118,34 +119,57 @@ var Editor = function() {
 
 Editor.prototype.reset = function( opt_json ) {
 
-	this.floorViewer.reset();
+	this.floorViewer.focusOnCenter( '6', 0 );
 
-	/*
+	var floors = this.floorViewer.floors;
+
+	$.each( floors, function( key, floor ) {
+		floor.reset();
+	} );
+
 	var json = opt_json;
 
 	if ( json ) {
 
-		$.each( json[ 'seats' ], function( id, seat ) {
-			FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
+		$.each( floors, function( key, floor ) {
+			floor.unlistenForChanges();
 		} );
 
-		var entities = employeeCollection.getAll();
+		setTimeout( function() {
 
-		$.each( entities, function( i, entity ) {
-			var entityData = json[ 'entities' ][ entity.fullName ];
-			entity.x = entityData[ 'x' ];
-			entity.y = entityData[ 'y' ];
-			entity.floorIndex = entityData[ 'floorIndex' ];
+			$.each( json[ 'seats' ], function( id, seat ) {
+				FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
+			} );
 
-			var seatId = entityData[ 'seat' ];
+			var floor = FloorModel.getByIndex( '6' );
 
-			if ( seatId ) {
-				var seat = FloorModel.getSeatById( seatId );
-				entity.seat = seat;
-			}
-		} );
+			var entities = employeeCollection.getAll();
+
+			$.each( entities, function( i, entity ) {
+				var entityData = json[ 'entities' ][ entity.fullName ];
+				entity.x = entityData[ 'x' ];
+				entity.y = entityData[ 'y' ];
+				entity.floorIndex = entityData[ 'floorIndex' ];
+
+				var seatId = entityData[ 'seat' ];
+
+				if ( seatId ) {
+					var seat = FloorModel.getSeatById( seatId );
+					entity.seat = seat;
+					seat.entity = entity;
+				}
+			} );
+
+			$.each( floors, function( key, floor ) {
+				var entities = employeeCollection.getByFloor( floor.model.index );
+				var seats = FloorModel.getByIndex( floor.model.index ).seats;
+				floor.createPins( entities, seats );
+
+				floor.listenForChanges();
+			} );
+
+		}, 0 );
 	}
-	*/
 
 	Platform.performMicrotaskCheckpoint();
 }

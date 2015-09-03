@@ -14,6 +14,7 @@ var PubSub = function() {
 	this.modeChanged = new Signal();
 	this.jsonLoaded = new Signal();
 	this.fileChanged = new Signal();
+	this.fileCreated = new Signal();
 };
 
 

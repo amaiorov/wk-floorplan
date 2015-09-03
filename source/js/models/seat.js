@@ -16,10 +16,8 @@ var Seat = function( seatIndex, floorIndex, opt_x, opt_y ) {
 
 	this.entity = null;
 
-	this._$onObserved = $.proxy( this.onObserved, this );
-
 	this._observer = new ObjectObserver( this );
-	this._observer.open( this._$onObserved );
+	this._observer.open( $.proxy( this.onObserved, this ) );
 }
 
 
@@ -30,7 +28,7 @@ Seat.prototype.dispose = function() {
 		this.entity = null;
 	}
 
-	this._observer.close( this._$onObserved );
+	this._observer.close();
 	this._observer = null;
 }
 

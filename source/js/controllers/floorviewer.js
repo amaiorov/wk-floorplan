@@ -64,7 +64,7 @@ var FloorViewer = function( _$element ) {
 	this._viewportMetrics = this.updateViewportMetrics();
 
 	// Create and stores floors by index
-	var floors = this._floors = {};
+	var floors = this.floors = {};
 	var viewportMetrics = this._viewportMetrics;
 	$.each( this.$element.find( '.floor' ), function( i, el ) {
 		var floor = new Floor( el, viewportMetrics );
@@ -104,14 +104,6 @@ FloorViewer.prototype.init = function() {
 }
 
 
-FloorViewer.prototype.reset = function() {
-
-	$.each( this._floors, function( key, floor ) {
-		floor.reset();
-	} );
-}
-
-
 FloorViewer.prototype.getFloorPosition = function() {
 
 	return {
@@ -127,6 +119,43 @@ FloorViewer.prototype.getFloorSize = function() {
 		width: this._floorWidth,
 		height: this._floorHeight
 	}
+}
+
+
+FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+
+	if ( opt_floorIndex ) {
+		this.toggleFloor( opt_floorIndex );
+	}
+
+	var floorSize = this.getFloorSize();
+	var floorXAfterCentered = ( this._viewportMetrics.width - floorSize.width ) / 2;
+	var floorYAfterCentered = ( this._viewportMetrics.height - floorSize.height ) / 2;
+
+	TweenMax.set( this._$floorContainer.get( 0 ), {
+		'x': floorXAfterCentered,
+		'y': floorYAfterCentered
+	} );
+
+	this._draggable.update( true );
+
+	if ( $.isNumeric( opt_zoom ) ) {
+
+		var elementOffset = this.$element.offset();
+		this._viewportZoomX = this._viewportMetrics.x + this._viewportMetrics.width / 2 - elementOffset.left;
+		this._viewportZoomY = this._viewportMetrics.y + this._viewportMetrics.height / 2 - elementOffset.top;
+
+		var floorPosition = this.getFloorPosition();
+		var floorX = floorPosition.x;
+		var floorY = floorPosition.y;
+
+		this._floorZoomFractionX = ( this._viewportZoomX - floorX ) / this._floorWidth;
+		this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
+
+		this.zoom( opt_zoom );
+	}
+
+	this.currentFloor.updateTiles( zoom );
 }
 
 
@@ -279,7 +308,7 @@ FloorViewer.prototype.toggleFloor = function( floorId ) {
 	var zoom = this._zoomTweener.target.zoom;
 	var $floorButtons = this._$floorButtons;
 
-	$.each( this._floors, function( id, floor ) {
+	$.each( this.floors, function( id, floor ) {
 
 		if ( floorId === id ) {
 
