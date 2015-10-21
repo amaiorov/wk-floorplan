@@ -34,19 +34,24 @@
 		border-left: none;
 		border-bottom: none;
 		bottom: 0;
+		padding: 6px;
 		font-size: 12px;
 		left: 0;
 		width: 40%;
 		position: absolute;
 		z-index: 1;
+
 		.department {
 			float: left;
 			overflow: hidden;
 			padding: 10px 10px 10px 30px;
 			position: relative;
 			text-overflow: ellipsis;
+			text-transform: uppercase;
+			font-size: 10px;
 			width: 33%;
 			white-space: nowrap;
+
 			&:before {
 				background: #ccc;
 				border-radius: 100%;
@@ -55,9 +60,10 @@
 				height: 12px;
 				left: 10px;
 				position: absolute;
-				top: 10px;
+				top: 8px;
 				width: 12px;
 			}
+
 			@each $department in $departments {
 				$class: nth($department, 1);
 				$color: nth($department, 2);
@@ -294,7 +300,8 @@
 
 				>.waitlist{
 					height: 100%;
-					overflow: auto;
+					overflow-x: hidden;
+					overflow-y: scroll;
 					@include transition(height, .3s ease-in-out);
 
 					.entity-pin{

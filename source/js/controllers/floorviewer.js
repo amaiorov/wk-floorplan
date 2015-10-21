@@ -94,11 +94,12 @@ FloorViewer.prototype.init = function() {
 		'y': ( this._editingRegionHeight - this._floorHeight ) / 2,
 	} );
 
-	this.updateIconSize();
 	this.updateBounds();
 	this.setMousewheelSpeed( 8 );
 	this.setZoomSlider( 0 );
-	this.toggleFloor( this.$element.find( '.floor-buttons .active' ).attr( 'data-id' ) );
+
+	var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
+	this.focusOnCenter( floorIndex, 0 );
 
 	this.hideMousewheelScroller();
 }
@@ -286,13 +287,15 @@ FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoor
 		x: fractionX * 100 + '%',
 		y: fractionY * 100 + '%'
 	}
-};
+}
 
 
 FloorViewer.prototype.setZoomSlider = function( fraction ) {
 
 	var scrollHeight = this._$mousewheelScroller.get( 0 ).scrollHeight;
-	this._$mousewheelScroller.scrollTop( scrollHeight * ( 1 - fraction ) );
+	var scrollTop = scrollHeight * ( 1 - fraction ) - this._$mousewheelScroller.height();
+
+	this._$mousewheelScroller.scrollTop( scrollTop );
 }
 
 
