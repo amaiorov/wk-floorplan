@@ -133,11 +133,11 @@ h1,h2,h3,h4,h5,h6,b{
     font-family: $font_medium;
   }
   &.freelance:after {
-    content: 'f';
+    content: 'fl';
     color: #286090;
   }
   &.intern:after {
-    content: 'i';
+    content: 'in';
     color: #f00;
   }
 }

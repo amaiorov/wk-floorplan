@@ -14,20 +14,19 @@
 
 	$action = defined($_POST['action']) ? $_POST['action'] : $_GET['action'] ;
 	$file = $_POST['path'] . $_POST['filename'];
-	$fullName = $_POST['firstName'] . '.' . $_POST['lastName'];
-	$fullName = $_GET['firstName'] . '.' . $_GET['lastName'];
+	$fullName = $_POST['fullName'];
+	$fullName = $_GET['fullName'];
 
 	switch ($action) {
 		case 'test':
-			header('Content-Type: application/json');
-			$fileList = 'filelist: ' . json_encode(scandir('./json/')). ',';
-			$jsonContents = file_get_contents('./json/default.json');
-			$json .= $fileList . $jsonContents;
-			echo json_encode($json);
 			break;
 		case 'saveDefaultJson':
 		case 'saveCustomJson':
 			file_put_contents($file, $_POST['json']);
+			$jsonContents = json_decode(file_get_contents('./json/default.json'));
+			$jsonContents->filelist = scandir('./json/');
+			header('Content-Type: application/json');
+			echo json_encode($jsonContents);
 			break;
 		case 'loadDefaultJson':
 		case 'loadCustomJson':
@@ -38,6 +37,7 @@
 
 			break;
 		default:
+		return;
 			$url = 'http://www.wk.com/' . $fullName;
 			// $url = 'http://www.wk.com/alex.maiorov';
 

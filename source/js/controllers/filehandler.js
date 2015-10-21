@@ -19,7 +19,7 @@ var FileHandler = function() {
 };
 
 
-FileHandler.prototype.postToService = function( action, customFilename, opt_callback ) {
+FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 
 	var postData = {};
 
@@ -50,14 +50,20 @@ FileHandler.prototype.postToService = function( action, customFilename, opt_call
 				} ),
 				'action': action,
 				'path': this._jsonPath,
-				'filename': customFilename
+				'filename': params.customFilename
 			};
 			break;
 		case 'loadCustomJson':
 			postData = {
 				'action': action,
 				'path': this._jsonPath,
-				'filename': customFilename
+				'filename': params.customFilename
+			};
+			break;
+		case 'getHeadshot':
+			postData = {
+				'action': action,
+				'fullName': params.fullName
 			};
 			break;
 		default:
@@ -79,7 +85,9 @@ FileHandler.prototype.onEdited = function() {
 	var floorPlanSelector = FloorPlanSelector();
 	var fileName = floorPlanSelector.currentFileName || this.defaultFile;
 
-	this.postToService( 'saveCustomJson', fileName );
+	this.postToService( 'saveCustomJson', {
+		'filename': fileName
+	} );
 }
 
 
