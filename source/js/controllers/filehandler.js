@@ -26,17 +26,6 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 	var postData = {};
 
 	switch ( action ) {
-		case 'saveDefaultJson':
-			postData = {
-				'json': JSON.stringify( {
-					'entities': employeeCollection.createJson(),
-					'seats': Floor.createJson()
-				} ),
-				'action': action,
-				'path': this._jsonPath,
-				'filename': this.defaultFile
-			};
-			break;
 		case 'loadDefaultJson':
 			postData = {
 				'action': action,
@@ -44,7 +33,14 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 				'filename': this.defaultFile
 			};
 			break;
-		case 'saveCustomJson':
+		case 'loadCustomJson':
+			postData = {
+				'action': action,
+				'path': this._jsonPath,
+				'filename': params.fileName
+			};
+			break;
+		case 'saveJson':
 			postData = {
 				'json': JSON.stringify( {
 					'entities': employeeCollection.createJson(),
@@ -52,14 +48,7 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 				} ),
 				'action': action,
 				'path': this._jsonPath,
-				'filename': params.customFilename
-			};
-			break;
-		case 'loadCustomJson':
-			postData = {
-				'action': action,
-				'path': this._jsonPath,
-				'filename': params.customFilename
+				'filename': params.fileName
 			};
 			break;
 		case 'getHeadshot':
@@ -84,7 +73,9 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 
 FileHandler.prototype.onEdited = function() {
 
-	this.postToService( 'saveCustomJson', this.currentFile );
+	this.postToService( 'saveJson', {
+		fileName: this.currentFile
+	} );
 }
 
 FileHandler.prototype.onFileChanged = function( fileName ) {
