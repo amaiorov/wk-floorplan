@@ -50,8 +50,8 @@ var Editor = function() {
 	this._metrics = {};
 
 	// query dom elements
-	this._$floorPane = this.$element.find( '.floor-pane' );
-	this._$waitlistPane = this.$element.find( '.waitlist-pane' );
+	this._$floorPane = this.$element.find( '.floor-pane' ).css( 'width', '100%' );
+	this._$waitlistPane = this.$element.find( '.waitlist-pane' ).css( 'width', '0%' );
 
 	// scoped methods
 	this._$onSplitUpdated = $.proxy( this.onSplitUpdated, this );
