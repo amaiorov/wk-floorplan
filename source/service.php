@@ -22,9 +22,10 @@
 			break;
 		case 'saveDefaultJson':
 		case 'saveCustomJson':
-			file_put_contents($file, $_POST['json']);
-			$jsonContents = json_decode(file_get_contents('./json/default.json'));
-			$jsonContents->filelist = scandir('./json/');
+			// file_put_contents($file, $_POST['json']);
+			// $jsonContents = json_decode(file_get_contents('./json/default.json'));
+			// print_r($jsonContents);
+			$jsonContents = json_encode(scandir('./json/'));
 			header('Content-Type: application/json');
 			echo json_encode($jsonContents);
 			break;
