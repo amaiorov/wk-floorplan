@@ -20,13 +20,13 @@
 	function getFilelist() {
 		$glob = glob('./json/*.{json}', GLOB_BRACE);
 		$glob = str_replace('./json/', '', $glob);
-		$glob = str_replace('.json', '', $glob);
 		return array_values($glob);
 	}
 
 	switch ($action) {
 		case 'test':
 			break;
+		case 'createJson':
 		case 'saveJson':
 			file_put_contents($file, $_POST['json']);
 			$JSON = json_encode(array(

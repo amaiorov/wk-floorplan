@@ -7,6 +7,7 @@ var employeeCollection = require( 'models/employeecollection' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
 var FileHandler = require( 'controllers/filehandler' );
+var pubSub = require( 'app/pubsub' );
 var Utils = require( 'app/utils' );
 var _instance;
 
@@ -57,7 +58,7 @@ Bootstrapper.prototype.loadDefaultJson = function() {
 
 Bootstrapper.prototype.onJsonLoad = function( data ) {
 
-	var json = data ? JSON.parse( data.content ) : null;
+	var content = data ? JSON.parse( data.content ) : null;
 	console.log( data );
 
 	// WIP: generate all seat models
@@ -67,14 +68,14 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 
 	var entities = employeeCollection.getAll();
 
-	if ( json ) {
+	if ( content ) {
 
-		$.each( json[ 'seats' ], function( id, seat ) {
+		$.each( content[ 'seats' ], function( id, seat ) {
 			Floor.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
 		} );
 
 		$.each( entities, function( i, entity ) {
-			var entityData = json[ 'entities' ][ entity.fullName ];
+			var entityData = content[ 'entities' ][ entity.fullName ];
 			entity.x = entityData[ 'x' ];
 			entity.y = entityData[ 'y' ];
 			entity.floorIndex = entityData[ 'floorIndex' ];
@@ -107,6 +108,9 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 	}
 
 	Platform.performMicrotaskCheckpoint();
+
+	//
+	pubSub.jsonLoaded.dispatch( content, data.filelist, data.file );
 
 	//
 	TweenMax.fromTo( $( '#main-container' ).get( 0 ), 1, {

@@ -40,6 +40,7 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 				'filename': params.fileName
 			};
 			break;
+		case 'createJson':
 		case 'saveJson':
 			postData = {
 				'json': JSON.stringify( {
