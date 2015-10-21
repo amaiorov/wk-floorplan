@@ -82,7 +82,7 @@ FloorPlanSelector.prototype.onModeChanged = function( isEditMode ) {
 
 FloorPlanSelector.prototype.onJsonLoad = function( data ) {
 
-	var json = JSON.parse( data );
+	var json = JSON.parse( data.content );
 	pubSub.jsonLoaded.dispatch( json );
 };
 
