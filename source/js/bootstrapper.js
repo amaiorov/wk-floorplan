@@ -58,7 +58,7 @@ Bootstrapper.prototype.loadDefaultJson = function() {
 Bootstrapper.prototype.onJsonLoad = function( data ) {
 
 	var json = data ? JSON.parse( data.content ) : null;
-	console.log( json );
+	console.log( data );
 
 	// WIP: generate all seat models
 	var floor6 = Floor.getByIndex( '6' );

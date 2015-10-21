@@ -14,6 +14,7 @@ var FloorPlanSelector = function() {
 	$( '#new-floorplan-modal .btn-primary' ).on( 'click', $.proxy( this.onConfirmModal, this ) );
 	$( '#new-floorplan-modal' ).on( 'show.bs.modal', $.proxy( this.onBeforeModalShow, this ) );
 
+	pubSub.jsonLoaded.add( $.proxy( this.onJsonLoaded, this ) )
 	pubSub.modeChanged.add( $.proxy( this.onModeChanged, this ) );
 
 	this.update( 'default.json' );
@@ -51,7 +52,7 @@ FloorPlanSelector.prototype.onClickItem = function( e ) {
 
 		fileHandler.postToService( 'loadCustomJson', {
 			fileName: fileName
-		}, $.proxy( this.onJsonLoad, this ) );
+		}, $.proxy( this.onJsonReceivedFromServer, this ) );
 	}
 };
 
@@ -80,10 +81,16 @@ FloorPlanSelector.prototype.onModeChanged = function( isEditMode ) {
 };
 
 
-FloorPlanSelector.prototype.onJsonLoad = function( data ) {
+FloorPlanSelector.prototype.onJsonLoaded = function( content, filelist, file ) {
 
-	var json = JSON.parse( data.content );
-	pubSub.jsonLoaded.dispatch( json );
+	console.log( filelist, file );
+};
+
+
+FloorPlanSelector.prototype.onJsonReceivedFromServer = function( data ) {
+
+	var content = JSON.parse( data.content );
+	pubSub.jsonLoaded.dispatch( content, data.filelist, data.file );
 };
 
 
