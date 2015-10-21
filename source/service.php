@@ -17,26 +17,38 @@
 	$fullName = $_POST['fullName'];
 	$fullName = $_GET['fullName'];
 
+	function getFilelist() {
+		return array_values(array_diff(scandir('./json/'), array('.', '..')));
+	}
+
 	switch ($action) {
 		case 'test':
 			break;
 		case 'saveJson':
 			file_put_contents($file, $_POST['json']);
-			$jsonContents = json_decode(file_get_contents('./json/default.json'));
-			$jsonContents->filelist = scandir('./json/');
+			$JSON = json_encode(array(
+				'filelist' => getFilelist(),
+				'file' => $_POST['filename']
+			));
 			header('Content-Type: application/json');
-			echo json_encode($jsonContents);
+			echo $JSON;
 			break;
 		case 'loadDefaultJson':
 		case 'loadCustomJson':
+
+			$JSON = json_encode(array(
+				'filelist' => getFilelist(),
+				'file' => $_POST['filename'],
+				'content' => file_get_contents($file)
+			));
 			header('Content-Type: application/json');
-			echo json_encode(file_get_contents($file));
+			echo $JSON;
 			break;
 		case 'getHeadshot':
 
 			break;
 		default:
-		return;
+			// return;
 			$url = 'http://www.wk.com/' . $fullName;
 			// $url = 'http://www.wk.com/alex.maiorov';
 
