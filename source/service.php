@@ -20,8 +20,7 @@
 	switch ($action) {
 		case 'test':
 			break;
-		case 'saveDefaultJson':
-		case 'saveCustomJson':
+		case 'saveJson':
 			file_put_contents($file, $_POST['json']);
 			$jsonContents = json_decode(file_get_contents('./json/default.json'));
 			$jsonContents->filelist = scandir('./json/');

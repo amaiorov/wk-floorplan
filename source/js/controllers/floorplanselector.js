@@ -48,7 +48,10 @@ FloorPlanSelector.prototype.onClickItem = function( e ) {
 		this.update( fileName );
 
 		var fileHandler = FileHandler();
-		fileHandler.postToService( 'loadCustomJson', fileName, $.proxy( this.onJsonLoad, this ) );
+
+		fileHandler.postToService( 'loadCustomJson', {
+			fileName: fileName
+		}, $.proxy( this.onJsonLoad, this ) );
 	}
 };
 
