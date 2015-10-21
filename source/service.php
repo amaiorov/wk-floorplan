@@ -12,7 +12,7 @@
 	// echo '<br><br>';
 	// echo $_POST['json'];
 
-	$action = defined($_POST['action']) ? $_POST['action'] : $_GET['action'] ;
+	$action = isset($_POST['action']) ? $_POST['action'] : $_GET['action'];
 	$file = $_POST['path'] . $_POST['filename'];
 	$fullName = $_POST['fullName'];
 	$fullName = $_GET['fullName'];
