@@ -1,6 +1,5 @@
 var Utils = require( 'app/utils' );
 var pubSub = require( 'app/pubsub' );
-var soy = require( 'libs/soyutils' );
 var template = require( 'views/main.soy' );
 var FloorModel = require( 'models/floor' );
 var employeeCollection = require( 'models/employeecollection' );
@@ -22,35 +21,38 @@ var Floor = function( element, viewportMetrics ) {
 	var floorIndex = this.$element.attr( 'data-id' );
 	this.model = FloorModel.getByIndex( floorIndex );
 
-	// create entities
-	var seats = this._seats = {};
-	var entities = this._entities = {};
-
-	$.each( this.$element.find( '.seat-pin' ), $.proxy( function( i, el ) {
-
-		var seatId = el.getAttribute( 'data-id' );
-		var seat = new SeatPin( el, FloorModel.getSeatById( seatId ) );
-		seats[ seatId ] = seat;
-
-	}, this ) );
-
-	$.each( this.$element.find( '.entity-pin' ), $.proxy( function( i, el ) {
-
-		var entityId = el.getAttribute( 'data-id' );
-		var entity = new EmployeePin( el );
-		entities[ entityId ] = entity;
-
-	}, this ) );
+	// create pins
+	this._seats = null;
+	this._entities = null;
+	this.createPins();
 
 	// listen for mouse events on pins
 	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
 	this.$element.on( 'click', '.seat-pin', $.proxy( this.onClickSeatPin, this ) );
 
 	// listen for seat models change
-	this._$onObserved = $.proxy( this.onObserved, this );
+	this.listenForChanges();
+};
+
+
+Floor.prototype.listenForChanges = function() {
+
+	if ( this._observer ) {
+		return;
+	}
+
 	this._observer = new ObjectObserver( this.model.seats );
-	this._observer.open( this._$onObserved );
-}
+	this._observer.open( $.proxy( this.onObserved, this ) );
+};
+
+
+Floor.prototype.unlistenForChanges = function() {
+
+	if ( this._observer ) {
+		this._observer.close();
+		this._observer = null;
+	}
+};
 
 
 Floor.prototype.getIndex = function() {
@@ -76,6 +78,59 @@ Floor.prototype.hide = function() {
 	this.$element.hide();
 	this.highlightEntityPin( null );
 	this.highlightSeatPin( null );
+};
+
+
+Floor.prototype.createPins = function( opt_entities, opt_seats ) {
+
+	if ( opt_entities && opt_seats ) {
+
+		soy.renderElement( this._$inner.get( 0 ), template.FloorPins, {
+			entities: opt_entities,
+			seats: opt_seats
+		} );
+	}
+
+	var seats = this._seats = {};
+	var entities = this._entities = {};
+
+	$.each( this.$element.find( '.seat-pin' ), $.proxy( function( i, el ) {
+
+		var seatId = el.getAttribute( 'data-id' );
+
+		if ( seats[ seatId ] ) return;
+
+		var seat = new SeatPin( el, FloorModel.getSeatById( seatId ) );
+		seats[ seatId ] = seat;
+
+	}, this ) );
+
+	$.each( this.$element.find( '.entity-pin' ), $.proxy( function( i, el ) {
+
+		var entityId = el.getAttribute( 'data-id' );
+
+		if ( entities[ entityId ] ) return;
+
+		var entity = new EmployeePin( el );
+		entities[ entityId ] = entity;
+
+	}, this ) );
+};
+
+
+Floor.prototype.reset = function() {
+
+	// remove all entity pins
+	for ( var key in this._entities ) {
+		var entity = this._entities[ key ].model;
+		this.removeEntityPin( entity );
+	}
+
+	// remove all seat pins
+	for ( var key in this._seats ) {
+		var seat = this._seats[ key ].model;
+		this.removeSeatPin( seat );
+	}
 };
 
 
@@ -105,7 +160,6 @@ Floor.prototype.removeEntityPin = function( model ) {
 	model.y = null;
 	model.floorIndex = null;
 
-	var entity = this._entities[ model.fullName ];
 	delete this._entities[ model.fullName ];
 };
 
@@ -133,6 +187,8 @@ Floor.prototype.addSeatPin = function( floorPosition, floorSize ) {
 Floor.prototype.removeSeatPin = function( model ) {
 
 	this.model.removeSeat( model );
+
+	delete this._seats[ model.id ];
 
 	Platform.performMicrotaskCheckpoint();
 };
@@ -297,16 +353,6 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 		this.highlightSeatPin( el );
 
 		console.log( 'Seat "' + key + '" added. Current seats total is: ' + this.model.getSeatsTotal() );
-	}
-
-	for ( var key in removed ) {
-
-		var seat = this._seats[ key ];
-		seat.dispose();
-
-		delete this._seats[ key ];
-
-		console.log( 'Seat "' + key + '" removed. Current seats total is: ' + this.model.getSeatsTotal() );
 	}
 
 	pubSub.edited.dispatch();

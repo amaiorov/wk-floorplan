@@ -1,21 +1,23 @@
+var td = require( 'throttle-debounce' );
 var pubSub = require( 'app/pubsub' );
 var Utils = require( 'app/utils' );
 var employeeCollection = require( 'models/employeecollection' );
 var Floor = require( 'models/floor' );
-var FloorPlanSelector = require( 'controllers/floorplanselector' );
-var td = require( 'throttle-debounce' );
 
 var _instance;
 
 var FileHandler = function() {
 
 	this.defaultFile = 'default.json';
+	this.currentFile = this.defaultFile;
+
 	this._jsonPath = './json/';
 	this._serviceURL = './service.php';
 
 	this._$debounceEdited = td.debounce( 1000, $.proxy( this.onEdited, this ) );
 
 	pubSub.modeChanged.add( $.proxy( this.onModeChanged, this ) );
+	pubSub.fileChanged.add( $.proxy( this.onFileChanged, this ) );
 };
 
 
@@ -82,12 +84,12 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 
 FileHandler.prototype.onEdited = function() {
 
-	var floorPlanSelector = FloorPlanSelector();
-	var fileName = floorPlanSelector.currentFileName || this.defaultFile;
+	this.postToService( 'saveCustomJson', this.currentFile );
+}
 
-	this.postToService( 'saveCustomJson', {
-		'filename': fileName
-	} );
+FileHandler.prototype.onFileChanged = function( fileName ) {
+
+	this.currentFile = fileName;
 }
 
 

@@ -118,60 +118,37 @@
 				{param departmentBucketList: $departmentBucketList /}
 				{param departmentBucketListCSS: $departmentBucketListCSS /}
 			{/call}
+
 			<div class="floor-viewport">
 
 				<div class="floor-container">
 					<div class="floor" data-id="6">
 						<div class="tiles"></div>
 						<div class="inner">
-							{foreach $employee in $floor6Employees}
-							{call .EmployeePin}
-								{param employee: $employee /}
-								{param showInfo: true /}
+							{call .FloorPins}
+								{param entities: $floor6Employees /}
+								{param seats: $floor6Seats /}
 							{/call}
-							{/foreach}
-
-							{foreach $seatId in keys($floor6Seats)}
-							{call .SeatPin}
-								{param seat: $floor6Seats[$seatId] /}
-							{/call}
-							{/foreach}
 						</div>
 					</div>
 
 					<div class="floor" data-id="7">
 						<div class="tiles"></div>
 						<div class="inner">
-							{foreach $employee in $floor7Employees}
-							{call .EmployeePin}
-								{param employee: $employee /}
-								{param showInfo: true /}
+							{call .FloorPins}
+								{param entities: $floor7Employees /}
+								{param seats: $floor7Seats /}
 							{/call}
-							{/foreach}
-
-							{foreach $seatId in keys($floor7Seats)}
-							{call .SeatPin}
-								{param seat: $floor7Seats[$seatId] /}
-							{/call}
-							{/foreach}
 						</div>
 					</div>
 
 					<div class="floor" data-id="8">
 						<div class="tiles"></div>
 						<div class="inner">
-							{foreach $employee in $floor8Employees}
-							{call .EmployeePin}
-								{param employee: $employee /}
-								{param showInfo: true /}
+							{call .FloorPins}
+								{param entities: $floor8Employees /}
+								{param seats: $floor8Seats /}
 							{/call}
-							{/foreach}
-
-							{foreach $seatId in keys($floor8Seats)}
-							{call .SeatPin}
-								{param seat: $floor8Seats[$seatId] /}
-							{/call}
-							{/foreach}
 						</div>
 					</div>
 				</div>
@@ -206,7 +183,7 @@
 					<div class="waitlist-container">
 						<div class="waitlist">
 						{call .WaitlistEmployees}
-						{param employees: $unassignedEmployees /}
+						{param entities: $unassignedEmployees /}
 						{/call}
 						</div>
 						<div class="info-container">
@@ -220,6 +197,27 @@
 
 	</div>
 </div>
+{/template}
+
+
+/**
+ * Pins on each floor.
+ * @param entities The entities.
+ * @param seats The seats.
+ */
+{template .FloorPins}
+	{foreach $entity in $entities}
+	{call .EmployeePin}
+		{param employee: $entity /}
+		{param showInfo: true /}
+	{/call}
+	{/foreach}
+
+	{foreach $seatId in keys($seats)}
+	{call .SeatPin}
+		{param seat: $seats[$seatId] /}
+	{/call}
+	{/foreach}
 {/template}
 
 
@@ -251,13 +249,13 @@
 
 
 /**
- * The unassigned employees on waitlist
- * @param employees The unassigned employees' models
+ * The unassigned entities on waitlist
+ * @param entities The unassigned entities' models
  */
 {template .WaitlistEmployees}
-{foreach $employee in $employees}
+{foreach $entity in $entities}
 {call .EmployeePin}
-	{param employee: $employee /}
+	{param employee: $entity /}
 {/call}
 {/foreach}
 {/template}

@@ -67,6 +67,7 @@ var Editor = function() {
 	this._$onSeatSelected = $.proxy( this.onSeatSelected, this );
 	this._$onModeChanged = $.proxy( this.onModeChanged, this );
 	this._$changeMode = $.proxy( this.changeMode, this );
+	this._$reset = $.proxy( this.reset, this );
 	this._$resize = $.proxy( this.resize, this );
 
 	// create editor components
@@ -107,10 +108,70 @@ var Editor = function() {
 	pubSub.editorSplitUpdated.add( this._$onSplitUpdated );
 	pubSub.editorSplitEnded.add( this._$onSplitEnded );
 	pubSub.modeChanged.add( this._$onModeChanged );
+	pubSub.jsonLoaded.add( this._$reset );
+	pubSub.fileCreated.add( this._$reset );
 
 	//
 	this._$changeMode();
 	this._$onSeatSelected( null );
+}
+
+
+Editor.prototype.reset = function( opt_json ) {
+
+	this.floorViewer.focusOnCenter( '6', 0 );
+
+	var floors = this.floorViewer.floors;
+
+	$.each( floors, function( key, floor ) {
+		floor.reset();
+	} );
+
+	var json = opt_json;
+
+	if ( json ) {
+
+		$.each( floors, function( key, floor ) {
+			floor.unlistenForChanges();
+		} );
+
+		setTimeout( function() {
+
+			$.each( json[ 'seats' ], function( id, seat ) {
+				FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
+			} );
+
+			var floor = FloorModel.getByIndex( '6' );
+
+			var entities = employeeCollection.getAll();
+
+			$.each( entities, function( i, entity ) {
+				var entityData = json[ 'entities' ][ entity.fullName ];
+				entity.x = entityData[ 'x' ];
+				entity.y = entityData[ 'y' ];
+				entity.floorIndex = entityData[ 'floorIndex' ];
+
+				var seatId = entityData[ 'seat' ];
+
+				if ( seatId ) {
+					var seat = FloorModel.getSeatById( seatId );
+					entity.seat = seat;
+					seat.entity = entity;
+				}
+			} );
+
+			$.each( floors, function( key, floor ) {
+				var entities = employeeCollection.getByFloor( floor.model.index );
+				var seats = FloorModel.getByIndex( floor.model.index ).seats;
+				floor.createPins( entities, seats );
+
+				floor.listenForChanges();
+			} );
+
+		}, 0 );
+	}
+
+	Platform.performMicrotaskCheckpoint();
 }
 
 
@@ -356,8 +417,6 @@ Editor.prototype.onClickAddSeat = function( e ) {
 		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
 
 	this.floorViewer.updateIconSize();
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -368,8 +427,6 @@ Editor.prototype.onClickRemoveSeat = function( e ) {
 	this.floorViewer.currentFloor.removeSeatPin( seatModel );
 
 	this.onSeatSelected( null );
-
-	Platform.performMicrotaskCheckpoint();
 };
 
 
@@ -395,4 +452,4 @@ Editor.prototype.onSeatSelected = function( seatId ) {
 };
 
 
-module.exports = Utils.createSingleton( _instance, Editor );
+module.exports = Utils.createSingleton( _instance, Editor, 'editor' );
