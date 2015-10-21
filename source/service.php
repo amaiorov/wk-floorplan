@@ -18,7 +18,10 @@
 	$fullName = $_GET['fullName'];
 
 	function getFilelist() {
-		return array_values(array_diff(scandir('./json/'), array('.', '..')));
+		$glob = glob('./json/*.{json}', GLOB_BRACE);
+		$glob = str_replace('./json/', '', $glob);
+		$glob = str_replace('.json', '', $glob);
+		return array_values($glob);
 	}
 
 	switch ($action) {
