@@ -105,6 +105,20 @@ FloorViewer.prototype.init = function() {
 }
 
 
+FloorViewer.prototype.getFloorCenterInView = function() {
+
+	var floorPosition = this.getFloorPosition();
+
+	var centerX = this._viewportMetrics.width / 2 - floorPosition.x;
+	var centerY = this._viewportMetrics.height / 2 - floorPosition.y;
+
+	return {
+		x: centerX,
+		y: centerY
+	}
+}
+
+
 FloorViewer.prototype.getFloorPosition = function() {
 
 	return {
@@ -123,14 +137,43 @@ FloorViewer.prototype.getFloorSize = function() {
 }
 
 
+FloorViewer.prototype.getZoom = function() {
+
+	return zoom;
+}
+
+
 FloorViewer.prototype.locateFromRoute = function( params ) {
 
+	// pause current zooming animation
+	this._zoomTweener.pause();
+
+	// apply changes
 	if ( params.floor ) {
+
 		this.toggleFloor( params.floor.toString() );
 	}
 
 	if ( params.zoom ) {
-		this.zoom( Utils.clamp( params.zoom, 0, 1 ) );
+
+		zoom = this._zoomTweener.target.zoom = Utils.clamp( params.zoom, 0, 1 );
+
+		this._floorWidth = Math.round( Utils.lerp( minWidth, maxWidth, zoom ) );
+		this._floorHeight = Math.round( this._floorWidth / Floor.aspectRatio );
+
+		TweenMax.set( this._$floorContainer.get( 0 ), {
+			'width': this._floorWidth,
+			'height': this._floorHeight
+		} );
+
+		this.updateBounds();
+
+		this.currentFloor.updateTiles( zoom );
+	}
+
+	if ( params.x && params.y ) {
+
+		this.moveTo( params.x, params.y );
 	}
 }
 

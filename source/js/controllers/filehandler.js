@@ -20,6 +20,12 @@ var FileHandler = function() {
 };
 
 
+FileHandler.prototype.getEncodedFilename = function() {
+
+	return encodeURI( this.currentFile.replace( '.json', '' ) );
+};
+
+
 FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 
 	var postData = {};

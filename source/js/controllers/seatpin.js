@@ -13,7 +13,7 @@ SeatPin.prototype.dispose = function() {
 
 	if ( this.model ) {
 		this.model.dispose();
-		console.log( 'Seat "' + this.model.id + '" disposed.' );
+		//console.log( 'Seat "' + this.model.id + '" disposed.' );
 	}
 
 	Pin.prototype.dispose.call( this );
