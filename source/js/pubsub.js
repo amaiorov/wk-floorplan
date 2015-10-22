@@ -16,6 +16,9 @@ var PubSub = function() {
 	this.jsonLoaded = new Signal();
 	this.jsonLoaded.memorize = true;
 
+	this.routed = new Signal();
+	this.routed.memorize = true;
+
 	this.fileChanged = new Signal();
 	this.fileCreated = new Signal();
 };

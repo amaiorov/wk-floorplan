@@ -4,6 +4,7 @@ var template = require( 'views/main.soy' );
 var Floor = require( 'models/floor' );
 var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
+var router = require( 'controllers/router' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
 var FileHandler = require( 'controllers/filehandler' );
@@ -22,7 +23,7 @@ var Bootstrapper = function() {
 
 Bootstrapper.prototype.load = function( opt_ssUrl ) {
 
-	this.loadSpreadSheets( opt_ssUrl, $.proxy( this.loadDefaultJson, this ) );
+	this.loadSpreadSheets( opt_ssUrl, $.proxy( this.onSpreadSheetsLoad, this ) );
 }
 
 
@@ -49,10 +50,31 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl, callback ) {
 }
 
 
-Bootstrapper.prototype.loadDefaultJson = function() {
+Bootstrapper.prototype.onSpreadSheetsLoad = function() {
 
-	var fileHandler = FileHandler();
-	fileHandler.postToService( 'loadDefaultJson', null, $.proxy( this.onJsonLoad, this ) );
+	var action;
+	var serviceData;
+
+	pubSub.routed.addOnce( function( key, params ) {
+
+		var fileHandler = FileHandler();
+
+		switch ( key ) {
+			case 'location':
+				action = 'loadCustomJson';
+				serviceData = {
+					fileName: params.file ? ( decodeURI( params.file ) + '.json' ) : fileHandler.defaultFile
+				};
+				break;
+
+			default:
+				action = 'loadDefaultJson';
+				break;
+		}
+
+		fileHandler.postToService( action, serviceData, $.proxy( this.onJsonLoad, this ) );
+
+	}, this );
 }
 
 

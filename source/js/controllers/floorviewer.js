@@ -98,8 +98,8 @@ FloorViewer.prototype.init = function() {
 	this.setMousewheelSpeed( 8 );
 	this.setZoomSlider( 0 );
 
-	var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
-	this.focusOnCenter( floorIndex, 0 );
+	//var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
+	//this.focusOnCenter( floorIndex, 0 );
 
 	this.hideMousewheelScroller();
 }
@@ -119,6 +119,18 @@ FloorViewer.prototype.getFloorSize = function() {
 	return {
 		width: this._floorWidth,
 		height: this._floorHeight
+	}
+}
+
+
+FloorViewer.prototype.locateFromRoute = function( params ) {
+
+	if ( params.floor ) {
+		this.toggleFloor( params.floor.toString() );
+	}
+
+	if ( params.zoom ) {
+		this.zoom( Utils.clamp( params.zoom, 0, 1 ) );
 	}
 }
 

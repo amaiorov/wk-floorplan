@@ -1,5 +1,6 @@
 // global requires
 window.$ = window.jQuery = require( 'jquery' );
+window._ = require( 'underscore' );
 window.soy = require( 'libs/soyutils' );
 require( 'bootstrap' );
 require( 'libs/bootstrap-toggle' );
