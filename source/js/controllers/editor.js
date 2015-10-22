@@ -392,7 +392,6 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 		if ( !outOfViewport && !entityModel.isAssigned ) {
 
 			this.floorViewer.currentFloor.addEntityPin( entityModel );
-			this.floorViewer.updateIconSize();
 		}
 
 		if ( this._collidingSeat ) {
@@ -415,8 +414,6 @@ Editor.prototype.onClickAddSeat = function( e ) {
 
 	this.floorViewer.currentFloor.addSeatPin(
 		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
-
-	this.floorViewer.updateIconSize();
 };
 
 

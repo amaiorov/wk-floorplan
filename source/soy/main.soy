@@ -10,16 +10,17 @@
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h4 class="modal-title">Pick a name for the new floor plan</h4>
+	        <h3 class="modal-title">Pick a name for the new floor plan:</h3>
 	      </div>
 	      <div class="modal-body">
 			<form>
-				<input type="text" class="form-control">
+				<input type="text" class="form-control" maxlength="40">
+				<label class="prompt filename-existed icon icon-warning">This filename is taken, please try a different one.</label>
 			</form>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary">Confirm</button>
+	        <button type="button" class="btn btn-primary btn-submit">Confirm</button>
 	      </div>
 	    </div>
 	  </div>
@@ -209,6 +210,7 @@
 	{foreach $entity in $entities}
 	{call .EmployeePin}
 		{param employee: $entity /}
+		{param size: 'min' /}
 		{param showInfo: true /}
 	{/call}
 	{/foreach}
@@ -216,6 +218,7 @@
 	{foreach $seatId in keys($seats)}
 	{call .SeatPin}
 		{param seat: $seats[$seatId] /}
+		{param size: 'min' /}
 	{/call}
 	{/foreach}
 {/template}
@@ -305,12 +308,14 @@
  * Employee pin
  * A floor pin representing an employee
  * @param employee The employee model.
+ * @param? size The pin size used when shown on the map.
  * @param? showInfo The ability to show info panel.
  */
 {template .EmployeePin}
 <div class="employee-pin entity-pin { $employee.departmentCSSClass }"
 	style="left:{ $employee.x }; top:{ $employee.y }"
-	data-id="{ $employee.fullName }">
+	data-id="{ $employee.fullName }"
+	data-size="{ $size }">
 	<div class="circle" data-clickable="true">
 		{ $employee.initials }
 	</div>
@@ -338,9 +343,13 @@
  * Seat pin
  * A floor pin representing a seat
  * @param seat The seat model.
+ * @param? size The pin size used when shown on the map.
  */
 {template .SeatPin}
-<div class="seat-pin {if $seat.entity }seated{/if}" style="left:{ $seat.x }; top:{ $seat.y };" data-id="{ $seat.id }">
+<div class="seat-pin {if $seat.entity }seated{/if}"
+	style="left:{ $seat.x }; top:{ $seat.y };"
+	data-id="{ $seat.id }"
+	data-size="{ $size }">
 	<div class="circle" data-clickable="true"></div>
 </div>
 {/template}

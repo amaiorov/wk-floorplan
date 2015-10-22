@@ -210,26 +210,9 @@ FloorViewer.prototype.zoom = function( fraction ) {
 		zoom: zoom
 	}, true );
 
-	this.updateIconSize();
-}
-
-
-FloorViewer.prototype.updateIconSize = function() {
-
-	window.setTimeout( $.proxy( function() {
-
-		var iconSize;
-
-		if ( zoom < 0.3 ) {
-			iconSize = 'min';
-		} else {
-			iconSize = 'max';
-		}
-
-		this.$element.find( '.entity-pin' ).attr( 'data-size', iconSize );
-		this.$element.find( '.seat-pin' ).attr( 'data-size', iconSize );
-
-	}, this ), 0 );
+	$.each( this.floors, function( i, floor ) {
+		floor.updatePinSize( zoom );
+	} );
 }
 
 

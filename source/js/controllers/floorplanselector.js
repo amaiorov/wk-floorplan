@@ -10,8 +10,22 @@ var FloorPlanSelector = function() {
 	this.$el = $( '#floorplan-selector' );
 	this.$el.on( 'click', 'li a', $.proxy( this.onClickItem, this ) );
 
-	$( '#new-floorplan-modal .btn-primary' ).on( 'click', $.proxy( this.onConfirmModal, this ) );
-	$( '#new-floorplan-modal' ).on( 'show.bs.modal', $.proxy( this.onBeforeModalShow, this ) );
+	this._$modal = $( '#new-floorplan-modal' );
+	this._$modalForm = this._$modal.find( 'form' );
+	this._$modalSubmitButton = this._$modal.find( '.btn-submit' );
+
+	this._$modalSubmitButton
+		.on( 'click', $.proxy( this.onSubmitModal, this ) );
+
+	this._$modalForm
+		.on( 'submit', $.proxy( this.onSubmitModal, this ) );
+
+	this._$modal.find( 'input' )
+		.on( 'input', $.proxy( this.onModalInput, this ) );
+
+	this._$modal
+		.on( 'show.bs.modal', $.proxy( this.onBeforeModalShow, this ) )
+		.on( 'shown.bs.modal', $.proxy( this.onModalShown, this ) );
 
 	this._fileList = [];
 
@@ -22,7 +36,7 @@ var FloorPlanSelector = function() {
 
 FloorPlanSelector.prototype.update = function( fileName, opt_fileList ) {
 
-	var _currentName = fileName.replace( '.json', '' ).replace( /-/g, ' ' );
+	var _currentName = fileName.replace( '.json', '' );
 
 	this._fileList = opt_fileList || this._fileList;
 
@@ -30,7 +44,7 @@ FloorPlanSelector.prototype.update = function( fileName, opt_fileList ) {
 
 	if ( opt_fileList ) {
 		$.each( this._fileList, function( i, fileName ) {
-			var formattedFileName = fileName.replace( '.json', '' ).split( '-' ).join( ' ' );
+			var formattedFileName = fileName.replace( '.json', '' );
 			files[ formattedFileName ] = fileName;
 		} );
 	}
@@ -65,16 +79,39 @@ FloorPlanSelector.prototype.onClickItem = function( e ) {
 
 FloorPlanSelector.prototype.onBeforeModalShow = function( e ) {
 
-	var $modal = $( '#new-floorplan-modal' );
-	var floorPlanName = $modal.find( 'input' ).val( '' );
+	this._$modal.find( 'input' ).val( '' ).trigger( 'input' );
+	this._$modal.find( '.prompt' ).hide();
+	this._$modalForm.toggleClass( 'has-error', false );
 };
 
 
-FloorPlanSelector.prototype.onConfirmModal = function( e ) {
+FloorPlanSelector.prototype.onModalShown = function( e ) {
 
-	var $modal = $( '#new-floorplan-modal' ).modal( 'hide' );
-	var floorPlanName = $modal.find( 'input' ).val() || $.now();
-	var fileName = floorPlanName.replace( /\s+/g, '-' ).toLowerCase() + '.json';
+	this._$modal.find( 'input' ).focus();
+};
+
+
+FloorPlanSelector.prototype.onModalInput = function( e ) {
+
+	var hasValue = ( e.target.value && e.target.value.length > 0 );
+	this._$modalSubmitButton.attr( 'disabled', !hasValue );
+};
+
+
+FloorPlanSelector.prototype.onSubmitModal = function( e ) {
+
+	e.preventDefault();
+
+	var floorPlanName = this._$modal.find( 'input' ).val();
+	var fileName = floorPlanName + '.json';
+
+	if ( this._fileList.indexOf( fileName ) > -1 ) {
+		this._$modal.find( '.filename-existed' ).show();
+		this._$modalForm.toggleClass( 'has-error', true );
+		return;
+	}
+
+	this._$modal.modal( 'hide' );
 
 	var fileHandler = FileHandler();
 	fileHandler.postToService( 'createJson', {

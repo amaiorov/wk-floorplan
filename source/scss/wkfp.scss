@@ -143,3 +143,24 @@ html{
 		width: 100%;
 	}
 }
+
+#new-floorplan-modal{
+	h3{
+		font-size: 20px;
+		line-height: 2;
+	}
+
+	form{
+		margin: 10px 0;
+	}
+
+	.prompt{
+		color: $color_red;
+		font-size: 12px;
+		line-height: 3;
+
+		&:before{
+			margin-right: 5px;
+		}
+	}
+}
