@@ -11,7 +11,6 @@ var FileHandler = function() {
 	this.defaultFile = 'default.json';
 	this.currentFile = this.defaultFile;
 
-	this._jsonPath = './json/';
 	this._serviceURL = './service.php';
 
 	this._$debounceEdited = td.debounce( 1000, $.proxy( this.onEdited, this ) );
@@ -29,17 +28,16 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 		case 'loadDefaultJson':
 			postData = {
 				'action': action,
-				'path': this._jsonPath,
 				'filename': this.defaultFile
 			};
 			break;
 		case 'loadCustomJson':
 			postData = {
 				'action': action,
-				'path': this._jsonPath,
 				'filename': params.fileName
 			};
 			break;
+		case 'createJson':
 		case 'saveJson':
 			postData = {
 				'json': JSON.stringify( {
@@ -47,7 +45,6 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 					'seats': Floor.createJson()
 				} ),
 				'action': action,
-				'path': this._jsonPath,
 				'filename': params.fileName
 			};
 			break;

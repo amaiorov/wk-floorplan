@@ -12,7 +12,13 @@ var PubSub = function() {
 	this.searchCompleted = new Signal();
 	this.edited = new Signal();
 	this.modeChanged = new Signal();
+
 	this.jsonLoaded = new Signal();
+	this.jsonLoaded.memorize = true;
+
+	this.routed = new Signal();
+	this.routed.memorize = true;
+
 	this.fileChanged = new Signal();
 	this.fileCreated = new Signal();
 };

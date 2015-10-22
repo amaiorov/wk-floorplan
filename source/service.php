@@ -13,36 +13,42 @@
 	// echo $_POST['json'];
 
 	$action = isset($_POST['action']) ? $_POST['action'] : $_GET['action'];
-	$file = $_POST['path'] . $_POST['filename'];
+	$fileName = $_POST['filename'];
+	$path = './json/';
 	$fullName = $_POST['fullName'];
 	$fullName = $_GET['fullName'];
 
 	function getFilelist() {
-		$glob = glob($_POST['path'] . '*.{json}', GLOB_BRACE);
-		$glob = str_replace($_POST['path'], '', $glob);
-		// $glob = str_replace('.json', '', $glob);
+
+		$glob = glob('./json/*.{json}', GLOB_BRACE);
+		$glob = str_replace('./json/', '', $glob);
+
+		for($i = 0; $i < sizeof($glob); $i++) {
+			$glob[$i] = urldecode( $glob[$i] );
+		}
+
 		return array_values($glob);
 	}
 
 	switch ($action) {
 		case 'test':
 			break;
+		case 'createJson':
 		case 'saveJson':
-			file_put_contents($file, $_POST['json']);
+			file_put_contents($path . urlencode($fileName), $_POST['json']);
 			$JSON = json_encode(array(
 				'filelist' => getFilelist(),
-				'file' => $_POST['filename']
+				'file' => $fileName
 			));
 			header('Content-Type: application/json');
 			echo $JSON;
 			break;
 		case 'loadDefaultJson':
 		case 'loadCustomJson':
-
 			$JSON = json_encode(array(
 				'filelist' => getFilelist(),
-				'file' => $_POST['filename'],
-				'content' => file_get_contents($file)
+				'file' => $fileName,
+				'content' => file_get_contents($path . urlencode($fileName))
 			));
 			header('Content-Type: application/json');
 			echo $JSON;

@@ -24,11 +24,18 @@ var Floor = function( element, viewportMetrics ) {
 	// create pins
 	this._seats = null;
 	this._entities = null;
+	this._pinSize = null;
 	this.createPins();
 
+	this._hasHighlightedEntityPin = false;
+	this._hasHighlightedSeatPin = false;
+
 	// listen for mouse events on pins
-	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
-	this.$element.on( 'click', '.seat-pin', $.proxy( this.onClickSeatPin, this ) );
+	this.$element.on( 'mousedown', '.entity-pin', $.proxy( this.onMouseDownEntityPin, this ) );
+	this.$element.on( 'mousedown', '.seat-pin', $.proxy( this.onMouseDownSeatPin, this ) );
+	this.$element.on( 'dblclick', '.seat-pin', $.proxy( this.onDoubleClickSeatPin, this ) );
+
+	this._$inner.on( 'click', $.proxy( this.onClickInner, this ) );
 
 	// listen for seat models change
 	this.listenForChanges();
@@ -76,8 +83,14 @@ Floor.prototype.show = function() {
 Floor.prototype.hide = function() {
 
 	this.$element.hide();
-	this.highlightEntityPin( null );
-	this.highlightSeatPin( null );
+
+	if ( this._hasHighlightedEntityPin ) {
+		this.highlightEntityPin( null );
+	}
+
+	if ( this._hasHighlightedSeatPin ) {
+		this.highlightSeatPin( null );
+	}
 };
 
 
@@ -118,6 +131,19 @@ Floor.prototype.createPins = function( opt_entities, opt_seats ) {
 };
 
 
+Floor.prototype.updatePinSize = function( zoom ) {
+
+	if ( zoom < 0.3 ) {
+		this._pinSize = 'min';
+	} else {
+		this._pinSize = 'max';
+	}
+
+	this.$element.find( '.entity-pin' ).attr( 'data-size', this._pinSize );
+	this.$element.find( '.seat-pin' ).attr( 'data-size', this._pinSize );
+};
+
+
 Floor.prototype.reset = function() {
 
 	// remove all entity pins
@@ -138,12 +164,8 @@ Floor.prototype.addEntityPin = function( model ) {
 
 	var icon = soy.renderAsFragment( template.EmployeePin, {
 		employee: model,
-		showInfo: true
-	} );
-
-	$( icon ).css( {
-		'left': model.x,
-		'top': model.y
+		showInfo: true,
+		size: this._pinSize
 	} );
 
 	this._$inner.append( icon );
@@ -205,6 +227,8 @@ Floor.prototype.highlightEntityPin = function( pinEl ) {
 		$pinEl.addClass( 'active' );
 	}
 
+	this._hasHighlightedEntityPin = shouldActivate;
+
 	// highlight the entity's seat pin if seated
 	if ( pinEl ) {
 
@@ -235,6 +259,8 @@ Floor.prototype.highlightSeatPin = function( pinEl ) {
 
 		pubSub.seatSelected.dispatch( null );
 	}
+
+	this._hasHighlightedSeatPin = shouldActivate;
 };
 
 
@@ -342,7 +368,8 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 		var seatModel = added[ key ];
 
 		var el = soy.renderAsFragment( template.SeatPin, {
-			seat: seatModel
+			seat: seatModel,
+			size: this._pinSize
 		} );
 
 		this._$inner.append( el );
@@ -359,16 +386,42 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 };
 
 
-Floor.prototype.onClickEntityPin = function( e ) {
+Floor.prototype.onMouseDownEntityPin = function( e ) {
 
 	this.highlightEntityPin( e.currentTarget );
 };
 
 
-Floor.prototype.onClickSeatPin = function( e ) {
+Floor.prototype.onMouseDownSeatPin = function( e ) {
 
 	this.highlightSeatPin( e.currentTarget );
 	this.highlightEntityPin( null );
+};
+
+
+Floor.prototype.onDoubleClickSeatPin = function( e ) {
+
+	this.highlightSeatPin( null );
+
+	var seatId = e.currentTarget.getAttribute( 'data-id' );
+	var seat = this._seats[ seatId ].model;
+	this.removeSeatPin( seat );
+};
+
+
+Floor.prototype.onClickInner = function( e ) {
+
+	if ( e.target !== e.currentTarget ) {
+		return;
+	}
+
+	if ( this._hasHighlightedEntityPin ) {
+		this.highlightEntityPin( null );
+	}
+
+	if ( this._hasHighlightedSeatPin ) {
+		this.highlightSeatPin( null );
+	}
 };
 
 

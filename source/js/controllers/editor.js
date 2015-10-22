@@ -48,6 +48,7 @@ var Editor = function() {
 
 	// declare vars
 	this._metrics = {};
+	this._hadResetOnce = false;
 
 	// query dom elements
 	this._$floorPane = this.$element.find( '.floor-pane' ).css( 'width', '100%' );
@@ -172,6 +173,18 @@ Editor.prototype.reset = function( opt_json ) {
 	}
 
 	Platform.performMicrotaskCheckpoint();
+
+	// apply initial routed location only once, immediately after first reset was called
+	if ( !this._hadResetOnce ) {
+
+		this._hadResetOnce = true;
+
+		pubSub.routed.addOnce( function( key, params ) {
+			if ( key === 'location' ) {
+				this.floorViewer.locateFromRoute( params );
+			}
+		}, this );
+	}
 }
 
 
@@ -392,7 +405,6 @@ Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 		if ( !outOfViewport && !entityModel.isAssigned ) {
 
 			this.floorViewer.currentFloor.addEntityPin( entityModel );
-			this.floorViewer.updateIconSize();
 		}
 
 		if ( this._collidingSeat ) {
@@ -415,8 +427,6 @@ Editor.prototype.onClickAddSeat = function( e ) {
 
 	this.floorViewer.currentFloor.addSeatPin(
 		this.floorViewer.getFloorPosition(), this.floorViewer.getFloorSize() );
-
-	this.floorViewer.updateIconSize();
 };
 
 

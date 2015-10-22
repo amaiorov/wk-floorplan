@@ -4,9 +4,11 @@ var template = require( 'views/main.soy' );
 var Floor = require( 'models/floor' );
 var Employee = require( 'models/employee' );
 var employeeCollection = require( 'models/employeecollection' );
+var router = require( 'controllers/router' );
 var Editor = require( 'controllers/editor' );
 var Search = require( 'controllers/search' );
 var FileHandler = require( 'controllers/filehandler' );
+var pubSub = require( 'app/pubsub' );
 var Utils = require( 'app/utils' );
 var _instance;
 
@@ -21,7 +23,7 @@ var Bootstrapper = function() {
 
 Bootstrapper.prototype.load = function( opt_ssUrl ) {
 
-	this.loadSpreadSheets( opt_ssUrl, $.proxy( this.loadDefaultJson, this ) );
+	this.loadSpreadSheets( opt_ssUrl, $.proxy( this.onSpreadSheetsLoad, this ) );
 }
 
 
@@ -48,17 +50,38 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl, callback ) {
 }
 
 
-Bootstrapper.prototype.loadDefaultJson = function() {
+Bootstrapper.prototype.onSpreadSheetsLoad = function() {
 
-	var fileHandler = FileHandler();
-	fileHandler.postToService( 'loadDefaultJson', null, $.proxy( this.onJsonLoad, this ) );
+	var action;
+	var serviceData;
+
+	pubSub.routed.addOnce( function( key, params ) {
+
+		var fileHandler = FileHandler();
+
+		switch ( key ) {
+			case 'location':
+				action = 'loadCustomJson';
+				serviceData = {
+					fileName: params.file ? ( decodeURI( params.file ) + '.json' ) : fileHandler.defaultFile
+				};
+				break;
+
+			default:
+				action = 'loadDefaultJson';
+				break;
+		}
+
+		fileHandler.postToService( action, serviceData, $.proxy( this.onJsonLoad, this ) );
+
+	}, this );
 }
 
 
 Bootstrapper.prototype.onJsonLoad = function( data ) {
 
-	var json = data ? JSON.parse( data.content ) : null;
-	console.log( json );
+	var content = data ? JSON.parse( data.content ) : null;
+	console.log( data );
 
 	// WIP: generate all seat models
 	var floor6 = Floor.getByIndex( '6' );
@@ -67,14 +90,14 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 
 	var entities = employeeCollection.getAll();
 
-	if ( json ) {
+	if ( content ) {
 
-		$.each( json[ 'seats' ], function( id, seat ) {
+		$.each( content[ 'seats' ], function( id, seat ) {
 			Floor.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
 		} );
 
 		$.each( entities, function( i, entity ) {
-			var entityData = json[ 'entities' ][ entity.fullName ];
+			var entityData = content[ 'entities' ][ entity.fullName ];
 			entity.x = entityData[ 'x' ];
 			entity.y = entityData[ 'y' ];
 			entity.floorIndex = entityData[ 'floorIndex' ];
@@ -107,6 +130,9 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 	}
 
 	Platform.performMicrotaskCheckpoint();
+
+	//
+	pubSub.jsonLoaded.dispatch( content, data.filelist, data.file );
 
 	//
 	TweenMax.fromTo( $( '#main-container' ).get( 0 ), 1, {

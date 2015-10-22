@@ -98,8 +98,8 @@ FloorViewer.prototype.init = function() {
 	this.setMousewheelSpeed( 8 );
 	this.setZoomSlider( 0 );
 
-	var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
-	this.focusOnCenter( floorIndex, 0 );
+	//var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
+	//this.focusOnCenter( floorIndex, 0 );
 
 	this.hideMousewheelScroller();
 }
@@ -123,15 +123,22 @@ FloorViewer.prototype.getFloorSize = function() {
 }
 
 
-FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+FloorViewer.prototype.locateFromRoute = function( params ) {
 
-	if ( opt_floorIndex ) {
-		this.toggleFloor( opt_floorIndex );
+	if ( params.floor ) {
+		this.toggleFloor( params.floor.toString() );
 	}
 
-	var floorSize = this.getFloorSize();
-	var floorXAfterCentered = ( this._viewportMetrics.width - floorSize.width ) / 2;
-	var floorYAfterCentered = ( this._viewportMetrics.height - floorSize.height ) / 2;
+	if ( params.zoom ) {
+		this.zoom( Utils.clamp( params.zoom, 0, 1 ) );
+	}
+}
+
+
+FloorViewer.prototype.moveTo = function( x, y ) {
+
+	var floorXAfterCentered = ( this._viewportMetrics.width - x * 2 ) / 2;
+	var floorYAfterCentered = ( this._viewportMetrics.height - y * 2 ) / 2;
 
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': floorXAfterCentered,
@@ -139,6 +146,19 @@ FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
 	} );
 
 	this._draggable.update( true );
+
+	this.currentFloor.updateTiles( zoom );
+}
+
+
+FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+
+	if ( opt_floorIndex ) {
+		this.toggleFloor( opt_floorIndex );
+	}
+
+	var floorSize = this.getFloorSize();
+	this.moveTo( floorSize.width / 2, floorSize.height / 2 );
 
 	if ( $.isNumeric( opt_zoom ) ) {
 
@@ -166,15 +186,8 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 
 	var pin = this.currentFloor.getEntityPin( entityModel.fullName );
 	var pinPosition = pin.$element.position();
-	var floorXAfterCentered = ( this._viewportMetrics.width - pinPosition.left * 2 ) / 2;
-	var floorYAfterCentered = ( this._viewportMetrics.height - pinPosition.top * 2 ) / 2;
 
-	TweenMax.set( this._$floorContainer.get( 0 ), {
-		'x': floorXAfterCentered,
-		'y': floorYAfterCentered
-	} );
-
-	this._draggable.update( true );
+	this.moveTo( pinPosition.left, pinPosition.top );
 
 	if ( opt_zoom ) {
 
@@ -182,6 +195,7 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 		var pinHalfWidth = pin.$element.width() / 2;
 		var pinHalfHeight = pin.$element.height() / 2;
 		var elementOffset = this.$element.offset();
+
 		this._viewportZoomX = pinOffset.left + pinHalfWidth - elementOffset.left;
 		this._viewportZoomY = pinOffset.top + pinHalfHeight - elementOffset.top;
 
@@ -210,26 +224,9 @@ FloorViewer.prototype.zoom = function( fraction ) {
 		zoom: zoom
 	}, true );
 
-	this.updateIconSize();
-}
-
-
-FloorViewer.prototype.updateIconSize = function() {
-
-	window.setTimeout( $.proxy( function() {
-
-		var iconSize;
-
-		if ( zoom < 0.3 ) {
-			iconSize = 'min';
-		} else {
-			iconSize = 'max';
-		}
-
-		this.$element.find( '.entity-pin' ).attr( 'data-size', iconSize );
-		this.$element.find( '.seat-pin' ).attr( 'data-size', iconSize );
-
-	}, this ), 0 );
+	$.each( this.floors, function( i, floor ) {
+		floor.updatePinSize( zoom );
+	} );
 }
 
 
