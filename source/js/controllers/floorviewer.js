@@ -135,15 +135,10 @@ FloorViewer.prototype.locateFromRoute = function( params ) {
 }
 
 
-FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+FloorViewer.prototype.moveTo = function( x, y ) {
 
-	if ( opt_floorIndex ) {
-		this.toggleFloor( opt_floorIndex );
-	}
-
-	var floorSize = this.getFloorSize();
-	var floorXAfterCentered = ( this._viewportMetrics.width - floorSize.width ) / 2;
-	var floorYAfterCentered = ( this._viewportMetrics.height - floorSize.height ) / 2;
+	var floorXAfterCentered = ( this._viewportMetrics.width - x * 2 ) / 2;
+	var floorYAfterCentered = ( this._viewportMetrics.height - y * 2 ) / 2;
 
 	TweenMax.set( this._$floorContainer.get( 0 ), {
 		'x': floorXAfterCentered,
@@ -151,6 +146,19 @@ FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
 	} );
 
 	this._draggable.update( true );
+
+	this.currentFloor.updateTiles( zoom );
+}
+
+
+FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+
+	if ( opt_floorIndex ) {
+		this.toggleFloor( opt_floorIndex );
+	}
+
+	var floorSize = this.getFloorSize();
+	this.moveTo( floorSize.width / 2, floorSize.height / 2 );
 
 	if ( $.isNumeric( opt_zoom ) ) {
 
@@ -178,15 +186,8 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 
 	var pin = this.currentFloor.getEntityPin( entityModel.fullName );
 	var pinPosition = pin.$element.position();
-	var floorXAfterCentered = ( this._viewportMetrics.width - pinPosition.left * 2 ) / 2;
-	var floorYAfterCentered = ( this._viewportMetrics.height - pinPosition.top * 2 ) / 2;
 
-	TweenMax.set( this._$floorContainer.get( 0 ), {
-		'x': floorXAfterCentered,
-		'y': floorYAfterCentered
-	} );
-
-	this._draggable.update( true );
+	this.moveTo( pinPosition.left, pinPosition.top );
 
 	if ( opt_zoom ) {
 
@@ -194,6 +195,7 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 		var pinHalfWidth = pin.$element.width() / 2;
 		var pinHalfHeight = pin.$element.height() / 2;
 		var elementOffset = this.$element.offset();
+
 		this._viewportZoomX = pinOffset.left + pinHalfWidth - elementOffset.left;
 		this._viewportZoomY = pinOffset.top + pinHalfHeight - elementOffset.top;
 

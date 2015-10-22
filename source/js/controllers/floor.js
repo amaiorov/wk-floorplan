@@ -31,8 +31,10 @@ var Floor = function( element, viewportMetrics ) {
 	this._hasHighlightedSeatPin = false;
 
 	// listen for mouse events on pins
-	this.$element.on( 'click', '.entity-pin', $.proxy( this.onClickEntityPin, this ) );
-	this.$element.on( 'click', '.seat-pin', $.proxy( this.onClickSeatPin, this ) );
+	this.$element.on( 'mousedown', '.entity-pin', $.proxy( this.onMouseDownEntityPin, this ) );
+	this.$element.on( 'mousedown', '.seat-pin', $.proxy( this.onMouseDownSeatPin, this ) );
+	this.$element.on( 'dblclick', '.seat-pin', $.proxy( this.onDoubleClickSeatPin, this ) );
+
 	this._$inner.on( 'click', $.proxy( this.onClickInner, this ) );
 
 	// listen for seat models change
@@ -384,16 +386,26 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 };
 
 
-Floor.prototype.onClickEntityPin = function( e ) {
+Floor.prototype.onMouseDownEntityPin = function( e ) {
 
 	this.highlightEntityPin( e.currentTarget );
 };
 
 
-Floor.prototype.onClickSeatPin = function( e ) {
+Floor.prototype.onMouseDownSeatPin = function( e ) {
 
 	this.highlightSeatPin( e.currentTarget );
 	this.highlightEntityPin( null );
+};
+
+
+Floor.prototype.onDoubleClickSeatPin = function( e ) {
+
+	this.highlightSeatPin( null );
+
+	var seatId = e.currentTarget.getAttribute( 'data-id' );
+	var seat = this._seats[ seatId ].model;
+	this.removeSeatPin( seat );
 };
 
 
