@@ -74,11 +74,11 @@
 							<input type="checkbox" class="checkbox checkbox-sheet">
 						</div>
 
+						<div id="floorplan-selector"></div>
+						
 						<input id="mode-toggler" type="checkbox" data-on="Edit" data-off="Preview">
 
 					</div>
-
-					<div id="floorplan-selector"></div>
 
 				</div>
 
@@ -233,16 +233,20 @@
 {template .FloorPlanDropdown}
 <div class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    <span class="text">{ $currentName }</span>
+    <span class="text icon icon-file">{ $currentName }</span>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
   	{foreach $name in keys($files)}
-  	<li><a data-file-name="{ $files[$name] }">{ $name }</a></li>
+  	<li {if $name == $currentName}class="disabled"{/if}>
+  		<a class="icon icon-file"
+  			{if $name == $currentName}data-disabled{/if} data-file-name="{ $files[$name] }">
+  			{ $name }
+  		</a>
+  	</li>
   	{/foreach}
     <li>
-    	<a class="new" data-toggle="modal" data-target="#new-floorplan-modal">
-    		<span class="icon icon-plus"></span>
+    	<a class="new icon icon-plus" data-toggle="modal" data-target="#new-floorplan-modal">
     		New Floor Plan
     	</a>
     </li>

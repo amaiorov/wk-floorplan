@@ -62,6 +62,10 @@ FloorPlanSelector.prototype.update = function( fileName, opt_fileList ) {
 
 FloorPlanSelector.prototype.onClickItem = function( e ) {
 
+	if ( e.currentTarget.hasAttribute( 'data-disabled' ) ) {
+		return;
+	}
+
 	var fileName = $( e.currentTarget ).attr( 'data-file-name' );
 
 	if ( fileName ) {

@@ -28,29 +28,29 @@
 	}
 
 	#floorplan-selector{
-		margin-left: 20px;
+		margin-right: 20px;
+
+		.icon:before{
+			margin-right: 8px;
+		}
 
 		a{
+			margin: 5px 0;
 			cursor: pointer;
-			text-transform: capitalize;
+			text-transform: normal;
 		}
 
 		.text{
-			margin-right: 5px;
-			text-transform: capitalize;
+			margin-right: 8px;
+			text-transform: normal;
 		}
 
 		.new{
 			border-top: 1px dashed lightgray;
 			margin-top: 10px;
+			margin-bottom: 0;
 			padding-top: 10px;
 			padding-bottom: 10px;
-
-			>.icon{
-				margin-top: -3px;
-				margin-right: 5px;
-				font-size: 8px;
-			}
 		}
 
 		&:not(.admin) {
