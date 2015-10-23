@@ -14,7 +14,10 @@ var _instance;
 
 var Bootstrapper = function() {
 
-	var frag = soy.renderAsFragment( template.Main );
+	var frag = soy.renderAsFragment( template.Main, {
+		admin: window.admin
+	} );
+
 	$( document.body ).append( frag );
 
 	var search = Search();

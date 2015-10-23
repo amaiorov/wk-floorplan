@@ -2,9 +2,12 @@
 
 /**
  * Main
+ * @param admin whether the app is in admin mode
  */
 {template .Main}
-	{call .Home}{/call}
+	{call .Home}
+		{param admin: $admin /}
+	{/call}
 
 	<div class="modal fade" id="new-floorplan-modal" tabindex="-1" role="dialog">
 	  <div class="modal-dialog" role="document">
@@ -32,6 +35,7 @@
 
 /**
  * Home Page
+ * @param admin whether the app is in admin mode
  */
 {template .Home}
 <div id="home">
@@ -62,6 +66,7 @@
 					<div id="autocomplete-list"></div>
 				</div>
 
+				{if $admin == true}
 				<div class="other-buttons">
 
 					<div class="admin-buttons">
@@ -83,6 +88,7 @@
 					</div>
 
 				</div>
+				{/if}
 
 			</div>
 		</div>
