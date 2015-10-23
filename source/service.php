@@ -79,7 +79,7 @@
 
 			$tags = $doc->getElementsByTagName('img');
 			if ($tags->length == 2) {
-				$localHeadshotSrc = './headshots/'. $fullName . '.jpg';
+				$localHeadshotSrc = './images/headshots/'. $fullName . '.jpg';
 				$localMD5 = file_exists($localHeadshotSrc) ? md5_file($localHeadshotSrc) : null;
 				$remoteHeadshotSrc = $tags[1]->getAttribute('src');
 				$remoteMD5 = md5_file($remoteHeadshotSrc);

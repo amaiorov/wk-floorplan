@@ -4,17 +4,17 @@
 
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.eot");
+	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot");
 	font-weight:normal;
 	font-style:normal;
 }
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.eot");
-	src:url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.eot?#iefix") format("embedded-opentype"),
-		url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.woff") format("woff"),
-		url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.ttf") format("truetype"),
-		url("../fonts/fontcustom/icons-e313fc8c0f45512f1c0167aa82f9e51f.svg?#icons") format("svg");
+	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot");
+	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot?#iefix") format("embedded-opentype"),
+		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.woff") format("woff"),
+		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.ttf") format("truetype"),
+		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.svg?#icons") format("svg");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -98,6 +98,11 @@
 }
 
 
-.icon-warning:before {
+.icon-url:before {
 	content:"\f10d";
+}
+
+
+.icon-warning:before {
+	content:"\f10e";
 }

@@ -3,6 +3,7 @@ var pubSub = require( 'app/pubsub' );
 var TweenMax = require( 'libs/gsap/TweenMax' );
 var Draggable = require( 'libs/gsap/utils/Draggable' );
 var Floor = require( 'controllers/floor' );
+var FileHandler = require( 'controllers/filehandler' );
 
 var mousewheelHideDelay = null;
 var zoom = 0;
@@ -15,6 +16,7 @@ var FloorViewer = function( _$element ) {
 
 	this._$floorContainer = this.$element.find( '.floor-container' );
 	this._$floorButtons = this.$element.find( '.floor-buttons .btn' );
+	this._$urlGenerator = this.$element.find( '.url-generator' );
 	this._$mousewheelScroller = this.$element.find( '.mousewheel-scroller' );
 
 	this._$resize = $.proxy( this.resize, this );
@@ -81,6 +83,9 @@ FloorViewer.prototype.init = function() {
 	$onClickFloorButton = $.proxy( this.onClickFloorButton, this );
 	this._$floorButtons.on( 'click', $onClickFloorButton );
 
+	$onClickUrlButton = $.proxy( this.onClickUrlButton, this );
+	this._$urlGenerator.find( 'button' ).on( 'click', $onClickUrlButton );
+
 	var $onMouseWheel = $.proxy( this.onMouseWheel, this );
 	this.$element.on( 'mousewheel wheel', $onMouseWheel );
 
@@ -134,12 +139,6 @@ FloorViewer.prototype.getFloorSize = function() {
 		width: this._floorWidth,
 		height: this._floorHeight
 	}
-}
-
-
-FloorViewer.prototype.getZoom = function() {
-
-	return zoom;
 }
 
 
@@ -376,6 +375,23 @@ FloorViewer.prototype.toggleFloor = function( floorId ) {
 }
 
 
+FloorViewer.prototype.generateURL = function() {
+
+	var fileHandler = FileHandler();
+	var floorCenter = this.getFloorCenterInView();
+
+	var params = {
+		file: fileHandler.getEncodedFilename(),
+		floor: this.currentFloorIndex,
+		zoom: zoom.toFixed( 2 ),
+		x: floorCenter.x.toFixed( 2 ),
+		y: floorCenter.y.toFixed( 2 )
+	};
+
+	return 'http://' + window.location.hostname + '/#/location?file=' + params.file + '&floor=' + params.floor + '&zoom=' + params.zoom + '&x=' + params.x + '&y=' + params.y;
+}
+
+
 FloorViewer.prototype.dispose = function() {
 
 	this._$floorButtons.off( 'click' );
@@ -449,6 +465,18 @@ FloorViewer.prototype.onClickFloorButton = function( e ) {
 
 	var floorId = e.currentTarget.getAttribute( 'data-id' );
 	this.toggleFloor( floorId );
+}
+
+
+FloorViewer.prototype.onClickUrlButton = function( e ) {
+
+	$( e.currentTarget ).toggleClass( 'active' );
+	this._$urlGenerator.toggleClass( 'show-url' );
+
+	if ( this._$urlGenerator.hasClass( 'show-url' ) ) {
+		var url = this.generateURL();
+		this._$urlGenerator.find( 'input' ).val( url ).select();
+	}
 }
 
 

@@ -146,6 +146,43 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		copy: {
+			release: {
+				files: [ {
+					expand: true,
+					cwd: './',
+					src: [
+						'**',
+						'!js/**',
+						'!node_modules/**',
+						'!scss/**',
+						'!output/bundle.map',
+						'!soy/**',
+						'!tools/**',
+						'!Gemfile.lock',
+						'!Gemfile',
+						'!Gruntfile.js',
+						'!package.json',
+						'!images/icons/**',
+						'!images/icons-2x/**',
+						'!images/ui/**',
+						'!images/ui-2x/**',
+						'!images/headshots/**.jpg',
+						'!fonts/fontcustom/icons/**',
+					],
+					dest: '../release',
+				}, ]
+			}
+		},
+
+		uglify: {
+			release: {
+				files: {
+					'../release/output/bundle.js': [ '../release/output/bundle.js' ]
+				}
+			}
+		},
+
 	} );
 
 	// These plugins provide necessary tasks.
@@ -153,6 +190,8 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-exorcise' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
+	grunt.loadNpmTasks( 'grunt-contrib-copy' );
+	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-closure-soy' );
 	grunt.loadNpmTasks( 'grunt-webfont' );
 
@@ -166,5 +205,13 @@ module.exports = function( grunt ) {
 		'watch',
 	] );
 
-	grunt.registerTask( 'release', [] );
+	grunt.registerTask( 'release', [
+		'compass',
+		'webfont',
+		'closureSoys',
+		'browserify',
+		'exorcise:bundle',
+		'copy',
+		'uglify:release',
+	] );
 };

@@ -29,28 +29,29 @@
 	white-space: normal;
 
 	.legend {
-		background-color: rgba(255, 255, 255, 0.8);
+		display: inline-block;
+		width: 600px;
+		background-color: rgba(white, .8);
 		border: 1px solid lightgray;
 		border-left: none;
 		border-bottom: none;
-		bottom: 0;
 		padding: 6px;
 		font-size: 12px;
-		left: 0;
-		width: 40%;
 		position: absolute;
+		left: 0;
+		bottom: 0;
 		z-index: 1;
 
 		.department {
-			float: left;
-			overflow: hidden;
 			padding: 10px 10px 10px 30px;
 			position: relative;
 			text-overflow: ellipsis;
 			text-transform: uppercase;
+			white-space: nowrap;
+			overflow: hidden;
 			font-size: 10px;
 			width: 33%;
-			white-space: nowrap;
+			float: left;
 
 			&:before {
 				background: #ccc;
@@ -245,6 +246,35 @@
 		z-index: 2;
 		top: 30px;
 		left: 30px;
+	}
+
+	.url-generator{
+		display: inline-block;
+		position: absolute;
+		z-index: 3;
+		top: 30px;
+		right: 30px;
+
+		&:not(.show-url) {
+			>input{
+				width: 0;
+				opacity: 0;
+			}
+		}
+
+		>input{
+			@include inline-block(top);
+			width: 200px;
+			margin-right: 4px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			opacity: 1;
+			@include transition(width .25s, opacity .25s);
+		}
+
+		>button{
+			@include inline-block(top);
+		}
 	}
 }
 

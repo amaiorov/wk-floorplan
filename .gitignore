@@ -12,7 +12,7 @@ source/fonts/fontcustom/*.eot
 source/fonts/fontcustom/*.ttf
 source/fonts/fontcustom/*.woff
 source/output/
-/source/headshots/*.jpg
+source/images/headshots/*.jpg
 /source/_Gemfile
 /source/web.config
 

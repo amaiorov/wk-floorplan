@@ -116,9 +116,6 @@ var Editor = function() {
 	//
 	this._$changeMode();
 	this._$onSeatSelected( null );
-
-	//
-	window.generateURLParams = this.generateURLParams.bind( this );
 }
 
 
@@ -209,24 +206,6 @@ Editor.prototype.changeMode = function() {
 
 	pubSub.modeChanged.dispatch( isEditMode );
 };
-
-
-Editor.prototype.generateURLParams = function() {
-
-	var fileHandler = FileHandler();
-	var zoom = this.floorViewer.getZoom();
-	var floorCenter = this.floorViewer.getFloorCenterInView();
-
-	var params = {
-		file: fileHandler.getEncodedFilename(),
-		floor: this.floorViewer.currentFloorIndex,
-		zoom: zoom.toFixed( 2 ),
-		x: floorCenter.x.toFixed( 2 ),
-		y: floorCenter.y.toFixed( 2 )
-	};
-
-	return window.location.hostname + '/#/location?file=' + params.file + '&floor=' + params.floor + '&zoom=' + params.zoom + '&x=' + params.x + '&y=' + params.y;
-}
 
 
 Editor.prototype.onModeChanged = function( isEditMode ) {
