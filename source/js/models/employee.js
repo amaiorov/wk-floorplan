@@ -16,6 +16,7 @@ var Employee = function( props ) {
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
 	this.type = this.getType( props );
+	this.photoURL = '/service.php?fullName=' + this.firstName + '.' + this.lastName.split( '/' )[ 0 ];
 	this.seat = null;
 	this.x = null;
 	this.y = null;

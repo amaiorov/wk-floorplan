@@ -13,6 +13,8 @@
 <?php
 	if ($_SESSION['admin'] == true) {
 		echo "<script>window.admin = true;</script>";
+	} else {
+		unset($_SESSION['admin']);
 	}
 ?>
 </head>

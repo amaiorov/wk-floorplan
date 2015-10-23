@@ -5,7 +5,7 @@
 	if ($_SESSION['admin']) {
 		header('Location: /');
 	} else {
-		echo 'session cookie "admin" is not set';
+		echo 'Please reload the page.';
 		$_SESSION['admin'] = true;
 	}
 

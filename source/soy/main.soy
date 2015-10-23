@@ -329,7 +329,10 @@
 			<h3 class="panel-title">{ $employee.firstName } { $employee.lastName }</h3>
 		</div>
 		<div class="panel-body">
-			<div class="photo {$employee.type}"></div>
+			<div class="photo {$employee.type}">
+				// <div style="background:url({$employee.photoURL});width:100px;height:100px"></div>
+				<div style="background-image:url({$employee.photoURL})"></div>
+			</div>
 			<div class="content">
 				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}
 				{if $employee.extension }<p>Ext. <span class="number">{ $employee.extension }</span></p>{/if}

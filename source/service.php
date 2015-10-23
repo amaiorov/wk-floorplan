@@ -61,37 +61,41 @@
 			$url = 'http://www.wk.com/' . $fullName;
 			// $url = 'http://www.wk.com/alex.maiorov';
 
-			$html = file_get_contents($url);
-
+			// if request headers contain 404, do not grab the file
+			$html = strpos(get_headers($url)[0], '404') ? null : file_get_contents($url);
+			// echo strpos(get_headers($url)[0], '404') ? 'found' : 'not found';
 			$doc = new DOMDocument();
 			@$doc->loadHTML($html);
+			$placeholderImageSrc = './images/cactaur.gif';
 
 			$tags = $doc->getElementsByTagName('img');
 			if ($tags->length == 2) {
 				$localHeadshotSrc = './headshots/'. $fullName . '.jpg';
-				$localMD5 = md5_file($localHeadshotSrc);
+				$localMD5 = file_exists($localHeadshotSrc) ? md5_file($localHeadshotSrc) : null;
 				$remoteHeadshotSrc = $tags[1]->getAttribute('src');
 				$remoteMD5 = md5_file($remoteHeadshotSrc);
 				if (file_exists($localHeadshotSrc) && $localMD5 == $remoteMD5) {
-					echo 'local file ' . $localHeadshotSrc . ' exists and MD5 match';
+					// echo 'local file ' . $localHeadshotSrc . ' exists and MD5 match';
+					header('Content-Type: image/jpeg');
+					echo file_get_contents($localHeadshotSrc);
 				} else if (file_exists($localHeadshotSrc) && $localMD5 != $remoteMD5) {
-					echo 'local file ' . $localHeadshotSrc . ' exists and MD5 do not match';
+					// echo 'local file ' . $localHeadshotSrc . ' exists and MD5 do not match';
+					file_put_contents($localHeadshotSrc, file_get_contents($remoteHeadshotSrc));
+					header('Content-Type: image/jpeg');
+					echo file_get_contents($remoteHeadshotSrc);
 				} else {
-					echo 'local file ' . $localHeadshotSrc . ' does not exist';
+					// echo 'local file ' . $localHeadshotSrc . ' does not exist';
+					file_put_contents($localHeadshotSrc, file_get_contents($remoteHeadshotSrc));
+					header('Content-Type: image/jpeg');
+					echo file_get_contents($remoteHeadshotSrc);
 				}
-
-				// echo 'correct page';
-				// header('Content-Type: image/jpeg');
-				// echo );
 			} else {
-				echo 'FAIL: incorrect page';
+				// echo 'incorrect file requested';
+				header('Content-Type: image/jpeg');
+				echo file_get_contents($placeholderImageSrc);
 			}
-			// echo 'do something else, aka FAIL';
+
 			break;
-			// echo file_get_contents('http://www.wk.com/alex.maiorov');
-
-			// $doc->loadHTML(file_get_contents('http://www.wk.com/alex.maiorov'));
-
 
 	}
 ?>
