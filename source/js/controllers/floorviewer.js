@@ -169,6 +169,10 @@ FloorViewer.prototype.locateFromRoute = function( params ) {
 		this.updateBounds();
 
 		this.currentFloor.updateTiles( zoom );
+
+		$.each( this.floors, function( i, floor ) {
+			floor.updatePinSize( zoom );
+		} );
 	}
 
 	if ( params.x && params.y ) {
