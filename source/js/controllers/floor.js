@@ -218,13 +218,15 @@ Floor.prototype.removeSeatPin = function( model ) {
 Floor.prototype.highlightEntityPin = function( pinEl ) {
 
 	var $pinEl = $( pinEl );
-	var shouldActivate = !$pinEl.hasClass( 'active' );
+	var shouldActivate = ( ( pinEl && !( $pinEl.hasClass( 'active' ) ) ) === true );
 
 	this.$element.find( '.entity-pin' ).removeClass( 'active' );
 
 	if ( shouldActivate ) {
-		$pinEl.addClass( 'active' );
+		$pinEl.addClass( 'active photo-shown' );
 	}
+
+	this._$inner.toggleClass( 'pin-selected', shouldActivate );
 
 	this._hasHighlightedEntityPin = shouldActivate;
 
@@ -245,14 +247,13 @@ Floor.prototype.highlightEntityPin = function( pinEl ) {
 Floor.prototype.highlightSeatPin = function( pinEl ) {
 
 	var $pinEl = $( pinEl );
-	var shouldActivate = !$pinEl.hasClass( 'active' );
+	var shouldActivate = ( ( pinEl && !( $pinEl.hasClass( 'active' ) ) ) === true );
 
 	this.$element.find( '.seat-pin' ).removeClass( 'active' );
 
 	if ( shouldActivate ) {
-		$pinEl.addClass( 'active' );
 
-		pubSub.seatSelected.dispatch( $pinEl.attr( 'data-id' ) );
+		pubSub.seatSelected.dispatch( $pinEl.addClass( 'active' ).attr( 'data-id' ) );
 
 	} else {
 
@@ -387,14 +388,19 @@ Floor.prototype.onObserved = function( added, removed, changed, getOldValueFn ) 
 
 Floor.prototype.onMouseDownEntityPin = function( e ) {
 
-	this.highlightEntityPin( e.currentTarget );
+	if ( e.which === 1 ) {
+		this.highlightEntityPin( e.currentTarget );
+		this.highlightSeatPin( null );
+	}
 };
 
 
 Floor.prototype.onMouseDownSeatPin = function( e ) {
 
-	this.highlightSeatPin( e.currentTarget );
-	this.highlightEntityPin( null );
+	if ( e.which === 1 ) {
+		this.highlightSeatPin( e.currentTarget );
+		this.highlightEntityPin( null );
+	}
 };
 
 
