@@ -126,55 +126,52 @@ Editor.prototype.reset = function( opt_json ) {
 
 	this.floorViewer.focusOnCenter( '6', 0 );
 
+	var entities = employeeCollection.getAll();
 	var floors = this.floorViewer.floors;
 
 	$.each( floors, function( key, floor ) {
 		floor.reset();
+		floor.unlistenForChanges();
 	} );
 
 	var json = opt_json;
 
 	if ( json ) {
 
-		$.each( floors, function( key, floor ) {
-			floor.unlistenForChanges();
+		// add seats found in json
+		$.each( json[ 'seats' ], function( id, seat ) {
+			FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
 		} );
 
-		setTimeout( function() {
+		$.each( entities, function( i, entity ) {
+			var entityData = json[ 'entities' ][ entity.fullName ];
+			entity.x = entityData[ 'x' ];
+			entity.y = entityData[ 'y' ];
+			entity.floorIndex = entityData[ 'floorIndex' ];
 
-			$.each( json[ 'seats' ], function( id, seat ) {
-				FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
-			} );
+			var seatId = entityData[ 'seat' ];
 
-			var floor = FloorModel.getByIndex( '6' );
+			if ( seatId ) {
+				var seat = FloorModel.getSeatById( seatId );
+				entity.seat = seat;
+				seat.entity = entity;
+			}
+		} );
 
-			var entities = employeeCollection.getAll();
+	} else {
 
-			$.each( entities, function( i, entity ) {
-				var entityData = json[ 'entities' ][ entity.fullName ];
-				entity.x = entityData[ 'x' ];
-				entity.y = entityData[ 'y' ];
-				entity.floorIndex = entityData[ 'floorIndex' ];
-
-				var seatId = entityData[ 'seat' ];
-
-				if ( seatId ) {
-					var seat = FloorModel.getSeatById( seatId );
-					entity.seat = seat;
-					seat.entity = entity;
-				}
-			} );
-
-			$.each( floors, function( key, floor ) {
-				var entities = employeeCollection.getByFloor( floor.model.index );
-				var seats = FloorModel.getByIndex( floor.model.index ).seats;
-				floor.createPins( entities, seats );
-
-				floor.listenForChanges();
-			} );
-
-		}, 0 );
+		// generate random seats
+		$.each( FloorModel.floors, function( i, floor ) {
+			floor.generateSeats( 50 );
+		} );
 	}
+
+	$.each( floors, function( key, floor ) {
+		var entities = employeeCollection.getByFloor( floor.model.index );
+		var seats = FloorModel.getByIndex( floor.model.index ).seats;
+		floor.createPins( entities, seats );
+		floor.listenForChanges();
+	} );
 
 	Platform.performMicrotaskCheckpoint();
 

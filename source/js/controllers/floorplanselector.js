@@ -146,7 +146,9 @@ FloorPlanSelector.prototype.onJsonReceivedFromServer = function( data ) {
 FloorPlanSelector.prototype.onJsonCreatedFromServer = function( data ) {
 
 	pubSub.fileChanged.dispatch( data.file );
-	pubSub.fileCreated.dispatch();
+
+	var content = JSON.parse( data.content );
+	pubSub.fileCreated.dispatch( content, data.filelist, data.file );
 
 	this.update( data.file, data.filelist );
 };

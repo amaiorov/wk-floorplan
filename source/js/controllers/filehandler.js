@@ -44,6 +44,16 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 			};
 			break;
 		case 'createJson':
+			var returnUnassigned = true;
+			postData = {
+				'json': JSON.stringify( {
+					'entities': employeeCollection.createJson( returnUnassigned ),
+					'seats': {}
+				} ),
+				'action': action,
+				'filename': params.fileName
+			};
+			break;
 		case 'saveJson':
 			postData = {
 				'json': JSON.stringify( {
