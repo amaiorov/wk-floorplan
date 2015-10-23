@@ -15,6 +15,7 @@ var Seat = function( seatIndex, floorIndex, opt_x, opt_y ) {
 	this.y = opt_y || '0%';
 
 	this.entity = null;
+	this.isDisposed = false;
 
 	this._observer = new ObjectObserver( this );
 	this._observer.open( $.proxy( this.onObserved, this ) );
@@ -22,6 +23,12 @@ var Seat = function( seatIndex, floorIndex, opt_x, opt_y ) {
 
 
 Seat.prototype.dispose = function() {
+
+	if ( this.isDisposed ) {
+		return;
+	} else {
+		this.isDisposed = true;
+	}
 
 	if ( this.entity ) {
 		this.entity.seat = null;

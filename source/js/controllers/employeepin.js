@@ -17,7 +17,7 @@ inherits( EmployeePin, Pin );
 EmployeePin.prototype.dispose = function() {
 
 	if ( this.model ) {
-		console.log( 'Entity Pin "' + this.model.fullName + '" disposed.' );
+		//console.log( 'Entity Pin "' + this.model.fullName + '" disposed.' );
 	}
 
 	Pin.prototype.dispose.call( this );

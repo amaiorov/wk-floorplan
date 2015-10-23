@@ -83,55 +83,6 @@ Bootstrapper.prototype.onJsonLoad = function( data ) {
 	var content = data ? JSON.parse( data.content ) : null;
 	console.log( data );
 
-	// WIP: generate all seat models
-	var floor6 = Floor.getByIndex( '6' );
-	var floor7 = Floor.getByIndex( '7' );
-	var floor8 = Floor.getByIndex( '8' );
-
-	var entities = employeeCollection.getAll();
-
-	if ( content ) {
-
-		$.each( content[ 'seats' ], function( id, seat ) {
-			Floor.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
-		} );
-
-		$.each( entities, function( i, entity ) {
-			var entityData = content[ 'entities' ][ entity.fullName ];
-			entity.x = entityData[ 'x' ];
-			entity.y = entityData[ 'y' ];
-			entity.floorIndex = entityData[ 'floorIndex' ];
-
-			var seatId = entityData[ 'seat' ];
-
-			if ( seatId ) {
-				var seat = Floor.getSeatById( seatId );
-				entity.seat = seat;
-			}
-		} );
-
-	} else {
-
-		$.each( Floor.floors, function( i, floor ) {
-			floor.generateSeats( 150 );
-		} );
-
-		var allVacantSeats = {};
-
-		$.each( entities, function( i, entity ) {
-			var floorIndex = entity.floorIndex;
-			var floor = Floor.getByIndex( floorIndex );
-			var vacantSeats = allVacantSeats[ floorIndex ] || floor.getVacantSeats();
-			allVacantSeats[ floorIndex ] = vacantSeats;
-
-			var seat = vacantSeats.shift();
-			entity.seat = seat;
-		} );
-	}
-
-	Platform.performMicrotaskCheckpoint();
-
-	//
 	pubSub.jsonLoaded.dispatch( content, data.filelist, data.file );
 
 	//

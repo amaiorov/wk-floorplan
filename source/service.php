@@ -34,6 +34,15 @@
 		case 'test':
 			break;
 		case 'createJson':
+			file_put_contents($path . urlencode($fileName), $_POST['json']);
+			$JSON = json_encode(array(
+				'filelist' => getFilelist(),
+				'file' => $fileName,
+				'content' => file_get_contents($path . urlencode($fileName))
+			));
+			header('Content-Type: application/json');
+			echo $JSON;
+			break;
 		case 'saveJson':
 			file_put_contents($path . urlencode($fileName), $_POST['json']);
 			$JSON = json_encode(array(

@@ -64,20 +64,22 @@ EmployeeCollection.prototype.getUnassigned = function() {
 	return employees;
 }
 
-EmployeeCollection.prototype.createJson = function() {
+
+EmployeeCollection.prototype.createJson = function( returnUnassigned ) {
 
 	var result = {};
 
 	var employees = $.each( this._employees, function( i, employee ) {
 		result[ employee.fullName ] = {
-			'seat': employee.seat ? employee.seat.id : null,
-			'x': employee.x,
-			'y': employee.y,
-			'floorIndex': employee.floorIndex
+			'seat': ( employee.seat && !returnUnassigned ) ? employee.seat.id : null,
+			'x': !returnUnassigned ? employee.x : null,
+			'y': !returnUnassigned ? employee.y : null,
+			'floorIndex': !returnUnassigned ? employee.floorIndex : null
 		}
 	} );
 
 	return result;
 }
+
 
 module.exports = Utils.createSingletonNow( _instance, EmployeeCollection, 'employeeCollection' );

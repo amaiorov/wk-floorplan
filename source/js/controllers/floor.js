@@ -25,7 +25,6 @@ var Floor = function( element, viewportMetrics ) {
 	this._seats = null;
 	this._entities = null;
 	this._pinSize = null;
-	this.createPins();
 
 	this._hasHighlightedEntityPin = false;
 	this._hasHighlightedSeatPin = false;
@@ -107,7 +106,7 @@ Floor.prototype.createPins = function( opt_entities, opt_seats ) {
 	var seats = this._seats = {};
 	var entities = this._entities = {};
 
-	$.each( this.$element.find( '.seat-pin' ), $.proxy( function( i, el ) {
+	_.each( this.$element.find( '.seat-pin' ), function( el ) {
 
 		var seatId = el.getAttribute( 'data-id' );
 
@@ -116,9 +115,9 @@ Floor.prototype.createPins = function( opt_entities, opt_seats ) {
 		var seat = new SeatPin( el, FloorModel.getSeatById( seatId ) );
 		seats[ seatId ] = seat;
 
-	}, this ) );
+	}, this );
 
-	$.each( this.$element.find( '.entity-pin' ), $.proxy( function( i, el ) {
+	_.each( this.$element.find( '.entity-pin' ), function( el ) {
 
 		var entityId = el.getAttribute( 'data-id' );
 
@@ -127,7 +126,7 @@ Floor.prototype.createPins = function( opt_entities, opt_seats ) {
 		var entity = new EmployeePin( el );
 		entities[ entityId ] = entity;
 
-	}, this ) );
+	}, this );
 };
 
 

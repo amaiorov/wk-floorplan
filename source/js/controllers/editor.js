@@ -1,6 +1,7 @@
 var Utils = require( 'app/utils' );
 var pubSub = require( 'app/pubsub' );
 var template = require( 'views/main.soy' );
+var FileHandler = require( 'controllers/filehandler' );
 var Waitlist = require( 'controllers/waitlist' );
 var FloorPlanSelector = require( 'controllers/floorplanselector' );
 var EntityDragger = require( 'controllers/entitydragger' );
@@ -115,6 +116,9 @@ var Editor = function() {
 	//
 	this._$changeMode();
 	this._$onSeatSelected( null );
+
+	//
+	window.generateURLParams = this.generateURLParams.bind( this );
 }
 
 
@@ -122,55 +126,52 @@ Editor.prototype.reset = function( opt_json ) {
 
 	this.floorViewer.focusOnCenter( '6', 0 );
 
+	var entities = employeeCollection.getAll();
 	var floors = this.floorViewer.floors;
 
 	$.each( floors, function( key, floor ) {
 		floor.reset();
+		floor.unlistenForChanges();
 	} );
 
 	var json = opt_json;
 
 	if ( json ) {
 
-		$.each( floors, function( key, floor ) {
-			floor.unlistenForChanges();
+		// add seats found in json
+		$.each( json[ 'seats' ], function( id, seat ) {
+			FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
 		} );
 
-		setTimeout( function() {
+		$.each( entities, function( i, entity ) {
+			var entityData = json[ 'entities' ][ entity.fullName ];
+			entity.x = entityData[ 'x' ];
+			entity.y = entityData[ 'y' ];
+			entity.floorIndex = entityData[ 'floorIndex' ];
 
-			$.each( json[ 'seats' ], function( id, seat ) {
-				FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
-			} );
+			var seatId = entityData[ 'seat' ];
 
-			var floor = FloorModel.getByIndex( '6' );
+			if ( seatId ) {
+				var seat = FloorModel.getSeatById( seatId );
+				entity.seat = seat;
+				seat.entity = entity;
+			}
+		} );
 
-			var entities = employeeCollection.getAll();
+	} else {
 
-			$.each( entities, function( i, entity ) {
-				var entityData = json[ 'entities' ][ entity.fullName ];
-				entity.x = entityData[ 'x' ];
-				entity.y = entityData[ 'y' ];
-				entity.floorIndex = entityData[ 'floorIndex' ];
-
-				var seatId = entityData[ 'seat' ];
-
-				if ( seatId ) {
-					var seat = FloorModel.getSeatById( seatId );
-					entity.seat = seat;
-					seat.entity = entity;
-				}
-			} );
-
-			$.each( floors, function( key, floor ) {
-				var entities = employeeCollection.getByFloor( floor.model.index );
-				var seats = FloorModel.getByIndex( floor.model.index ).seats;
-				floor.createPins( entities, seats );
-
-				floor.listenForChanges();
-			} );
-
-		}, 0 );
+		// generate random seats
+		$.each( FloorModel.floors, function( i, floor ) {
+			floor.generateSeats( 50 );
+		} );
 	}
+
+	$.each( floors, function( key, floor ) {
+		var entities = employeeCollection.getByFloor( floor.model.index );
+		var seats = FloorModel.getByIndex( floor.model.index ).seats;
+		floor.createPins( entities, seats );
+		floor.listenForChanges();
+	} );
 
 	Platform.performMicrotaskCheckpoint();
 
@@ -208,6 +209,24 @@ Editor.prototype.changeMode = function() {
 
 	pubSub.modeChanged.dispatch( isEditMode );
 };
+
+
+Editor.prototype.generateURLParams = function() {
+
+	var fileHandler = FileHandler();
+	var zoom = this.floorViewer.getZoom();
+	var floorCenter = this.floorViewer.getFloorCenterInView();
+
+	var params = {
+		file: fileHandler.getEncodedFilename(),
+		floor: this.floorViewer.currentFloorIndex,
+		zoom: zoom.toFixed( 2 ),
+		x: floorCenter.x.toFixed( 2 ),
+		y: floorCenter.y.toFixed( 2 )
+	};
+
+	return window.location.hostname + '/#/location?file=' + params.file + '&floor=' + params.floor + '&zoom=' + params.zoom + '&x=' + params.x + '&y=' + params.y;
+}
 
 
 Editor.prototype.onModeChanged = function( isEditMode ) {
