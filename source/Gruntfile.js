@@ -146,6 +146,13 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		clean: {
+			options: {
+				force: true
+			},
+			release: [ '../release' ]
+		},
+
 		copy: {
 			release: {
 				files: [ {
@@ -160,7 +167,11 @@ module.exports = function( grunt ) {
 						'!soy/**',
 						'!tools/**',
 						'!Gemfile.lock',
+						'!_Gemfile',
 						'!Gemfile',
+						'!App_Data',
+						'!aspnet_client/**',
+						'!web.config',
 						'!Gruntfile.js',
 						'!package.json',
 						'!images/icons/**',
@@ -189,6 +200,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-browserify' );
 	grunt.loadNpmTasks( 'grunt-exorcise' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-contrib-clean' );
 	grunt.loadNpmTasks( 'grunt-contrib-compass' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
@@ -211,6 +223,7 @@ module.exports = function( grunt ) {
 		'closureSoys',
 		'browserify',
 		'exorcise:bundle',
+		'clean:release',
 		'copy',
 		'uglify:release',
 	] );

@@ -15,7 +15,9 @@
 	      <div class="modal-body">
 			<form>
 				<input type="text" class="form-control" maxlength="40">
-				<label class="prompt filename-existed icon icon-warning">This filename is taken, please try a different one.</label>
+				<label class="prompt filename-existed icon icon-warning">
+					<span>This filename is taken, please try a different one.</span>
+				</label>
 			</form>
 	      </div>
 	      <div class="modal-footer">
@@ -240,7 +242,7 @@
 {template .FloorPlanDropdown}
 <div class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    <span class="text icon icon-file">{ $currentName }</span>
+    <span class="text icon icon-file"><span>{ $currentName }</span></span>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
@@ -248,13 +250,13 @@
   	<li {if $name == $currentName}class="disabled"{/if}>
   		<a class="icon icon-file"
   			{if $name == $currentName}data-disabled{/if} data-file-name="{ $files[$name] }">
-  			{ $name }
+  			<span>{ $name }</span>
   		</a>
   	</li>
   	{/foreach}
     <li>
     	<a class="new icon icon-plus" data-toggle="modal" data-target="#new-floorplan-modal">
-    		New Floor Plan
+    		<span>New Floor Plan</span>
     	</a>
     </li>
   </ul>

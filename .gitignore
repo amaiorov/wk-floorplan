@@ -13,9 +13,10 @@ source/fonts/fontcustom/*.ttf
 source/fonts/fontcustom/*.woff
 source/output/
 source/images/headshots/*.jpg
-/source/_Gemfile
-/source/web.config
-
+source/_Gemfile
+source/web.config
+source/app_data
+source/aspnet_client
 
 # Elastic Beanstalk Files
 
