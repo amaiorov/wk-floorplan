@@ -3,6 +3,10 @@ var pubSub = require( 'app/pubsub' );
 
 var Employee = function( props ) {
 
+	var sanitize = function( str ) {
+		return str.replace( /\(.+\)/gi, '' ).replace( /\W+/gi, '' );
+	}
+
 	this.firstName = props[ 'First' ];
 	this.lastName = props[ 'Last' ];
 	this.extension = props[ 'Ext.' ];
@@ -16,7 +20,7 @@ var Employee = function( props ) {
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
 	this.type = this.getType( props );
-	this.photoURL = '/service.php?fullName=' + this.firstName + '.' + this.lastName.split( '/' )[ 0 ];
+	this.photoURL = '/service.php?fullName=' + sanitize( this.firstName ) + '.' + sanitize( this.lastName.split( '/' )[ 0 ] );
 	this.seat = null;
 	this.x = null;
 	this.y = null;
@@ -63,6 +67,7 @@ Employee.prototype.getFullName = function() {
 
 	return this.firstName + ' ' + this.lastName;
 }
+
 
 
 Employee.prototype.seatByPosition = function( x, y ) {
