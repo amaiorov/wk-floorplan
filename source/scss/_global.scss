@@ -163,9 +163,13 @@ h1,h2,h3,h4,h5,h6,b{
     text-transform: uppercase;
     position: absolute;
     top: 0;
-    left: 100%;
+    right: 0;
     font-size: .5em;
     font-family: $font_medium;
+    #autocomplete-list & {
+      left: 100%;
+      right: auto;
+    }
   }
   &.freelance:after {
     content: 'fl';
