@@ -331,7 +331,8 @@
 		<div class="panel-body">
 			<div class="photo {$employee.type}">
 				// <div style="background:url({$employee.photoURL});width:100px;height:100px"></div>
-				<div style="background-image:url({$employee.photoURL})"></div>
+				<div style="background-image:url('{$employee.photoURL}')"></div>
+				// <span style="font-size:14px;position:relative;z-index:1;background:#fff">{$employee.photoURL}</span>
 			</div>
 			<div class="content">
 				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}
