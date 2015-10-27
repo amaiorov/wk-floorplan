@@ -43,7 +43,7 @@
 		z-index: 1;
 
 		.department {
-			padding: 10px 10px 10px 30px;
+			padding: 10px;
 			position: relative;
 			text-overflow: ellipsis;
 			text-transform: uppercase;
@@ -54,15 +54,13 @@
 			float: left;
 
 			&:before {
-				background: #ccc;
-				border-radius: 100%;
 				content: '';
-				display: block;
-				height: 12px;
-				left: 10px;
-				position: absolute;
-				top: 8px;
+				@include inline-block(bottom);
+				margin-right: 6px;
 				width: 12px;
+				height: 12px;
+				background: $color_pin_default;
+				border-radius: 100%;
 			}
 
 			@each $department in $departments {
@@ -72,7 +70,6 @@
 					background: $color !important;
 				}
 			}
-
 		}
 	}
 	>.floor-viewport{
@@ -411,7 +408,7 @@
 		z-index: 0;
 		width: 40px;
 		height: 40px;
-		background: #ccc;
+		background: $color_pin_default;
 		text-align: center;
 		color: white;
 		line-height: 40px;
@@ -449,15 +446,18 @@
 			line-height: 1.2;
 			width: 100px;
 			height: 100px;
+
 			&.employee,
 			&.freelance,
 			&.intern {
 				background: url(/images/coffee.gif) center center no-repeat;
-				background-size: 60%;				
+				background-size: 60%;	
+							
 				&:before {
 					display: none;
 				}
 			}
+
 			&:before{
 				display: block;
 			    width: 100%;
@@ -466,6 +466,7 @@
 			    font-size: 80px;
 			    line-height: 100px;
 			}
+
 			>div {
 				background-size: 100%;
 				height: 100%;
@@ -504,7 +505,7 @@
 
 	&:hover{
 		>.circle{
-			background: darken(#ccc, 12);
+			background: darken($color_pin_default, 12);
 		}
 	}
 
@@ -512,7 +513,7 @@
 		z-index: 10 !important;
 
 		>.circle{
-			background: darken(#ccc, 12) !important;
+			background: darken($color_pin_default, 12) !important;
 		}
 
 		>.info{
@@ -531,7 +532,7 @@
 
 	&.dragging{
 		>.circle{
-			background: darken(#ccc, 12) !important;
+			background: darken($color_pin_default, 12) !important;
 		}
 	}
 
