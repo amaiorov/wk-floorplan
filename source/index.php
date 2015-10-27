@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-toggle.min.css">
 	<link rel="stylesheet" href="css/wkfp.css">
+	<link href="http://c0717682.cdn.cloudfiles.rackspacecloud.com/images/favicon.ico" rel="icon" type="image/vnd.microsoft.icon">
 <?php
 	if ($_SESSION['admin'] == true) {
 		echo "<script>window.admin = true;</script>";

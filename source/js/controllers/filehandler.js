@@ -64,12 +64,6 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 				'filename': params.fileName
 			};
 			break;
-		case 'getHeadshot':
-			postData = {
-				'action': action,
-				'fullName': params.fullName
-			};
-			break;
 		default:
 	}
 

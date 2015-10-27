@@ -62,26 +62,35 @@
 			header('Content-Type: application/json');
 			echo $JSON;
 			break;
-		case 'getHeadshot':
-
-			break;
 		default:
-			// return;
 			$url = 'http://www.wk.com/' . $fullName;
 			// $url = 'http://www.wk.com/alex.maiorov';
 
 			// if request headers contain 404, do not grab the file
 			$html = strpos(get_headers($url)[0], '404') ? null : file_get_contents($url);
 			// echo strpos(get_headers($url)[0], '404') ? 'found' : 'not found';
+
+			$placeholderId = round( rand(0,1000)/1000 );
+			$placeholderImageSrc = $placeholderId == 0 ? './images/dan.png' : './images/dave.png';
+
 			$doc = new DOMDocument();
 			@$doc->loadHTML($html);
-			$placeholderImageSrc = './images/cactaur.gif';
 
 			$tags = $doc->getElementsByTagName('img');
+
+
 			if ($tags->length == 2) {
 				$localHeadshotSrc = './images/headshots/'. $fullName . '.jpg';
 				$localMD5 = file_exists($localHeadshotSrc) ? md5_file($localHeadshotSrc) : null;
-				$remoteHeadshotSrc = $tags[1]->getAttribute('src');
+
+				$srcs = array();
+
+				foreach ($tags as $tag) {
+					$srcs[] = $tag->getAttribute('src');
+				}
+
+				$remoteHeadshotSrc = $srcs[1];
+
 				$remoteMD5 = md5_file($remoteHeadshotSrc);
 				if (file_exists($localHeadshotSrc) && $localMD5 == $remoteMD5) {
 					// echo 'local file ' . $localHeadshotSrc . ' exists and MD5 match';
@@ -103,7 +112,6 @@
 				header('Content-Type: image/jpeg');
 				echo file_get_contents($placeholderImageSrc);
 			}
-
 			break;
 
 	}
