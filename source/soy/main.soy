@@ -291,13 +291,6 @@
 <div class="info">
 	<h6>{ $employee.firstName } { $employee.lastName }</h6>
 	<ul>
-		{if $employee.extension }
-		<li>
-			<b>Extension</b>
-			<span class="number">{ $employee.extension }</span>
-		</li>
-		{/if}
-
 		{if $employee.department }
 		<li>
 			<b>Department</b>
@@ -305,17 +298,24 @@
 		</li>
 		{/if}
 
-		{if $employee.workEmail }
+		{if $employee.extension }
 		<li>
-			<b>Email</b>
-			<span>{ $employee.workEmail }</span>
+			<b>Extension</b>
+			<span class="number">{ $employee.extension }</span>
 		</li>
 		{/if}
-		
+
 		{if $employee.cellPhone }
 		<li>
 			<b>Cell-Phone</b>
 			<span class="number">{ $employee.cellPhone }</span>
+		</li>
+		{/if}
+		
+		{if $employee.workEmail }
+		<li>
+			<b>Email</b>
+			<span>{ $employee.workEmail }</span>
 		</li>
 		{/if}
 	</ul>

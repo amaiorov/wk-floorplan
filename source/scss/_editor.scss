@@ -592,8 +592,8 @@
 	
 	&.seated{
 		>.circle{
-			@include scale(1.5);
-			border: 3px solid #FF6600;
+			@include scale(1.4);
+			border: 3px solid #FFCC00;
 
 			&:after{
 				content: none;
