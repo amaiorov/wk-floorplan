@@ -450,9 +450,11 @@
 			&.employee,
 			&.freelance,
 			&.intern {
-				background: url(/images/coffee.gif) center center no-repeat;
-				background-size: 60%;	
-							
+				background-image: image-url('loader.gif');
+				background-repeat: no-repeat;
+				background-position: center center;
+				background-size: 50%;	
+
 				&:before {
 					display: none;
 				}
