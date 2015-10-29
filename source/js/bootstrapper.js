@@ -39,15 +39,17 @@ Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl, callback ) {
 		url: ssUrl,
 		target: $( '#sheet' ).get( 0 ),
 		callback: function( error, options, response ) {
-			var rows = response[ 'rows' ];
-			rows.shift();
+			setTimeout( function() {
+				var rows = response[ 'rows' ];
+				rows.shift();
 
-			$.each( rows, function( i, row ) {
-				var employee = new Employee( row.cells );
-				employeeCollection.add( employee );
-			} );
+				$.each( rows, function( i, row ) {
+					var employee = new Employee( row.cells );
+					employeeCollection.add( employee );
+				} );
 
-			callback();
+				callback();
+			}, 0 );
 		}
 	} );
 }
