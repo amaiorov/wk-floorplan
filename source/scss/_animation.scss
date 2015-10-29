@@ -1,10 +1,21 @@
 @include keyframes(fade-in-from-bottom) {
-  0% {
-    opacity: 0;
-    @include translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    @include translateY(0px);
-  }
+	0% {
+		opacity: 0;
+		@include translateY(20px);
+	}
+	100% {
+		opacity: 1;
+		@include translateY(0px);
+	}
+}
+
+@include keyframes(poofs) {
+	0%{
+		visibility: visible;
+		background-position: 0px 0px;
+	}
+	100% {
+		visibility: hidden;
+		background-position: 0px -250px;
+	}
 }
