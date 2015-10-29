@@ -43,6 +43,16 @@ EmployeeCollection.prototype.getByName = function( fullName ) {
 }
 
 
+EmployeeCollection.prototype.getByWorkEmail = function( workEmail ) {
+
+	var employee = $.grep( this._employees, function( employee ) {
+		return ( employee.workEmail === workEmail );
+	} )[ 0 ];
+
+	return employee;
+}
+
+
 EmployeeCollection.prototype.getByFloor = function( floorId ) {
 
 	var floor = floorId.toString();

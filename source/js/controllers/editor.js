@@ -172,7 +172,13 @@ Editor.prototype.reset = function( opt_json ) {
 
 		pubSub.routed.addOnce( function( key, params ) {
 			if ( key === 'location' ) {
+
 				this.floorViewer.locateFromRoute( params );
+
+			} else if ( global.config.email ) {
+
+				var employee = employeeCollection.getByWorkEmail( global.config.email );
+				this.floorViewer.focusOnPin( employee, 1 );
 			}
 		}, this );
 	}
