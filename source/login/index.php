@@ -50,6 +50,11 @@ if (isset($_REQUEST[$saml_sso])) {
     $_SESSION[$user_session_key] = $user;
 }
 
+
+if (isset($_SESSION["FirstName"]) && isset($_SESSION["LastName"]) && isset($_SESSION["Email"])) {
+  header ("Location: /");
+}
+
 ?>  
 <!DOCTYPE html>
 <html>

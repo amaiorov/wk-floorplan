@@ -2,6 +2,15 @@
 	error_reporting(0);
 	session_name('floorplan_admin');
 	session_start();
+
+	$prodDomain = "floorplan.wknyc.com";
+
+	if ($_SERVER["HTTP_HOST"] != $prodDomain) {
+
+	} else if (!isset($_SESSION["FirstName"]) && !isset($_SESSION["LastName"]) && !isset($_SESSION["Email"])) {
+		header("Location: /login/");
+	}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
