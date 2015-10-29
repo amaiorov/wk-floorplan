@@ -4,17 +4,17 @@
 
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot");
+	src:url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.eot");
 	font-weight:normal;
 	font-style:normal;
 }
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot");
-	src:url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.eot?#iefix") format("embedded-opentype"),
-		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.woff") format("woff"),
-		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.ttf") format("truetype"),
-		url("../fonts/fontcustom/icons-dee1ce9938b75bac41e543a73419c332.svg?#icons") format("svg");
+	src:url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.eot");
+	src:url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.eot?#iefix") format("embedded-opentype"),
+		url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.woff") format("woff"),
+		url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.ttf") format("truetype"),
+		url("../fonts/fontcustom/icons-ce4d7e902399808d7b55e07a6820ac82.svg?#icons") format("svg");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -58,51 +58,61 @@
 }
 
 
-.icon-file:before {
+.icon-embed:before {
 	content:"\f105";
 }
 
 
-.icon-out:before {
+.icon-file:before {
 	content:"\f106";
 }
 
 
-.icon-person:before {
+.icon-out:before {
 	content:"\f107";
 }
 
 
-.icon-plus:before {
+.icon-person:before {
 	content:"\f108";
 }
 
 
-.icon-printer:before {
+.icon-plus:before {
 	content:"\f109";
 }
 
 
-.icon-remove-seat:before {
+.icon-printer:before {
 	content:"\f10a";
 }
 
 
-.icon-room:before {
+.icon-remove-seat:before {
 	content:"\f10b";
 }
 
 
-.icon-sheet:before {
+.icon-room:before {
 	content:"\f10c";
 }
 
 
-.icon-url:before {
+.icon-search:before {
 	content:"\f10d";
 }
 
 
-.icon-warning:before {
+.icon-sheet:before {
 	content:"\f10e";
+}
+
+
+.icon-social:before {
+	content:"\f10f";
+}
+
+
+.icon-warning:before {
+	content:"\f110";
 }

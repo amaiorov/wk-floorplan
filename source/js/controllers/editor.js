@@ -141,7 +141,7 @@ Editor.prototype.reset = function( opt_json ) {
 		} );
 
 		$.each( entities, function( i, entity ) {
-			var entityData = json[ 'entities' ][ entity.fullName ];
+			var entityData = json[ 'entities' ][ entity.fullName ] || {};
 			entity.x = entityData[ 'x' ];
 			entity.y = entityData[ 'y' ];
 			entity.floorIndex = entityData[ 'floorIndex' ];
@@ -359,7 +359,7 @@ Editor.prototype.onEntityDragMove = function( x, y, $entityPin, entityModel ) {
 
 Editor.prototype.onEntityDragEnd = function( x, y, $entityPin, entityModel ) {
 
-	var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y );
+	var entityPositionInFloor = this.floorViewer.getFloorPositionByViewerCoordinates( x, y, true );
 	var entityX = $.isNumeric( x ) ? entityPositionInFloor.x : null;
 	var entityY = $.isNumeric( y ) ? entityPositionInFloor.y : null;
 

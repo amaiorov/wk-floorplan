@@ -75,6 +75,25 @@ html{
 	.text{
 		margin-right: 5px;
 	}
+
+	.input-group{
+		position: relative;
+
+		&:before{
+			position: absolute;
+			top: 50%;
+			left: 12px;
+			font-size: 14px;
+			color: #ccc;
+			@include translateY(-50%);
+			@extend .icon;
+			@extend .icon-search;
+		}
+
+		input{
+			padding-left: 34px;
+		}
+	}
 }
 
 #autocomplete-list {

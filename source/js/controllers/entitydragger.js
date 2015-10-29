@@ -6,8 +6,10 @@ var Floor = require( 'models/floor' );
 
 var EntityDragger = function( $element, $entityContainer, _onDragStartCallback, _onDragMoveCallback, _onDragEndCallback ) {
 
-	this._$element = $element.hide();
+	this._$element = $element.toggleClass( 'invisible', true );
 	this._$entityContainer = $entityContainer;
+
+	this._$element.find( '.poofs' ).hide();
 
 	this._entityModel = null;
 	this._$actualEntityIcon = null;
@@ -118,7 +120,7 @@ EntityDragger.prototype.onDragMove = function( e ) {
 
 		this._$draggerEntityIcon = $( draggerEntityIcon ).addClass( 'dragging' );
 
-		this._$element.append( this._$draggerEntityIcon ).show();
+		this._$element.append( this._$draggerEntityIcon ).toggleClass( 'invisible', false );
 		$( 'html' ).attr( 'data-cursor', 'dragging' );
 	}
 
@@ -159,12 +161,23 @@ EntityDragger.prototype.onDragEnd = function( e ) {
 	var outOfRangeX = ( dragX < 0 || dragX > this._$element.width() );
 	var outOfRangeY = ( dragY < 0 || dragY > this._$element.height() );
 
+	if ( outOfRangeX || outOfRangeY ) {
+
+		var $poofs = this._$element.find( '.poofs' ).show().css( {
+			'left': dragX + 'px',
+			'top': dragY + 'px'
+		} );
+
+		$poofs.replaceWith( $poofs.clone() );
+	}
+
 	dragX = outOfRangeX ? null : dragX;
 	dragY = outOfRangeY ? null : dragY;
 
 	this._onDragEndCallback( dragX, dragY, this._$actualEntityIcon, this._entityModel );
 
-	this._$element.hide().empty();
+	this._$draggerEntityIcon.remove();
+	this._$element.toggleClass( 'invisible', true );
 	$( 'html' ).attr( 'data-cursor', '' );
 };
 

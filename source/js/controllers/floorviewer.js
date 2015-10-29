@@ -59,9 +59,6 @@ var FloorViewer = function( _$element ) {
 
 	this._editingRegionWidth = null;
 	this._editingRegionHeight = null;
-	this._elementOffset = null;
-	this._windowScrollTop = null;
-	this._windowScrollLeft = null;
 
 	this._viewportMetrics = this.updateViewportMetrics();
 
@@ -89,6 +86,9 @@ FloorViewer.prototype.init = function() {
 	var $onMouseWheel = $.proxy( this.onMouseWheel, this );
 	this.$element.on( 'mousewheel wheel', $onMouseWheel );
 
+	var $onDoubleClick = $.proxy( this.onDoubleClick, this );
+	this.$element.on( 'dblclick', $onDoubleClick );
+
 	$( window ).on( 'resize', this._$resize ).resize();
 
 	var $onSearchComplete = $.proxy( this.onSearchComplete, this );
@@ -100,7 +100,7 @@ FloorViewer.prototype.init = function() {
 	} );
 
 	this.updateBounds();
-	this.setMousewheelSpeed( 8 );
+	this.setMousewheelSpeed( 5 );
 	this.setZoomSlider( 0 );
 
 	//var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
@@ -192,6 +192,18 @@ FloorViewer.prototype.moveTo = function( x, y ) {
 	} );
 
 	this._draggable.update( true );
+
+	this.currentFloor.updateTiles( zoom );
+}
+
+
+FloorViewer.prototype.focusOnClickedPosition = function( e, opt_zoom ) {
+
+	this.updatePropsBeforeMouseZoom( e );
+
+	if ( opt_zoom ) {
+		this.zoom( opt_zoom );
+	}
 
 	this.currentFloor.updateTiles( zoom );
 }
@@ -310,6 +322,24 @@ FloorViewer.prototype.updateViewportMetrics = function() {
 }
 
 
+FloorViewer.prototype.updatePropsBeforeMouseZoom = function( e ) {
+
+	var elementOffset = this.$element.offset();
+	var windowScrollTop = $( window ).scrollTop();
+	var windowScrollLeft = $( window ).scrollLeft();
+
+	var floorPosition = this.getFloorPosition();
+	var floorX = floorPosition.x;
+	var floorY = floorPosition.y;
+
+	this._viewportZoomX = e.originalEvent.clientX - ( elementOffset.left - windowScrollLeft );
+	this._viewportZoomY = e.originalEvent.clientY - ( elementOffset.top - windowScrollTop );
+
+	this._floorZoomFractionX = ( this._viewportZoomX - floorX ) / this._floorWidth;
+	this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
+}
+
+
 FloorViewer.prototype.getFloorPositionByViewerCoordinates = function( viewerCoordX, viewerCoordY, allowInvalidPositions ) {
 
 	var floorPosition = this.getFloorPosition();
@@ -423,10 +453,6 @@ FloorViewer.prototype.hideMousewheelScroller = function( e ) {
 	this._$mousewheelScroller.css( 'visibility', 'hidden' );
 
 	mousewheelHideDelay = null;
-
-	this._elementOffset = null;
-	this._windowScrollTop = null;
-	this._windowScrollLeft = null;
 }
 
 
@@ -498,30 +524,15 @@ FloorViewer.prototype.onThrowComplete = function() {
 }
 
 
+FloorViewer.prototype.onDoubleClick = function( e ) {
+
+	this.focusOnClickedPosition( e, 1 );
+}
+
+
 FloorViewer.prototype.onMouseWheel = function( e ) {
 
-	// calculate floor zoom properties
-	if ( this._elementOffset === null ) {
-		this._elementOffset = this.$element.offset();
-	}
-
-	if ( this._windowScrollTop === null ) {
-		this._windowScrollTop = $( window ).scrollTop();
-	}
-
-	if ( this._windowScrollLeft === null ) {
-		this._windowScrollLeft = $( window ).scrollLeft();
-	}
-
-	var floorPosition = this.getFloorPosition();
-	var floorX = floorPosition.x;
-	var floorY = floorPosition.y;
-
-	this._viewportZoomX = e.originalEvent.clientX - ( this._elementOffset.left - this._windowScrollLeft );
-	this._viewportZoomY = e.originalEvent.clientY - ( this._elementOffset.top - this._windowScrollTop );
-
-	this._floorZoomFractionX = ( this._viewportZoomX - floorX ) / this._floorWidth;
-	this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
+	this.updatePropsBeforeMouseZoom( e );
 
 	// prevent document scroll
 	var scroller = this._$mousewheelScroller.get( 0 );
