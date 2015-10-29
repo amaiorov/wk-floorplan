@@ -131,11 +131,11 @@ Editor.prototype.reset = function( opt_json ) {
 		floor.unlistenForChanges();
 	} );
 
-	var json = opt_json;
+	var json = opt_json || {};
 
-	if ( json ) {
+	// add seats and entities found in json
+	if ( json[ 'seats' ] && json[ 'entities' ] ) {
 
-		// add seats found in json
 		$.each( json[ 'seats' ], function( id, seat ) {
 			FloorModel.registerSeat( id, seat[ 'x' ], seat[ 'y' ] );
 		} );
@@ -153,13 +153,6 @@ Editor.prototype.reset = function( opt_json ) {
 				entity.seat = seat;
 				seat.entity = entity;
 			}
-		} );
-
-	} else {
-
-		// generate random seats
-		$.each( FloorModel.floors, function( i, floor ) {
-			floor.generateSeats( 50 );
 		} );
 	}
 

@@ -160,6 +160,8 @@ module.exports = function( grunt ) {
 					cwd: './',
 					src: [
 						'**',
+						'!*.md',
+						'!*.org',
 						'!js/**',
 						'!node_modules/**',
 						'!scss/**',

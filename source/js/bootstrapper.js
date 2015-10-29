@@ -14,13 +14,15 @@ var _instance;
 
 var Bootstrapper = function() {
 
+	global.config = JSON.parse( $( '#config' ).remove().html() );
+
 	var frag = soy.renderAsFragment( template.Main, {
-		admin: window.admin
+		admin: global.config.admin || global.config.admindemo
 	} );
 
 	$( document.body ).append( frag );
 
-	var search = Search();
+	Search();
 }
 
 

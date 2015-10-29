@@ -16,6 +16,7 @@
 
 	$action = isset($_POST['action']) ? $_POST['action'] : $_GET['action'];
 	$fileName = $_POST['filename'];
+	$write = isset($_POST['write']) ? $_POST['write'] : false;
 	$path = './json/';
 	$fullName = $_POST['fullName'];
 	$fullName = $_GET['fullName'];
@@ -36,7 +37,10 @@
 		case 'test':
 			break;
 		case 'createJson':
-			file_put_contents($path . urlencode($fileName), $_POST['json']);
+			if($write == 'true') {
+				file_put_contents($path . urlencode($fileName), $_POST['json']);
+			}
+			
 			$JSON = json_encode(array(
 				'filelist' => getFilelist(),
 				'file' => $fileName,
@@ -46,7 +50,10 @@
 			echo $JSON;
 			break;
 		case 'saveJson':
-			file_put_contents($path . urlencode($fileName), $_POST['json']);
+			if($write == 'true') {
+				file_put_contents($path . urlencode($fileName), $_POST['json']);
+			}
+			
 			$JSON = json_encode(array(
 				'filelist' => getFilelist(),
 				'file' => $fileName

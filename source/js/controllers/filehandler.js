@@ -29,6 +29,7 @@ FileHandler.prototype.getEncodedFilename = function() {
 FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 
 	var postData = {};
+	var canWrite = ( global.config.admin && !global.config.admindemo );
 
 	switch ( action ) {
 		case 'loadDefaultJson':
@@ -51,7 +52,8 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 					'seats': {}
 				} ),
 				'action': action,
-				'filename': params.fileName
+				'filename': params.fileName,
+				'write': canWrite
 			};
 			break;
 		case 'saveJson':
@@ -61,7 +63,8 @@ FileHandler.prototype.postToService = function( action, params, opt_callback ) {
 					'seats': Floor.createJson()
 				} ),
 				'action': action,
-				'filename': params.fileName
+				'filename': params.fileName,
+				'write': canWrite
 			};
 			break;
 		default:

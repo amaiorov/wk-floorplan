@@ -18,11 +18,7 @@
 require('../simplesamlphp/lib/_autoload.php');
 session_start();
 
-$bootstrap_cdn_css_url = '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css';
-$bootstrap_cdn_js_url  = '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js';
-$jquery_cdn_url        = '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js';
-
-$title = 'SimpleSAMLphp Example SAML SP';
+$title = 'Login: W+K New York Floorplan';
 $user_session_key = 'user_session';
 $saml_sso = 'saml_sso';
 
@@ -51,7 +47,13 @@ if (isset($_REQUEST[$saml_sso])) {
 }
 
 
-if (isset($_SESSION["FirstName"]) && isset($_SESSION["LastName"]) && isset($_SESSION["Email"])) {
+if (isset($_SESSION[$user_session_key])) {
+  
+  $attributes = $_SESSION[$user_session_key]['attributes'];
+  $_SESSION["FirstName"] = $attributes["FirstName"][0];
+  $_SESSION["LastName"] = $attributes["LastName"][0];
+  $_SESSION["Email"] = $attributes["Email"][0];
+
   header ("Location: /");
 }
 
@@ -61,58 +63,39 @@ if (isset($_SESSION["FirstName"]) && isset($_SESSION["LastName"]) && isset($_SES
   <head>
     <title><?= $title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="<?= $bootstrap_cdn_css_url ?>" rel="stylesheet" media="screen">
   </head>
-  <body style="padding-top: 60px">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-	  <!-- this is what makes the "hamburger" icon -->
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/"><?= $title ?></a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-	  <?php if(isset($_SESSION[$user_session_key])) { ?>
-            <li><a href="?logout=true">Logout</a></li>
-	  <?php } ?>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+
+  <body>
+    <?php if(isset($_SESSION[$user_session_key])) { ?>
+    <a href="?logout=true">Logout</a>
+    <?php } ?>
+
     <div class="container">
     <?php if(isset($_SESSION[$user_session_key])) { ?>
       <h1>Logged in</h1>
-      <p class="lead">Contents of the most recent SAML assertion:</p>
-      <div class="col-md-8">
-        <table class="table">
-	<?php foreach($_SESSION[$user_session_key]['attributes'] as $key => $value) { ?>
+      <p>Contents of the most recent SAML assertion:</p>
+      <div>
+        <table>
+        <?php foreach($_SESSION[$user_session_key]['attributes'] as $key => $value) { ?>
           <tr>
             <td><?= $key ?></td>
             <td><?= $value[0] ?></td>
           </tr>
-	<?php } ?>
+        <?php } ?>
         </table>
       </div>
-    <?php
+      <?php
       } else {
         $sources = SimpleSAML_Auth_Source::getSources();
-    ?>
+      ?>
       <p class="lead">Select the IdP you want to use to authenticate:</p>
       <ol>
         <?php foreach($sources as $source) { ?>
         <li><a href="?<?= $saml_sso ?>=<?= $source ?>"><?= $source ?></a></li>
-	<?php } ?>
+        <?php } ?>
       </ol>
     <?php } ?>
     </div>
-    <script src="<?= $jquery_cdn_url ?>"></script>
-    <script src="<?= $bootstrap_cdn_js_url ?>"></script>
   </body>
+
 </html>
