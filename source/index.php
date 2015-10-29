@@ -1,4 +1,5 @@
 <?php
+	error_reporting(0);
 	session_name('floorplan_admin');
 	session_start();
 ?>

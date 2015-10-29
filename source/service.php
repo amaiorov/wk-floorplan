@@ -1,4 +1,6 @@
 <?php
+	error_reporting(0);
+
 	// foreach ($_POST as $key => $value) {
 	// 	echo 'key: ' . $key . '<br>';
 	// 	echo 'value: ' . $value . '<br>';
