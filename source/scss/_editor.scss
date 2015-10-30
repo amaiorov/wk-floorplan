@@ -212,6 +212,11 @@
 		top: 80px;
 		left: 30px;
 		@extend %shadowed-button;
+
+		.btn{
+			font-size: 10px;
+			line-height: 2.4;
+		}
 	}
 
 	.url-generator{
@@ -304,6 +309,10 @@
 
 		>.toggle{
 			@extend %shadowed-button;
+
+			&:hover{
+				background: #fff;
+			}
 
 			>span{
 				@include inline-block(middle);

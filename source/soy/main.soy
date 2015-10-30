@@ -196,7 +196,7 @@
 
 				<div class="legend-container">
 					<button type="button" class="btn btn-default toggle">
-						{for $i in range(6)}
+						{for $i in range(4)}
 						<span class="circle"></span>
 						{/for}
 						<span class="icon icon-arrow-up"></span>
@@ -455,11 +455,16 @@
 <ul class="dropdown-menu dropdown-menu-left">
 
 {if length(keys($otherFloorEntities)) == 1 and keys($otherFloorEntities) == -1}
-	<li>
+	<li class="not-found">
 		{if $category == 'all'}
-		<h6>No matches found.</h6>
+		<h6>
+			<span class="icon icon-warning"></span>
+			<span>No matches found.</span></h6>
 		{else}
-		<h6>No matches found. Try a different category?</h6>
+		<h6>
+			<span class="icon icon-warning"></span>
+			<span>No matches found. Try a different filter?</span>
+		</h6>
 		{/if}
 	</li>
 {else}

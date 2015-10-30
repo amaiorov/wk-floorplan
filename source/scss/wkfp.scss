@@ -99,17 +99,27 @@ html{
 #autocomplete-list {
 	width: 100%;
 
-	strong {
-		font-weight: 900;
-		text-decoration: underline;
-	}
-	h6 {
-		margin: 5px 0 0px 0;
-		text-indent: 20px;
-		line-height: 2.5;
-		border-bottom: 1px solid lightgray;
-	}
 	li {
+		&.not-found{
+			h6{
+				border-bottom: none;
+
+				span{
+					@include inline-block(baseline);
+					text-indent: 0;	
+					color: $color_red;
+
+					&.icon{
+						margin-right: 5px;
+						font-size: 12px;
+					}
+
+					&:not(.icon) {
+						font-family: $font_medium;
+					}
+				}
+			}
+		}
 		&.current-floor {
 			background: rgba(153, 204, 255, 0.1);
 			border-left: 3px solid #9cf;
@@ -128,6 +138,16 @@ html{
 			h6 {
 				margin-top: 0;
 			}
+		}
+		strong {
+			font-weight: 900;
+			text-decoration: underline;
+		}
+		h6 {
+			margin: 5px 0 0px 0;
+			text-indent: 20px;
+			line-height: 2.5;
+			border-bottom: 1px solid lightgray;
 		}
 		a {
 			padding-bottom: 5px;

@@ -130,7 +130,7 @@ Floor.prototype.createPins = function( opt_entities, opt_seats ) {
 
 Floor.prototype.updatePinSize = function( zoom ) {
 
-	if ( zoom < 0.3 ) {
+	if ( zoom < 0.5 ) {
 		this._pinSize = 'min';
 	} else {
 		this._pinSize = 'max';
