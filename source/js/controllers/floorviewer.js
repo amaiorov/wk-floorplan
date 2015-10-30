@@ -17,6 +17,7 @@ var FloorViewer = function( _$element ) {
 	this._$floorContainer = this.$element.find( '.floor-container' );
 	this._$floorButtons = this.$element.find( '.floor-buttons .btn' );
 	this._$urlGenerator = this.$element.find( '.url-generator' );
+	this._$legend = this.$element.find( '.legend-container' );
 	this._$mousewheelScroller = this.$element.find( '.mousewheel-scroller' );
 
 	this._$resize = $.proxy( this.resize, this );
@@ -82,6 +83,9 @@ FloorViewer.prototype.init = function() {
 
 	$onClickUrlButton = $.proxy( this.onClickUrlButton, this );
 	this._$urlGenerator.find( 'button' ).on( 'click', $onClickUrlButton );
+
+	$onClickLegendToggle = $.proxy( this.onClickLegendToggle, this );
+	this._$legend.find( '.toggle' ).on( 'click', $onClickLegendToggle );
 
 	var $onMouseWheel = $.proxy( this.onMouseWheel, this );
 	this.$element.on( 'mousewheel wheel', $onMouseWheel );
@@ -507,6 +511,12 @@ FloorViewer.prototype.onClickUrlButton = function( e ) {
 		var url = this.generateURL();
 		this._$urlGenerator.find( 'input' ).val( url ).select();
 	}
+}
+
+
+FloorViewer.prototype.onClickLegendToggle = function( e ) {
+
+	this._$legend.toggleClass( 'show-legend' );
 }
 
 

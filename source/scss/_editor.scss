@@ -28,51 +28,6 @@
 	height: 100%;
 	white-space: normal;
 
-	.legend {
-		display: inline-block;
-		width: 600px;
-		background-color: rgba(white, .9);
-		border: 1px solid lightgray;
-		border-left: none;
-		border-bottom: none;
-		padding: 6px;
-		font-size: 12px;
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		z-index: 1;
-
-		.department {
-			padding: 10px;
-			position: relative;
-			text-overflow: ellipsis;
-			text-transform: uppercase;
-			white-space: nowrap;
-			overflow: hidden;
-			font-size: 10px;
-			font-family: $font_medium;
-			width: 33%;
-			float: left;
-
-			&:before {
-				content: '';
-				@include inline-block(bottom);
-				margin-right: 6px;
-				width: 12px;
-				height: 12px;
-				background: $color_pin_default;
-				border-radius: 100%;
-			}
-
-			@each $department in $departments {
-				$class: nth($department, 1);
-				$color: nth($department, 2);
-				&.#{$class}:before {
-					background: $color !important;
-				}
-			}
-		}
-	}
 	>.floor-viewport{
 		position: relative;
 		width: 100%;
@@ -248,7 +203,7 @@
 		z-index: 2;
 		top: 30px;
 		left: 30px;
-		@include box-shadow(2px 2px 4px 0px rgba(black,0.4));
+		@extend %shadowed-button;
 	}
 
 	.url-generator{
@@ -277,7 +232,98 @@
 
 		>button{
 			@include inline-block(top);
-			@include box-shadow(2px 2px 4px 0px rgba(black,0.4));
+			@extend %shadowed-button;
+		}
+	}
+
+	.legend-container{
+		position: absolute;
+		z-index: 4;
+		bottom: 30px;
+		left: 30px;
+
+		>.legend{
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			display: inline-block;
+			width: 600px;
+			background-color: rgba(white, .95);
+			border: 1px solid lightgray;
+			padding: 8px;
+			padding-right: 36px;
+			font-size: 12px;
+
+			.department {
+				padding: 10px;
+				position: relative;
+				text-overflow: ellipsis;
+				text-transform: uppercase;
+				white-space: nowrap;
+				overflow: hidden;
+				font-size: 10px;
+				font-family: $font_medium;
+				width: 33%;
+				float: left;
+
+				&:before {
+					content: '';
+					@include inline-block(bottom);
+					margin-right: 6px;
+					width: 12px;
+					height: 12px;
+					background: $color_pin_default;
+					border-radius: 100%;
+				}
+
+				@each $department in $departments {
+					$class: nth($department, 1);
+					$color: nth($department, 2);
+					&.#{$class}:before {
+						background: $color !important;
+					}
+				}
+			}
+
+			.toggle{
+				position: absolute;
+				top: 16px;
+				right: 16px;
+				font-size: 18px;
+				@extend %reset-button;
+			}
+		}
+
+		>.toggle{
+			@extend %shadowed-button;
+
+			>span{
+				@include inline-block(middle);
+				margin: 6px;
+				width: 12px;
+				height: 12px;
+				border-radius: 100%;
+
+				@each $department in $departments {
+					$i: index($departments, $department);
+					$color: nth($department, 2);
+					&:nth-child(#{$i}) {
+						background: $color;
+					}
+				}
+			}
+		}
+
+		&.show-legend{
+			>.toggle{
+				display: none;
+			}
+		}
+
+		&:not(.show-legend) {
+			>.legend{
+				display: none;
+			}
 		}
 	}
 }

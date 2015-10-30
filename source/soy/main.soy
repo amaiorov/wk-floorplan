@@ -123,11 +123,6 @@
 
 		<div class="floor-pane">
 
-			{call .Legend}
-				{param departmentBucketList: $departmentBucketList /}
-				{param departmentBucketListCSS: $departmentBucketListCSS /}
-			{/call}
-
 			<div class="floor-viewport">
 
 				<div class="floor-container">
@@ -187,6 +182,17 @@
 					</button>
 				</div>
 
+				<div class="legend-container">
+					<button type="button" class="btn btn-default toggle">
+						{for $i in range(6)}
+						<span></span>
+						{/for}
+					</button>
+					{call .Legend}
+						{param departmentBucketList: $departmentBucketList /}
+						{param departmentBucketListCSS: $departmentBucketListCSS /}
+					{/call}
+				</div>
 			</div>
 
 			<div class="entity-dragger-viewport">
@@ -415,11 +421,14 @@
  * @param departmentBucketListCSS CSS class names for above
  */
 {template .Legend}
-<ul class="legend">
-{foreach $department in $departmentBucketList}
-	<li class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</li>
-{/foreach}
-</ul>
+<div class="legend">
+	<ul>
+	{foreach $department in $departmentBucketList}
+		<li class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</li>
+	{/foreach}
+	</ul>
+	<button class="icon icon-close toggle"></button>
+</div>
 {/template}
 
 

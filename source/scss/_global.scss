@@ -191,3 +191,20 @@ div{
     color: #f00;
   }
 }
+
+%shadowed-button{
+  @include box-shadow(2px 2px 4px 0px rgba(black,0.4))
+}
+
+%reset-button{
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  @include user-select(none);
+  @include appearance(none);
+  cursor: pointer;
+}
