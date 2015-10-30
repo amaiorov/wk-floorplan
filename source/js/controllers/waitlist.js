@@ -90,7 +90,7 @@ Waitlist.prototype.triggerSplitUpdate = function( e ) {
 
 Waitlist.prototype.triggerSplitEnd = function( e ) {
 
-	pubSub.editorSplitEnded.dispatch();
+	pubSub.editorSplitEnded.dispatch( this._dragFracX );
 }
 
 

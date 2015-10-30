@@ -121,7 +121,7 @@ var Editor = function() {
 
 Editor.prototype.reset = function( opt_json ) {
 
-	this.floorViewer.focusOnCenter( '6', 0 );
+	this.floorViewer.focusOnCenter( '6', true, 0 );
 
 	var entities = employeeCollection.getAll();
 	var floors = this.floorViewer.floors;
@@ -252,9 +252,11 @@ Editor.prototype.onSplitUpdated = function( fraction ) {
 }
 
 
-Editor.prototype.onSplitEnded = function() {
+Editor.prototype.onSplitEnded = function( fraction ) {
 
-	this.floorViewer.resize();
+	if ( fraction === 1 ) {
+		this.floorViewer.resize();
+	}
 }
 
 

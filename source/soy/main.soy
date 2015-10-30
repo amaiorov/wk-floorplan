@@ -165,15 +165,27 @@
 
 				<div class="btn-group floor-buttons" data-toggle="buttons">
 					<label class="btn btn-default active" data-id="6">
-						<input type="radio" name="options" autocomplete="off" checked>6th Fl
+						<input type="radio" name="options" autocomplete="off" checked>
+						<span class="number">6th</span> Fl
 					</label>
 					<label class="btn btn-default" data-id="7">
-						<input type="radio" name="options" autocomplete="off">7th Fl
+						<input type="radio" name="options" autocomplete="off">
+						<span class="number">7th</span> Fl
 					</label>
 					<label class="btn btn-default" data-id="8">
-						<input type="radio" name="options" autocomplete="off">8th Fl
+						<input type="radio" name="options" autocomplete="off">
+						<span class="number">8th</span> Fl
 					</label>
 				</div>
+
+				<div class="btn-group-vertical zoom-buttons" role="group">
+			      <button type="button" class="btn btn-default" data-id="zoom-in">
+			      	<span class="icon icon-plus"></span>
+			      </button>
+			      <button type="button" class="btn btn-default" data-id="zoom-out">
+			      	<span class="icon icon-minus"></span>
+			      </button>
+			    </div>
 
 				<div class="url-generator">
 					<input type="text" class="form-control">
@@ -185,8 +197,9 @@
 				<div class="legend-container">
 					<button type="button" class="btn btn-default toggle">
 						{for $i in range(6)}
-						<span></span>
+						<span class="circle"></span>
 						{/for}
+						<span class="icon icon-arrow-up"></span>
 					</button>
 					{call .Legend}
 						{param departmentBucketList: $departmentBucketList /}
@@ -427,7 +440,7 @@
 		<li class="department {$departmentBucketListCSS[index($department)]}" title="{$department}">{$department}</li>
 	{/foreach}
 	</ul>
-	<button class="icon icon-close toggle"></button>
+	<button class="icon icon-arrow-down toggle"></button>
 </div>
 {/template}
 

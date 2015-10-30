@@ -16,6 +16,7 @@ var FloorViewer = function( _$element ) {
 
 	this._$floorContainer = this.$element.find( '.floor-container' );
 	this._$floorButtons = this.$element.find( '.floor-buttons .btn' );
+	this._$zoomButtons = this.$element.find( '.zoom-buttons .btn' );
 	this._$urlGenerator = this.$element.find( '.url-generator' );
 	this._$legend = this.$element.find( '.legend-container' );
 	this._$mousewheelScroller = this.$element.find( '.mousewheel-scroller' );
@@ -81,6 +82,9 @@ FloorViewer.prototype.init = function() {
 	$onClickFloorButton = $.proxy( this.onClickFloorButton, this );
 	this._$floorButtons.on( 'click', $onClickFloorButton );
 
+	$onClickZoomButton = $.proxy( this.onClickZoomButton, this );
+	this._$zoomButtons.on( 'click', $onClickZoomButton );
+
 	$onClickUrlButton = $.proxy( this.onClickUrlButton, this );
 	this._$urlGenerator.find( 'button' ).on( 'click', $onClickUrlButton );
 
@@ -91,7 +95,7 @@ FloorViewer.prototype.init = function() {
 	this.$element.on( 'mousewheel wheel', $onMouseWheel );
 
 	var $onDoubleClick = $.proxy( this.onDoubleClick, this );
-	this.$element.on( 'dblclick', $onDoubleClick );
+	this._$floorContainer.on( 'dblclick', $onDoubleClick );
 
 	$( window ).on( 'resize', this._$resize ).resize();
 
@@ -108,7 +112,7 @@ FloorViewer.prototype.init = function() {
 	this.setZoomSlider( 0 );
 
 	//var floorIndex = this.$element.find( '.floor-buttons .active' ).attr( 'data-id' );
-	//this.focusOnCenter( floorIndex, 0 );
+	//this.focusOnCenter( floorIndex, true, 0 );
 
 	this.hideMousewheelScroller();
 }
@@ -205,22 +209,28 @@ FloorViewer.prototype.focusOnClickedPosition = function( e, opt_zoom ) {
 
 	this.updatePropsBeforeMouseZoom( e );
 
-	if ( opt_zoom ) {
-		this.zoom( opt_zoom );
-	}
+	if ( $.isNumeric( opt_zoom ) ) {
 
-	this.currentFloor.updateTiles( zoom );
+		this.zoom( opt_zoom );
+
+	} else {
+
+		this.currentFloor.updateTiles( zoom );
+	}
 }
 
 
-FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
+FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_locateToCenter, opt_zoom ) {
 
 	if ( opt_floorIndex ) {
 		this.toggleFloor( opt_floorIndex );
 	}
 
-	var floorSize = this.getFloorSize();
-	this.moveTo( floorSize.width / 2, floorSize.height / 2 );
+	if ( opt_locateToCenter ) {
+
+		var floorSize = this.getFloorSize();
+		this.moveTo( floorSize.width / 2, floorSize.height / 2 );
+	}
 
 	if ( $.isNumeric( opt_zoom ) ) {
 
@@ -236,9 +246,11 @@ FloorViewer.prototype.focusOnCenter = function( opt_floorIndex, opt_zoom ) {
 		this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
 
 		this.zoom( opt_zoom );
-	}
 
-	this.currentFloor.updateTiles( zoom );
+	} else {
+
+		this.currentFloor.updateTiles( zoom );
+	}
 }
 
 
@@ -251,7 +263,7 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 
 	this.moveTo( pinPosition.left, pinPosition.top );
 
-	if ( opt_zoom ) {
+	if ( $.isNumeric( opt_zoom ) ) {
 
 		var pinOffset = pin.$element.offset();
 		var pinHalfWidth = pin.$element.width() / 2;
@@ -269,10 +281,13 @@ FloorViewer.prototype.focusOnPin = function( entityModel, opt_zoom ) {
 		this._floorZoomFractionY = ( this._viewportZoomY - floorY ) / this._floorHeight;
 
 		this.zoom( opt_zoom );
+
+	} else {
+
+		this.currentFloor.updateTiles( zoom );
 	}
 
 	this.currentFloor.highlightEntityPin( pin.$element );
-	this.currentFloor.updateTiles( zoom );
 }
 
 
@@ -499,6 +514,22 @@ FloorViewer.prototype.onClickFloorButton = function( e ) {
 
 	var floorId = e.currentTarget.getAttribute( 'data-id' );
 	this.toggleFloor( floorId );
+}
+
+
+FloorViewer.prototype.onClickZoomButton = function( e ) {
+
+	var id = e.currentTarget.getAttribute( 'data-id' );
+	var step = 1 / 4;
+
+	if ( id === 'zoom-in' ) {
+
+		this.focusOnCenter( null, false, Math.min( 1, zoom + step ) );
+
+	} else if ( id === 'zoom-out' ) {
+
+		this.focusOnCenter( null, false, Math.max( 0, zoom - step ) );
+	}
 }
 
 
