@@ -439,6 +439,10 @@ FloorViewer.prototype.resize = function() {
 
 	this.updateViewportMetrics();
 	this.updateBounds();
+
+	if ( this.currentFloor ) {
+		this.currentFloor.updateTiles( zoom );
+	}
 }
 
 

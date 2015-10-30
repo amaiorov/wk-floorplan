@@ -251,7 +251,7 @@ Editor.prototype.onSplitUpdated = function( fraction ) {
 
 Editor.prototype.onSplitEnded = function() {
 
-	this.floorViewer.updateViewportMetrics();
+	this.floorViewer.resize();
 }
 
 

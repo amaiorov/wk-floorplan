@@ -197,7 +197,7 @@
 		<div class="waitlist-pane">
 			<div class="inner-container">
 				<div class="inner">
-					<h3><span class="icon icon-out"></span>Not Assigned</h3>
+					<h3>Not Assigned</h3>
 					<div class="waitlist-container">
 						<div class="waitlist">
 						{call .WaitlistEmployees}
@@ -292,7 +292,16 @@
 {template .WaitlistInfo}
 <div class="info">
 	<h6>{ $employee.firstName } { $employee.lastName }</h6>
-	<ul>
+	<div class="avatar {$employee.type}">
+		{if $employee.photoURL }
+			<div class="photo">
+				<div style="background-image:url('{$employee.photoURL}')"></div>
+			</div>
+		{else}
+			<div class="icon icon-{$employee.type}"></div>
+		{/if}
+	</div>
+	<ul class="details">
 		{if $employee.department }
 		<li>
 			<b>Department</b>
@@ -347,11 +356,9 @@
 		</div>
 		<div class="panel-body">
 			<div class="photo {$employee.type}">
-				// <div style="background:url({$employee.photoURL});width:100px;height:100px"></div>
 				{if $employee.photoURL }
 					<div style="background-image:url('{$employee.photoURL}')"></div>
 				{/if}
-				// <span style="font-size:14px;position:relative;z-index:1;background:#fff">{$employee.photoURL}</span>
 			</div>
 			<div class="content">
 				{if $employee.department }<p><span>{ $employee.department }</span></p>{/if}

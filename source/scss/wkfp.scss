@@ -45,7 +45,7 @@ html{
 	z-index: 0;
 	width: 100%;
 	height: calc(100% - 90px);
-	padding: 40px;
+	padding: 30px;
 	@include box-sizing(borde-box);
 }
 
@@ -107,7 +107,7 @@ html{
 		margin: 5px 0 0px 0;
 		text-indent: 20px;
 		line-height: 2.5;
-		border-bottom: 1px dashed lightgray;
+		border-bottom: 1px solid lightgray;
 	}
 	li {
 		&.current-floor {

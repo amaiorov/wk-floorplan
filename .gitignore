@@ -17,6 +17,7 @@ source/_Gemfile
 source/web.config
 source/app_data
 source/aspnet_client
+source/simplesamlphp/vendor
 
 # Elastic Beanstalk Files
 
