@@ -178,7 +178,10 @@ Editor.prototype.reset = function( opt_json ) {
 			} else if ( global.config.email ) {
 
 				var employee = employeeCollection.getByWorkEmail( global.config.email );
-				this.floorViewer.focusOnPin( employee, 1 );
+
+				if ( employee ) {
+					this.floorViewer.focusOnPin( employee, 1 );
+				}
 			}
 		}, this );
 	}
