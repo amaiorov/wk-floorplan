@@ -17,12 +17,12 @@ $easeOutQuint: cubic-bezier(0.230, 1.000, 0.320, 1.000);
 
 $color_blue: #337ab7;
 $color_red: #a94442;
-$color_pin_default: #C9CDAC;
+$color_pin_default: gray;
 
 $departments:
   account-services #564860,
   business-services #91aa9d,
-  creative #CEFF00,
+  creative #F4770A,
   creative-services #BFE394,
   digital #ffdc00,
   executive #AB2D04,
@@ -32,7 +32,8 @@ $departments:
   media-planning #8D6A5D,
   production #E86D6D,
   project-management #7E6B99,
-  tech #57B4EA;
+  tech #57B4EA,
+  other #C9CDAC;
 
 // -- Global Mixins --
 @mixin absoluteTopLeft() {

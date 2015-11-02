@@ -538,8 +538,9 @@
 		top: -4px;
 		font-size: 14px;
 		white-space: nowrap;
+		border: none;
 		@include box-sizing(border-box);
-		@include box-shadow(2px 4px 10px 0px rgba(black,0.1));
+		@include box-shadow(2px 4px 10px 0px rgba(black,0.25));
 		@include translate(-50%, -90%);
 		@include backfaceHidden();
 		visibility: hidden;
@@ -563,7 +564,7 @@
 				background-image: image-url('loader.gif');
 				background-repeat: no-repeat;
 				background-position: center center;
-				background-size: 50%;	
+				background-size: 25%;	
 
 				&:before {
 					display: none;
@@ -599,6 +600,9 @@
 		}
 	}
 
+	.panel-primary{
+		border-color: transparent !important;
+	}
 
 	@each $department in $departments {
 		$class: nth($department, 1);
@@ -606,18 +610,23 @@
 
 		&:hover, &.active, &.dragging{
 			&.#{$class} .circle{
-				background: darken($color, 18) !important;
+				background: lighten($color, 10) !important;
 			}
 		}
 
 		&.#{$class} .circle{
 			background: $color;
 		}
+
+		&.#{$class} .panel-heading{
+			border-color: $color !important;
+			background: $color !important;
+		}
 	}
 
 	&:hover{
 		>.circle{
-			background: darken($color_pin_default, 18);
+			background: lighten($color_pin_default, 10);
 		}
 	}
 
@@ -625,7 +634,7 @@
 		z-index: 10 !important;
 
 		>.circle{
-			background: darken($color_pin_default, 18) !important;
+			background: lighten($color_pin_default, 10) !important;
 		}
 
 		>.info{
@@ -644,7 +653,7 @@
 
 	&.dragging{
 		>.circle{
-			background: darken($color_pin_default, 18) !important;
+			background: lighten($color_pin_default, 10) !important;
 		}
 	}
 
