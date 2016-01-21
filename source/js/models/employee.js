@@ -19,7 +19,8 @@ var Employee = function( props ) {
 	this.cellPhone = props[ 'CellPhone#s' ];
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
-	this.type = this.getType( props );
+	// this.type = this.getType( props );
+	this.type = props[ 'Special' ].toLowerCase() || 'employee';
 	if ( this.type === 'employee' || this.type === 'intern' || this.type === 'freelance' ) {
 		this.photoURL = '/service.php?fullName=' + sanitize( this.firstName ) + '.' + sanitize( this.lastName.split( '/' )[ 0 ] );
 	} else {
