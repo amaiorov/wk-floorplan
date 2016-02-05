@@ -22,7 +22,7 @@
 			"alex.maiorov@wk.com"
 		);
 
-		if (in_array($_SESSION["Email"], $admins)) {
+		if (in_array( strtolower($_SESSION["Email"]), $admins)) {
 		    $_SESSION['admin'] = true;
 		}
 	}
@@ -42,7 +42,7 @@
 		"admindemo" => $_SESSION['admindemo'],
 		"firstname" => $_SESSION["FirstName"],
 		"lastname" => $_SESSION["LastName"],
-		"email" => $_SESSION["Email"]
+		"email" => strtolower($_SESSION["Email"])
 	);
 ?>
 
