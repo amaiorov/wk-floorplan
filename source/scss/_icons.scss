@@ -4,17 +4,17 @@
 
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.eot");
+	src:url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.eot");
 	font-weight:normal;
 	font-style:normal;
 }
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.eot");
-	src:url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.eot?#iefix") format("embedded-opentype"),
-		url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.woff") format("woff"),
-		url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.ttf") format("truetype"),
-		url("../fonts/fontcustom/icons-a5fe0d905eacaebc4388306faf8b80aa.svg?#icons") format("svg");
+	src:url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.eot");
+	src:url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.eot?#iefix") format("embedded-opentype"),
+		url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.woff") format("woff"),
+		url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.ttf") format("truetype"),
+		url("../fonts/fontcustom/icons-da49188afbe3f220f52ca6ff4054a74a.svg?#icons") format("svg");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -73,56 +73,66 @@
 }
 
 
-.icon-file:before {
+.icon-extinguisher:before {
 	content:"\f108";
 }
 
 
-.icon-minus:before {
+.icon-file:before {
 	content:"\f109";
 }
 
 
-.icon-person:before {
+.icon-minus:before {
 	content:"\f10a";
 }
 
 
-.icon-plus:before {
+.icon-person:before {
 	content:"\f10b";
 }
 
 
-.icon-printer:before {
+.icon-plus:before {
 	content:"\f10c";
 }
 
 
-.icon-remove-seat:before {
+.icon-printer:before {
 	content:"\f10d";
 }
 
 
-.icon-room:before {
+.icon-remove-seat:before {
 	content:"\f10e";
 }
 
 
-.icon-search:before {
+.icon-room:before {
 	content:"\f10f";
 }
 
 
-.icon-sheet:before {
+.icon-search:before {
 	content:"\f110";
 }
 
 
-.icon-social:before {
+.icon-sheet:before {
 	content:"\f111";
 }
 
 
-.icon-warning:before {
+.icon-social:before {
 	content:"\f112";
+}
+
+
+.icon-stairs:before {
+	content:"\f113";
+}
+
+
+.icon-warning:before {
+	content:"\f114";
 }
