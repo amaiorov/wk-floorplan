@@ -181,6 +181,15 @@ div{
   &.printer{
     @extend .icon-printer;
   }
+  &.extinguisher{
+    @extend .icon-extinguisher;
+  }
+  &.stairs{
+    @extend .icon-stairs;
+  }
+  &.hose{
+    @extend .icon-hose;
+  }
   &.freelance:after,
   &.intern:after {
     text-transform: uppercase;
@@ -204,6 +213,14 @@ div{
   &.intern:after {
     content: 'in';
     color: #f00;
+  }
+  &.extinguisher,
+  &.hose,
+  &.safety,
+  &.stairs {
+    :before {
+      color: #f00;
+    }
   }
 }
 

@@ -34,11 +34,18 @@ Bootstrapper.prototype.load = function( opt_ssUrl ) {
 
 Bootstrapper.prototype.loadSpreadSheets = function( opt_ssUrl, callback ) {
 
-	// PROD
-	// var ssUrl = opt_ssUrl || 'https://docs.google.com/spreadsheets/d/1gm6bI8Oyat9ClNKRwQVlBOzQ_YOV9BDCu0Z7l1BeAro/edit#gid=0';
 
-	// DEV
-	var ssUrl = opt_ssUrl || 'https://docs.google.com/spreadsheets/d/1LhJO-TTiwQwrODfAHCzBa2WXUWNZKdsqS2_44cp-WBQ/edit#gid=0';
+	if ( global.config.dev ) {
+		// DEV
+		var ssUrl = opt_ssUrl || 'https://docs.google.com/spreadsheets/d/1LhJO-TTiwQwrODfAHCzBa2WXUWNZKdsqS2_44cp-WBQ/edit#gid=0';
+		console.log( 'DEV' );
+	} else {
+		// PROD
+		var ssUrl = opt_ssUrl || 'https://docs.google.com/spreadsheets/d/1gm6bI8Oyat9ClNKRwQVlBOzQ_YOV9BDCu0Z7l1BeAro/edit#gid=0';
+		console.log( 'PROD' );
+	}
+
+
 
 	sheetrock( {
 		url: ssUrl,

@@ -10,6 +10,8 @@
 		    $_SESSION['admin'] = true;
 		}
 
+		$dev = true;
+
 	}else if (!isset($_SESSION["FirstName"]) && !isset($_SESSION["LastName"]) && !isset($_SESSION["Email"])) {
 		
 		header("Location: /login/?saml_sso=wknyc-floorplan");
@@ -44,6 +46,9 @@
 		"lastname" => $_SESSION["LastName"],
 		"email" => strtolower($_SESSION["Email"])
 	);
+	if (isset($dev)) {
+		$config["dev"] = true;
+	}
 ?>
 
 <!DOCTYPE html>

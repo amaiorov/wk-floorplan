@@ -4,17 +4,17 @@
 
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.eot");
+	src:url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.eot");
 	font-weight:normal;
 	font-style:normal;
 }
 @font-face {
 	font-family:"icons";
-	src:url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.eot");
-	src:url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.eot?#iefix") format("embedded-opentype"),
-		url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.woff") format("woff"),
-		url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.ttf") format("truetype"),
-		url("../fonts/fontcustom/icons-25552db6235dfbb19475a9a16b4c2f54.svg?#icons") format("svg");
+	src:url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.eot");
+	src:url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.eot?#iefix") format("embedded-opentype"),
+		url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.woff") format("woff"),
+		url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.ttf") format("truetype"),
+		url("../fonts/fontcustom/icons-f15ab90c24b1bcfaab8dbacc1ccb89d4.svg?#icons") format("svg");
 	font-weight:normal;
 	font-style:normal;
 }
@@ -73,71 +73,76 @@
 }
 
 
-.icon-file:before {
+.icon-extinguisher:before {
 	content:"\f108";
 }
 
 
-.icon-minus:before {
+.icon-file:before {
 	content:"\f109";
 }
 
 
-.icon-person:before {
+.icon-hose:before {
 	content:"\f10a";
 }
 
 
-.icon-plus:before {
+.icon-minus:before {
 	content:"\f10b";
 }
 
 
-.icon-printer:before {
+.icon-person:before {
 	content:"\f10c";
 }
 
 
-.icon-remove-seat:before {
+.icon-plus:before {
 	content:"\f10d";
 }
 
 
-.icon-room:before {
+.icon-printer:before {
 	content:"\f10e";
 }
 
 
-.icon-search:before {
+.icon-remove-seat:before {
 	content:"\f10f";
 }
 
 
-.icon-sheet:before {
+.icon-room:before {
 	content:"\f110";
 }
 
 
-.icon-social:before {
+.icon-safety:before {
 	content:"\f111";
 }
 
 
-.icon-stairs:before {
+.icon-search:before {
 	content:"\f112";
 }
 
 
-.icon-unused:before {
+.icon-sheet:before {
 	content:"\f113";
 }
 
 
-.icon-warning:before {
+.icon-social:before {
 	content:"\f114";
 }
 
 
-.icon-zzz:before {
+.icon-stairs:before {
 	content:"\f115";
+}
+
+
+.icon-warning:before {
+	content:"\f116";
 }

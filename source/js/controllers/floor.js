@@ -334,8 +334,8 @@ Floor.prototype.updateTiles = function( zoom ) {
 			var tx = parseInt( $tile.attr( 'data-x' ) );
 			var ty = parseInt( $tile.attr( 'data-y' ) );
 			var tileIndex = ty * settings.cols + tx;
-			var lowTileUrl = 'images/floorplan/' + floorIndex + '/low/' + tileIndex + '.jpg';
-			var tileUrl = 'images/floorplan/' + floorIndex + '/' + res + '/' + tileIndex + '.jpg';
+			var lowTileUrl = 'images/floorplan/' + floorIndex + '/low/' + tileIndex + '.png';
+			var tileUrl = 'images/floorplan/' + floorIndex + '/' + res + '/' + tileIndex + '.png';
 
 			if ( !$tile.data( 'hasImage' ) ) {
 				var $imageDiv = $( '<div>' );

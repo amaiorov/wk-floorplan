@@ -52,6 +52,17 @@
 			&[data-size="max"] .circle{
 				@include scale(1);
 			}
+			&[data-size="max"]:before{
+				@include scale(1);
+				font-size: 60px;
+			}
+			&.extinguisher,
+			&.stairs,
+			&.hose {
+				.circle {
+					opacity: 0;
+				}
+			}
 		}
 
 		.seat-pin{
@@ -417,6 +428,13 @@
 						@include translate(0, 0);
 						margin: 0 10px 10px 0;
 						position: static;
+						&.extinguisher,
+						&.stairs,
+						&.hose {
+							.circle {
+								opacity: 0;
+							}
+						}
 					}
 				}
 
@@ -513,6 +531,30 @@
 	@include user-select(none);
 	cursor: pointer !important;
 
+	&.safety,
+	&.extinguisher,
+	&.hose,
+	&.stairs {
+		@extend .icon;
+		@extend %entity-icon;
+		&:before {
+			display: block;
+			color: #f00;
+			font-size: 30px;
+			width: 100%;
+			height: 100%;
+			padding: 5px;
+			position: absolute;
+			text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+		}
+		.info {
+			min-width: 0;
+			h3 {
+				white-space: normal;
+			}
+		}
+}
+
 	>.circle{
 		position: relative;
 		z-index: 0;
@@ -564,7 +606,7 @@
 				background-image: image-url('loader.gif');
 				background-repeat: no-repeat;
 				background-position: center center;
-				background-size: 25%;	
+				background-size: 25%;
 
 				&:before {
 					display: none;
