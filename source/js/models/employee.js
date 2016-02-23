@@ -11,7 +11,7 @@ var Employee = function( props ) {
 	this.lastName = props[ 'Last' ] || '.';
 	this.extension = props[ 'Ext.' ];
 	this.department = props[ 'Department' ];
-	this.departmentCSSClass = props[ 'DepartmentBucket' ].toLowerCase().split( ' ' ).join( '-' ) || props[ 'Special' ].toLowerCase() || 'other';
+	this.departmentCSSClass = props[ 'DepartmentBucket' ].toLowerCase().split( ' ' ).join( '-' ) || props[ 'Special' ].toLowerCase().replace( /^\(.{1}\)/, '' ) || 'other';
 	this.departmentBucket = props[ 'DepartmentBucket' ] || 'other';
 	this.mailbox = props[ 'Desk#/Mailbox#' ];
 	this.deskDrawerKey = props[ 'DeskDrawerKey#' ];
@@ -19,8 +19,8 @@ var Employee = function( props ) {
 	this.cellPhone = props[ 'CellPhone#s' ];
 	this.initials = this.getInitials();
 	this.fullName = this.getFullName();
-	this.type = props[ 'Special' ].toLowerCase() || 'employee';
-	if ( this.type === 'employee' || this.type === 'intern' || this.type === 'freelance' ) {
+	this.type = props[ 'Special' ].toLowerCase().replace( /^\(.{1}\)/, '' ) || 'employee';
+	if ( this.type.match( /employee|intern|freelance/ ) ) {
 		this.photoURL = '/service.php?fullName=' + sanitize( this.firstName ) + '.' + sanitize( this.lastName.split( '/' )[ 0 ] );
 	} else {
 		this.photoURL = null;

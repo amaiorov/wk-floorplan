@@ -184,11 +184,14 @@ div{
   &.extinguisher{
     @extend .icon-extinguisher;
   }
-  &.stairs{
+  &.staircase{
     @extend .icon-stairs;
   }
   &.hose{
     @extend .icon-hose;
+  }
+  &.safety{
+    @extend .icon-safety;
   }
   &.freelance:after,
   &.intern:after {
@@ -217,7 +220,7 @@ div{
   &.extinguisher,
   &.hose,
   &.safety,
-  &.stairs {
+  &.staircase {
     :before {
       color: #f00;
     }
